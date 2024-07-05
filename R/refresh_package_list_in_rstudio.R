@@ -1,0 +1,1 @@
+rstudioapi::executeCommand(commandId = "refreshPackages")
