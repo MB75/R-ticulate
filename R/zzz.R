@@ -23,9 +23,6 @@ rticulateStartupMessage <- function()
   library(learnr)
 }
 
-.onLoad <- function(libname, pkgname) {
-  rstudioapi::executeCommand(commandId = "refreshPackages")
-}
 # .onAttach <- function(libname, pkgname) {
 #
 #   ## Install and load required packages
