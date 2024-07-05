@@ -1,0 +1,356 @@
+---
+title: "R-ticulate Exercises"
+author: "Martin Bader and Sebastian Leuzinger"
+output: learnr::tutorial
+runtime: shiny_prerendered
+description: >
+  Some of What Lies Ahead
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+## List of packages required for this tutorial
+# pkgs <- c("learnr", "ggplot2", "nlsMicrobio", "mgcv")
+
+# ## Check whether the specified package is available
+#   inst.pack <- rownames(installed.packages()) # list of installed packages
+#   if (length(setdiff(x = pkgs, y = inst.pack)) > 0) { # setdiff() returns the elements of x that don't occur in y
+#     install.packages(setdiff(pkgs, inst.pack), repos = "https://cloud.r-project.org", dependencies = T)  
+#   }
+
+## Load required packages
+library(learnr)
+library(nlsMicrobio)
+library(mgcv)
+library(ggplot2)
+
+## Hailstorm probability as a function of supercooled water droplet concentration in the atmosphere ----
+# Set seed for reproducibility
+set.seed(789)
+
+# Number of data points
+n <- 1000
+
+# Generate random data for supercooled water droplets (values between 0 and 2 g/m³)
+supercooled_water_droplets <- runif(n, min = 0, max = 2)
+
+# Define logistic regression model coefficients
+# Logistic regression model: log(p / (1 - p)) = beta0 + beta1 * supercooled_water_droplets
+# Plausible coefficients for hailstorm prediction
+beta0 <- -4     # Intercept (base level of hailstorm occurrence)
+beta1 <- 3      # Coefficient for supercooled water droplets (impact on hailstorm occurrence)
+
+# Calculate the probability of a hailstorm based on supercooled water droplet concentration
+# Logistic function:
+prob_hailstorm <- 1 / (1 + exp(-(beta0 + beta1 * supercooled_water_droplets)))
+
+# Generate the binary outcome (1 = hailstorm, 0 = no hailstorm)
+hailstorm <- rbinom(n, size = 1, prob = prob_hailstorm)
+
+# Create a dataframe with the simulated data
+hail <- data.frame(
+  scwd = round(supercooled_water_droplets, digits = 2),
+  hailstorm = hailstorm
+)
+
+
+## Crossbills ----
+# crossbills <- data.frame(direction = factor(c(rep(c("left", "right"), times = c(100, 311)), rep(c("left", "right"), times = c(90, 198)))), gender = factor(rep(c("male", "female"), times = c(411, 288))))
+
+# m1 <- glm(direction ~ gender, data = crossbills, family = binomial)
+# m1 <- glm(direction ~ 1, data = crossbills, family = binomial)
+# summary(m1)
+
+# group_by(crossbills, direction) %>% summarise(n = n()) %>% mutate(freq = n/sum(n))
+# crossbills2 <- group_by(crossbills, gender, direction) %>% summarise(n = n()) %>% mutate(freq = n/sum(n))
+# newdat <- data.frame(gender = levels(crossbills$gender))
+# preds <- predict(m1, newdata = newdat, se = T)
+
+# ggplot(data = crossbills2, aes(x = direction, y = n)) +
+  # geom_bar(stat = "identity") +
+  # facet_wrap(facets = ~ gender)
+```
+
+## Chapter 12 - Some of What Lies Ahead
+
+### Exercise 1 - Multiple-choice quiz
+
+Please note that there is only one correct (or most correct) answer to each question.
+
+<p style="margin-top:-30px;">
+</p>
+```{r anova_quiz, echo=FALSE}
+quiz(caption = "",
+      question("Generalised linear models (GLMs) relax the assumption of",
+         answer("independence among observations."),
+         answer("variance homogeneity (homoscedasticity)."),
+         answer("normally distributed model residuals (errors).", correct = T),
+         answer("a constant slope."),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+     
+     question("The most appropriate error distribution for a binary response variable such as dead/alive or presence/absence, is the",
+         answer("gaussian (normal) distribution."),
+         answer("binomial distribution.", correct = T),
+         answer("poisson distribution."),
+         answer("gamma distribution."),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+     
+      question("What is the purpose of the link function in generalised linear models?",
+         answer("To transform the response variable so that it follows a normal distribution."),
+         answer("To ensure the model residuals (errors) are homoscedastic."),
+         answer("To provide a non-linear relationship between the predictors and the response variable."),
+         answer("To relate the linear predictor to the expected values of the response variable.", correct = T),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+     
+         question("In a figure related to a logistic regression model (binomial GLM) you notice symmetric confidence intervals around the fitted curve. What do you conclude?", 
+         answer("This is the way it should be suggesting an accurate visualisation of the model results."),
+         answer("Something is wrong. It is not possible to calculate confidence intervals for GLMs."),
+          answer("This indicates that an ill-suited distribution was chosen."),
+          answer("The confidence interval was incorrectly calculated after back-transforming the predictions from the link scale.", correct = T),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+     
+     question("One of the basic requirements of a nonlinear regression model is",
+         answer("a nonlinear equation describing the relationship between response and predictor.", correct = T),
+         answer("an intercept and slope."),
+         answer("a distribution for the response variable and model errors."),
+         answer("a correct link function."),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+     
+         question("What does the term 'starting values' mean in the context of nonlinear regression?",
+         answer("This refers to the first few rows in the dataset containing the nonlinear relationship."),
+         answer("This refers to the starting points of the desired range of the continuous predictor."),
+         answer("These are initial parameter estimates that need to be supplied to provide starting points for the optimisation algorithm of the model.", correct = T),
+         answer("This refers to the starting points of the range of the model predictions, which allows the user to specify predictions for interpolation or extrapolation."),
+         answer("This refers to start values that need to be provided to estimate the confidence interval around the nonlinear curve."),
+         allow_retry = T
+         ),
+     
+      question("Which of the following statements is true for generalised additive models (GAMs)?",
+         answer("GAMs assume normally distributed errors (residuals)."),
+         answer("In GAMs, the relationship between the response variable and each predictor is assumed to be linear."),
+         answer("GAMs allow for the inclusion of non-linear relationships between the predictors and the response variable by using smooth functions.", correct = T),
+         answer("The interpretation of coefficients in a GAM is the same as in a linear regression model."),
+         answer("GAMs require starting values as starting points for the fitting algorithm similar to nonlinear regression models."),
+         allow_retry = T
+         ),
+     
+      question("The summary output of generalised additive models",
+         answer("is the same as in nonlinear models."),
+         answer("consists of two parts, a parametric component and a smoother-related component.", correct = T),
+         answer("only consists of the estimated degrees of freedom of the smoother, indicating the degree of nonlinearity, and a goodness-of-fit statistic."),
+         answer("consists of an intercept and the associated standard error, _t_- and _P_-value."),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+     
+        question("Which of the following statements best describes heteroscedasticty (variance heterogeneity)?",
+        answer("The residuals are normally distributed."),
+        answer("The variance of the residuals is constant across all levels of the independent variables."),
+        answer("The variance of the residuals increases or decreases with the level of the fitted values or the independent variable(s), respectively.", correct = T),
+        answer("The residuals are independent and identically distributed."),
+        answer("None of the above."),
+  allow_retry = T
+),
+
+question("Which of the following methods can be used to detect heteroscedasticity in a regression model?",
+        answer("Shapiro-Wilk test."),
+        answer("Qantile-quantile plot."),
+        answer("Variance inflation factor (VIF)."),
+        answer("Histogram"),
+        answer("None of the above.", correct = T),
+  allow_retry = T
+),
+
+question("Why is it important to check for and deal with heteroscedasticity if it occurs?",
+        answer("Heteroscedasticity commonly results in biased estimates of the standard errors of the regression coefficients and thus compromised statistical inference.", correct = T),
+        answer("Since heteroscedasticity can lead to biased estimates of the regression coefficients."),
+        answer("Since heteroscedasticity indicates that the linear relationship between the predictors and the response variable is incorrect, requiring a respecification of the model."),
+        answer("Heteroscedasticity results in the loss of observations and thus reduces the sample size."),
+        answer("None of the above."),
+  allow_retry = T
+),
+
+question("Which of the following techniques is not a suitable remedy for heterscedasticity?",
+        answer("A variance-stabilising data transformation."),
+        answer("Using robust, heteroscedasticity-consistent estimation of standard errors."),
+        answer("Using a generalised linear model framework, allowing the use of various error distributions.", correct = T),
+        answer("Using a generalised least squares approach, which explicitly models the variance structure of the errors and adjusts the estimation process accordingly.
+"),
+        answer("None of the above."),
+  allow_retry = T
+)
+)
+```
+
+The model code related to the exercises below relies on the following R packages (which are autoloaded behind the scenes in this tutorial):
+
+* _ggplot2_
+* _nlsMicrobio_
+* _mgcv_
+
+### Exercise 2 - Logistic Regression
+
+Supercooling refers to the process of lowering the temperature of a liquid below its normal freezing point without transition into the solid phase. Supercooled water droplets are common in the atmosphere, where their availability is a driver for hail formation. Here, we will analyse the occurrence of hailstorms as a function of the concentration of supercooled water in the atmosphere using the pre-loaded dataset `hail`, containing the supercooled water droplet concentration in the `scwd` column and the occurrence of hailstorms given as a binary variable in the `hailstorm` column.
+
+a. Visualise the data
+
+b. Run a generalised linear model with a binomial error distribution and the default logit link.
+
+c. Calculate the model predictions including a 95% confidence interval, back-transform them to the response scale and add them to the previously created plot.
+
+d. At roughly what supercooled water droplet concentration is the hailstorm probability 50%?
+
+```{r hail-exercise, exercise=TRUE, fig.align='center', fig.width=4.5, fig.height=4.5, message=FALSE}
+## View the first few observations
+head(hail)
+```
+
+```{r hail-exercise-solution, exercise.reveal_solution = TRUE}
+## a. Visualise the data
+ggplot(data = hail, aes(x = scwd, y = hailstorm)) +
+  geom_point(alpha = 0.3, position = position_jitter(width = 0, height = 0.05)) +
+  labs(x = expression(paste("Supercooled Water Droplets (g m"^-3, ")")),
+       y = "Hailstorm probability") +
+  theme_test()
+
+## b. Run a binomial GLM
+m1 <- glm(hailstorm ~ scwd, data = hail, family = binomial()) # binomial() defaults to binomial(link = "logit")
+summary(m1)
+
+## c. Model predictions incl. 95% confidence interval
+## Set up a new data frame with a fine grid of scwd values to predict from (ensures a smooth regression curve)
+newdat <- data.frame(scwd = seq(min(hail$scwd), max(hail$scwd), length.out = 200))
+preds <- predict(m1, newdata = newdat, se = T)
+
+bt <- binomial()$linkinv # back-transformation function, see help file for 'family'
+newdat$fit <- bt(preds$fit)
+newdat$upper <- bt(preds$fit + 1.96 * preds$se.fit)
+newdat$lower <- bt(preds$fit - 1.96 * preds$se.fit)
+newdat$hailstorm <- 0 # add 'empty' hailstorm variable, required for plotting (ggplot assumes this variable as it occurrs in the hail data frame)
+
+# Plot to visualise the relationship
+ggplot(data = hail, aes(x = scwd, y = hailstorm)) +
+  geom_ribbon(data = newdat, aes(x = scwd, ymin = lower, ymax = upper), fill = "grey50", alpha = 0.5) +
+  geom_line(data = newdat, aes(x = scwd, y = fit), linewidth = 1, colour = "red3") +
+  geom_point(alpha = 0.3, position = position_jitter(width = 0, height = 0.05)) +
+  labs(x = expression(paste("Supercooled Water Droplets (g m"^-3, ")")),
+       y = "Hailstorm probability") +
+  theme_test()
+```
+</details>
+
+<p style="margin-top:40px">
+<details><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> to view the solution to question 2 d.</summary>
+<p style="margin-top:10px">
+The hailstorm probability reaches about 50% at a supercooled water droplet concentration of _ca._ 1.4 g m^-3^.
+</p></details></p>
+
+### Exercise 3 - Building a Nonlinear Regression Model
+
+The data set `L.minor` (package _nlsMicrobio_) contains nitrogen uptake rates (variable `rate`) as a function of aquatic nitrogen concentration (variable `conc`). The data stem from Cedergreen & Madsen (2002) Nitrogen uptake by the floating macrophyte _Lemna minor_. _New Phytologist_, 155, 285–292.
+
+Uptake kinetics are often described by the Michaelis-Menten model:
+
+$$
+f(x) = \frac{V_{max}\: x}{K_{m} + x}
+$$
+Here, $f(x)$ is the nitrogen uptake rate, $x$ is the substrate concentration, _V_~max~ is the maximum reaction rate under substrate-saturated conditions and _K_~m~ indicates the Michaelis constant, which is the substrate concentration at which the reaction rate is half of _V_~max~. It reflects the affinity of the enzyme for the substrate; a lower _K_~m~ indicates higher affinity.
+
+a. Plot the data. 
+
+b. Guess intital parameter estimates (eyeball the asymptote and the value on the _x_-axis, where the rate is about half of the max) and fit the Michaelis-Menten model model to the data. 
+
+c. Check the underlying model assumptions of normality and variance homogeneity of the residuals. 
+
+d. Calculate the model predictions and add the regression curve to the plot. 
+
+
+```{r nls-exercise, exercise=TRUE, fig.align='center', fig.width=4.5, fig.height=4.5, message=FALSE}
+## Load the data
+data(L.minor)
+
+## View the first few observations
+head(L.minor)
+```
+
+```{r nls-exercise-solution, exercise.reveal_solution = TRUE}
+## a. Plot the data
+plot(rate ~ conc, data = L.minor, ylim = c(0, 120))
+
+## b. Run the nonlinear model
+m1 <- nls(rate ~ Vm * conc/(K + conc), data = L.minor, start = c(Vm = 110, K = 20))
+summary(m1)
+
+## c. Check model assumptions
+qqnorm(resid(m1))
+qqline(resid(m1))
+plot(resid(m1) ~ fitted(m1))
+abline(h = 0, lty = 2)
+
+## d. Add regression curve
+plot(rate ~ conc, data = L.minor, ylim = c(0, 120))
+lines(L.minor$conc, fitted(m1)) # kinked looking curve because there is no interpolation between measured concentrations
+
+## Set up a new data frame containing a fine grid of predictor values( x-values) to predict from in order to obtain a smooth regression curve. NOTE that the variable name in the new data frame needs to match the name in the nonlinear model exactly (here 'conc').
+newdat <- data.frame(conc = seq(min(L.minor$conc), max(L.minor$conc), length.out = 200))
+newdat$fit <- predict(m1, newdata = newdat)
+plot(rate ~ conc, data = L.minor, ylim = c(0, 120))
+lines(fit ~ conc, data = newdat)
+```
+
+### Exercise 4 - Generalised additive modeling
+
+We will revert to the built-in `airquality` dataset and model ozone concentration (variable `Ozone`) as a function of solar radiation (variable `Solar.R`) using a generalised additive model (GAM). As we have determined in chapter 3, the `Ozone` variable follows a gamma distribution, so you need to specify this distribution via the `family` argument (note that the function name for the gamma distribution is spelled with a capital 'G', see help file for `family`). Use the default "inverse" link of the gamma distribution.
+
+a. Create an exploratory plot of the data.
+
+b. Fit a GAM with gamma error distribution.
+
+c. Check the model assumptions using the `gam.check` function.
+
+d. Calculate the model predictions and add the GAM fit including its 95% confidence interval to the plot.
+
+**Hint:** Use `par(mfrow = c(2, 2)` to split the plotting area in four panels before using the `gam.check` function to check the model assumptions.
+
+```{r gam-exercise2, exercise=TRUE, exercise.eval=TRUE, fig.align='center', fig.width=4.5, fig.height=4.5, message=FALSE}
+## Load the data
+data(airquality)
+
+## View the first few observations
+head(airquality)
+```
+```{r gam-exercise2-solution, exercise.reveal_solution = TRUE, message=FALSE}
+## a. Exploratory plot 
+plot(Ozone ~ Solar.R, data = airquality)
+
+## b. GAM with gamma error distribution
+m1 <- gam(Ozone ~ s(Solar.R), data = airquality, family = Gamma()) # Gamma() boils down to Gamma(link = "inverse")
+summary(m1)
+
+## c. Check model assumptions
+op <- par(mfrow = c(2, 2))
+gam.check(m1)
+par(op) # reset the graphics defaults
+
+## d. Model predictions
+newdat <- with(airquality, data.frame(Solar.R = seq(min(Solar.R, na.rm = T), max(Solar.R, na.rm = T), length.out = 200)))
+preds <- predict(m1, newdata = newdat, se.fit = T)
+newdat$fit <- 1/preds$fit # 1/preds$fit is the back-transformation of the inverse link. We could have created a function like this: bt <- Gamma()$linkinv, but this may seems overkill for such a simple back-transformation
+newdat$upper <- 1/(preds$fit + 1.96 * preds$se.fit) # recall that the calculation of the confidence interval must be done on the link scale, prior to the back-transformation to the response scale
+newdat$lower <- 1/(preds$fit - 1.96 * preds$se.fit)
+
+plot(Ozone ~ Solar.R, data = airquality, las = 1, ylab = "Ozone (ppb)", xlab = " Solar radiation (Ly)") # Ly = langley, a unit of heat transmission
+with(newdat, polygon(x = c(Solar.R, rev(Solar.R)), y = c(upper, rev(lower)), col = "grey", border = "grey"))
+points(Ozone ~ Solar.R, data = airquality)
+lines(fit ~ Solar.R, data = newdat)
+```

@@ -1,0 +1,364 @@
+---
+title: "R-ticulate Exercises"
+author: "Martin Bader and Sebastian Leuzinger"
+output: learnr::tutorial
+runtime: shiny_prerendered
+description: >
+  Working with Continuous Data
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+## List of packages required for this tutorial
+# pkgs <- c("learnr", "kableExtra", "ggplot2", "ggcorrplot")
+# 
+# ## Check whether the specified package is available
+#   inst.pack <- rownames(installed.packages()) # list of installed packages
+#   if (length(setdiff(x = pkgs, y = inst.pack)) > 0) { # setdiff() returns the elements of x that don't occur in y
+#     install.packages(setdiff(pkgs, inst.pack), repos = "https://cloud.r-project.org", dependencies = T)  
+#   }
+  
+## Load required packages
+library(learnr)
+library(kableExtra)
+library(MASS)
+library(ggplot2)
+library(ggcorrplot)
+
+  
+corr <- round(cor(diamonds[, c(1, 5:7)]), digits = 1)
+ggcorrplot(corr, method = "circle", type = "upper")
+ggcorrplot(cor(swiss, method = "spearman"), method = "circle", type = "upper", lab = T)
+cor(swiss, method = "spearman")
+cor(swiss$Fertility, swiss$Infant.Mortality)
+
+## Provide datasets
+# Offspring size
+set.seed(20653)
+x <- (round(rnorm(n = 30, mean = 15, sd = 1), digits = 1))
+y <- (round(rnorm(n = 30, mean = 15, sd = 1), digits = 1))
+bugs <- data.frame(mother = x, offspring = y)
+plot(offspring ~ mother, data = bugs)
+cor.test(bugs$mother, bugs$offspring)
+
+## For multiple-choice questions
+## Significant but weak correlation
+# for (i in 1:100000) {
+#   set.seed(i)
+#   x <- rnorm(n = 150, sd = 10)
+#   y <- rnorm(n = 150, mean = 10, sd = 15)
+#   ct <- cor.test(x, y)
+# if(ct$p.value < 0.05 & abs(ct$estimate) < 0.2) print(i)
+# }
+# 
+#   set.seed(94874) # 97622, 97488, 91111
+#   x <- rnorm(n = 150, sd = 10)
+#   y <- rnorm(n = 150, mean = 10, sd = 15)
+# cor.test(x, y)
+
+## Strong but statistically insignificant correlation
+# for (i in 1:100000) {
+#   set.seed(i)
+#   x <- rnorm(n = 10, sd = 10)
+#   y <- rnorm(n = 10, mean = 10, sd = 10)
+#   ct <- cor.test(x, y)
+# if(abs(ct$estimate) > 0.6 && ct$p.value > 0.05) print(i)
+# }
+#  
+# set.seed(99503) # 99948
+#   x <- rnorm(n = 10, sd = 10)
+#   y <- rnorm(n = 10, mean = 10, sd = 10)
+# (ct <- cor.test(x, y))
+#   abs(ct$estimate)
+## Plant health scores for Spearman or Kendall correlation analysis
+set.seed(4862)
+scores <- sample(x = 1:5, size = 40, replace = T)
+health.scores <- data.frame(staff1 = scores[1:20], staff2 = scores[21:40])
+
+## Air quality indes (AQI)
+aqi <- data.frame(rainfall = c(50, 40, 60, 30, 70)-25, airquality.index = c(44, 42, 50, 33, 52))
+
+## Transformation data example
+set.seed(6448)
+x <- round(rnorm(n = 30, mean = 10), 2)
+y <- x + rnorm(30, 5)
+y <- round(y^15/10^17, digits = 2)
+trans <- data.frame(x = x, y = y)
+```
+<br>
+
+## Chapter 08 - Working with Continuous Data
+
+### Exercise 1 - Multiple-choice quiz
+
+Please note that there is only one correct (or most correct) answer to each question.
+
+<p style="margin-top:-30px;">
+</p>
+```{r quiz1, echo=FALSE}
+quiz(caption = "",
+    question("Which of the following phrases best describes correlation?", 
+         answer("A measure of causation between two variables."),
+         answer("A measure of the strength and direction of the relationship between two variables.", correct = T),
+         answer("A measure of the difference between two variables."),
+         answer("A measure of variability within a single variable."),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+     question("What is the range of values for Pearson's product-moment correlation coefficient?", 
+         answer("0 to 1."),
+         answer("$-\\infty$ to $\\infty$."),
+         answer("0  to $\\infty$."),
+         answer("&minus;1 to 1.", correct = T),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+    question("What does a correlation coefficient of 0 indicate?", 
+         answer("A strong positive relationship between variables."),
+         answer("A strong negative relationship between variables."),
+         answer("A relationship that shifts from negative to positive."),
+         answer("No relationship between variables.", correct = T),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+    question("Which correlation coefficient represents the strongest relationship?",
+        answer("&minus;0.20"),
+        answer("0.67"),
+        answer("&minus;0.83", correct = T),
+        answer("0.31"),
+        answer("None of the above."),
+        allow_retry = T
+      ),
+    question("The Pearson's product-moment correlation coefficient &lpar; $r$ &rpar; is the",
+        answer("square of the coefficient of determination."),
+        answer("square root of the coefficient of determination.", correct = T),
+        answer("same as the $r$-squared."),
+        answer("inverse of the coefficient of variation."),
+        answer("None of the above."),
+        allow_retry = T
+      ),
+    question("Which of the plot types below is suitable for visualising the relationship between two continuous variables?",
+        answer("Bar plot."),
+        answer("Boxplot."),
+        answer("Scatter plot.", correct = T),
+        answer("Histogram."),
+        answer("Pie chart."),
+        allow_retry = T
+      ),
+    question("Which correlation coefficient is most appropriate for assessing the relationship between two continuous variables with a linear association, assuming the data meet the assumption of normality?",
+        answer("Point-biserial correlation coefficient."),
+        answer("Kendall's $\\tau$ correlation coefficient."),
+        answer("Pearson's product-moment correlation coefficient.", correct = T),
+        answer("Spearman's rank correlation coefficient (Spearman's $\\rho$)"),
+        answer("None of the above."),
+        allow_retry = T
+      ),
+question("Which correlation coefficient is best suited to compare two sets of Likert scale questions (ranging from 1 to 5, corresponding to: strongly disagree, disagree, neutral, agree, strongly agree)?",
+        answer("Pearson's product-moment correlation coefficient."),
+        answer("Spearman's rank correlation coefficient (Spearman's $\\rho$)"),
+        answer("Kendall's $\\tau$ correlation coefficient."),
+        answer("Both Spearman's $\\rho$ and Kendall's $\\tau$.", correct = T),
+        answer("Both Pearson's product-moment correlation coefficient and Spearman's $\\rho$."),
+        allow_retry = T
+        ),
+ question("What does a _P_-value smaller than 0.05 mean in the context of a correlation test?",
+    answer("The correlation coefficient is equal to 1."),
+    answer("The correlation coefficient is equal to 0."),
+    answer("The correlation is statistically significant.", correct = T),
+    answer("There is no relationship between the variables."),
+    answer("None of the above."),
+    allow_retry = T
+  ),
+question(c("A correlation test based on Pearson's $r$ yields a correlation of 0.61 with a _P_-value of 0.059. What do you conclude?"),
+    answer("There seems to be a reasonably strong, positive association between the two tested variables and the _P_-value provides evidence in favour of the alternative hypothesis."),
+    answer("There seems to be a reasonably strong, positive association between the two tested variables but we cannot reject the null hypothesis of no significant correlation.", correct = T),
+    answer("The two tested variables correlate inversely and this relationship is statistically significant."),
+    answer("The two tested variables correlate inversely but this relationship is statistically not significant."),
+    answer("Something went wrong during the analysis. Such a high value of correlation must be associated with a _P_-value smaller than 0.05."),
+    allow_retry = T
+  ),
+question(c("Which of the following statements makes no sense?"),
+    answer("_P_ < 0.1."),
+    answer("_r_ = 0.05"),
+    answer("_P_ = &minus;0.05.", correct = T),
+    answer("_r_ = &minus;0.95."),
+    answer("None of the above."),
+    allow_retry = T
+  ),
+question(c("A correlation test based on Pearson's $r$ yields a correlation of &minus;0.18 with a _P_-value of 0.029. What do you conclude?"),
+    answer("There is a strong, negative association between the two tested variables and the _P_-value indicates that this correlation is statistically significant."),
+    answer("There is a strong, positive association between the two tested variables and the _P_-value indicates that we should reject the null hypothesis."),
+    answer("There is weak negative association between the two tested variables, which is statistically significant but may be of little actual relevance.", correct = T),
+    answer("The two tested variables correlate inversely but this relationship is statistically not significant."),
+    answer("Something went wrong during the analysis. Such a small value of correlation must be associated with a _P_-value greater than 0.05."),
+    allow_retry = T
+  )
+)
+```
+
+The model code related to the exercises below relies on the following R packages (which are autoloaded behind the scenes in this tutorial):
+
+* _ggplot2_
+* _ggcorrplot_
+* _MASS_
+
+### Exercise 2
+A researcher is interested in the relationship between maternal body size of a certain bug species and that of their offspring and has made 30 observations. The data are available in the pre-loaded dataset `bugs`.
+
+a. Use a suitable plot to visualise the relationship between the body size of mother bugs and their offspring. 
+
+b. Perform an appropriate test to determine if there is a significant correlation between maternal and offspring body size.
+
+c. Report your findings in a scientifically appropriate way.
+
+```{r cor_exercise1, exercise=TRUE, fig.align='center', fig.width=5, fig.height=5}
+  
+```
+```{r cor_exercise1-solution, exercise.reveal_solution = TRUE}
+## a. Scatter plot of the data
+plot(offspring ~ mother, data = bugs)
+
+## b. Conduct a correlation analysis
+cor.test(bugs$mother, bugs$offspring)
+
+```
+<br>
+<details><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> to view a model answer for reporting the results from the correlation analysis as specified in 2 c.</summary>
+<p style="margin-top:10px">
+The body size of offspring strongly correlates with the maternal body size in this bug species (_r_ = 0.64, _t_ = 4.36, _df_ = 28, _P_ < 0.001).
+</p>
+</details>
+
+### Exercise 3
+To estimate the observer bias, a researcher compares the health scores (1 -- very poor health to 5 -- very good health) that two technical staff have independently assigned to the same 20 plant individuals. The data are available in the pre-loaded dataset `healthscores`.
+
+a. Visualise the two plant health assessments.
+
+b. Conduct a suitable correlation analysis.
+
+b. Report the result of the analysis in a scientifically appropriate way.
+
+```{r cor_exercise2, exercise=TRUE, fig.align='center', fig.width=5, fig.height=5}
+## View the first few observations
+head(health.scores)
+```
+```{r cor_exercise2-solution, exercise.reveal_solution = TRUE}
+## a. Scatter plot of the plant health scores recorded by two technical staff
+plot(staff1 ~ staff2, data = health.scores)
+
+## b. The health scores represent ordinal data. This means that either Spearman's or Kendall's correlation coefficient rather than Pearson's r should be used in the correlation analysis. 
+
+## Spearman rank correlation
+cor.test(health.scores$staff1, health.scores$staff2, method = "spearman", exact = F)
+
+## Kendall rank correlation
+cor.test(health.scores$staff1, health.scores$staff2, method = "kendall", exact = F)
+```
+
+
+<details><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> to view a model answer regarding the reporting of the results of the correlation analysis.</summary>
+
+<p style="margin-top:10px">
+**Results of the Spearman rank correlation:** <br>
+Given the ordinal nature of the plant health scores, we used non-parametric correlation analysis based on Spearman's rank correlation coefficient and found a strong positive association between the rankings of the two technical staff ($\rho$ = 0.71, S = 391.80, _P_ < 0.001).
+
+**Results of the Kendall rank correlation:** <br>
+In view of the ordinal nature of the plant health scores, we used non-parametric correlation analysis based on Kendall's rank correlation coefficient and found a moderately strong, positive association between the rankings of the two technical staff (_&#964;_ = 0.58, _z_ = 3.08, _P_ = 0.002).
+</p>
+</details>
+<p style="margin-top:20px">
+</p>
+
+### Exercise 4
+An environmental scientist is interested in the relationship between rainfall (mm) and air quality (given as an index). The data are available in the pre-loaded data frame `aqi`. Compute the Pearson product-moment correlation coefficient (_r_) by hand. 
+Pearson's _r_ is made up of the covariance of $x$ and $y$ divided by the product of their standard deviations: 
+$$r~=\frac{COV(x,y)}{s_{x}~s_{y}}$$
+where $s$ denotes the standard deviation and $COV$ means the covariance, which is calculated as follows:
+
+$$COV(x,y)~=\frac{\sum{(x_{i} - \bar{x}) ~ (y_{i} - \bar{y})}}{n - 1}$$
+where $x_{i}$ indicates the $i$th rainfall observation, $\bar{x}$ denotes the mean rainfall and $n$ is the number of paired observations (number of rows in the data frame).
+
+Start by computing the covariance, i.e. the nominator of Pearson's _r_: 
+
+1. Calculate the differences between each rainfall observation and the rainfall mean and do the same for the air quality index (recall that R is vector based, so arithmetic operations can be performed with entire columns).
+2. Multiply those differences for each rainfall-air quality pair.
+3. Sum those products
+4. Divide by _n_ -- 1 (_n_ is equal to the number of rows in the data frame)
+
+Now calculate the denominator of Pearson's _r_, given by the product of the standard deviations. <br>
+
+5. Multiply the standard deviation of rainfall with the standard deviation of the air quality index
+
+Final step: <br>
+Divide the covariance by the product of the standard deviations.
+
+<p style="margin-top:30px">
+</p>
+
+```{r cor_coef-exercise, exercise = T}
+```
+```{r cor_coef-exercise-solution, exercise.reveal_solution = T}
+covariance <- with(aqi, sum((rainfall - mean(rainfall)) * (airquality.index - mean(airquality.index)))/4 )
+product.sd <- sd(aqi$rainfall) * sd(aqi$airquality.index)
+covariance/product.sd
+```
+
+### Exercise 5
+As part of an exploratory data analysis, we may want to examine patterns of association among multiple variables in a dataset. Besides the powerful pairs plots (see Chapter 6), we can also supply an entire data frame to the `cor` function. This produces a so-called correlation matrix, i.e. a square matrix that contains correlation coefficients, which quantify the strength and direction of (linear) relationships between pairs of variables. Each row and column in the correlation matrix represents a variable, and the value at the intersection of row _i_ and column _j_ is the correlation coefficient between variable _i_ and variable _j_. Correlation matrices are symmetric because the correlation between variable _i_ and variable _j_ is the same as the correlation between variable _j_ and variable _i_. Consequently, one half of the correlation matrix is redundant and therefore often only one half is presented. The main diagonal is redundant as it gives the correlation of a variable with itself, which always equals 1.
+
+a. Apply the `cor` function to the built-in dataset `swiss` and examine the resulting correlation matrix. Read the help file associated with the `upper.tri` and `lower.tri` function to learn how to remove the upper or lower half of the correlation matrix in order to eliminate redundancy (your choice which half to omit). 
+
+b. Familiarise yourself with the `ggcorrplot` function (R package _ggcorrplot_) and create a visualisation of the correlation matrix without the main diagonal (omit self-correlations) and with the correlation coefficients displayed.  
+
+```{r cor_exercise3, exercise=TRUE, fig.align='center', fig.width=5, fig.height=5, message=FALSE}
+
+```
+
+```{r cor_exercise3-solution, exercise.reveal_solution = TRUE}
+## a. Generate a correlation matrix of the swiss dataset
+cormat <- cor(swiss)
+cormat
+
+## Remove the upper half of the correlation matrix
+cormat[upper.tri(cormat)] <- NA
+cormat
+
+## b. Plot the correlation matrix
+ggcorrplot(cormat, show.diag = F, lab = T) # lab = T adds the values of the correlation coefficients
+
+## A variant using circles
+ggcorrplot(cormat, show.diag = F, method = "circle", insig = "pch", pch.cex = 2)
+
+## Replace the default colour gradients
+ggcorrplot(cormat, show.diag = F, lab = T, method = "circle", lab_size = 3) +
+  scale_fill_continuous_divergingx(name = "Corr.") # see also help file for function scale_fill_gradient2
+```
+
+### Exercise 6
+
+Data transformations have been widely used to linearise relationships or to reduce variance heterogeneity (so-called variance stabilising transformations) and despite the availability of more sophisticated tools to deal with nonlinear patterns or variance heterogeneity, transformations are still occasionally needed and should thus be part of the natural scientist's data wrangling toolbox. Plot the pre-loaded `trans` dataset and apply the most suitable transformation function to the _y_-variable identified using the `boxcox` function (built-in package _MASS_), then replot the data with the transformed _y_-variable to check the efficacy of the transformation.
+
+```{r transformation_exercise, exercise=T, message=FALSE, fig.align='center', fig.height=5, fig.width=5}
+```
+
+```{r transformation_exercise-solution, exercise.reveal_solution=T, message=FALSE}
+## Plot the data
+head(trans)
+plot(y ~ x, data = trans)
+
+## Apply the boxcox approach to determine the optimal exponent (lambda) for a linearising transformation
+bx <- boxcox(y ~ x, data = trans)
+
+## Zoom in 
+boxcox(y ~ x, data = trans, lambda = seq(-0.5, 1, 0.1))
+
+## Extract lambda
+lambda <- bx$x[which.max(bx$y)]
+lambda
+
+## Add transformed y-variable
+trans$y.trans <- trans$y^lambda
+
+## Replot using the transformed y-variable
+plot(y.trans ~ x, data = trans)
+```

@@ -1,0 +1,398 @@
+---
+title: "R-ticulate Exercises"
+author: "Martin Bader and Sebastian Leuzinger"
+output: learnr::tutorial
+runtime: shiny_prerendered
+description: >
+  Linear Regression
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+## List of packages required for this tutorial
+# pkgs <- c("learnr", "kableExtra", "car", "dplyr", "relaimpo")
+# 
+# ## Check whether the specified package is available
+#   inst.pack <- rownames(installed.packages()) # list of installed packages
+#   if (length(setdiff(x = pkgs, y = inst.pack)) > 0) { # setdiff() returns the elements of x that don't occur in y
+#     install.packages(setdiff(pkgs, inst.pack), repos = "https://cloud.r-project.org", dependencies = T)  
+#   }
+  
+## Load required packages
+library(learnr)
+library(dplyr)
+library(car)
+library(relaimpo)
+library(kableExtra)
+```
+
+## Chapter 9 - Linear Regression
+
+### Exercise 1 - Multiple-choice quiz
+
+Please note that there is only one correct (or most correct) answer to each question.
+
+<p style="margin-top:-30px;">
+</p>
+```{r quiz1}
+quiz(caption = "",
+  question("In linear regression models",
+  answer("the response variable is continuous and the predictor(s) categorical."),
+  answer("both the response variable and the predictor(s) are continuous.", correct = T),
+  answer("the response variable is continuous and the predictor(s) are a mix of continuous and categorical variables."),
+  answer("the response variable is categorical and the predictor(s) continuous and/or categorical."),
+  answer("None of the above."),
+  allow_retry = T
+),
+
+  question("Consider a simple regression model $y = a + bx + \\epsilon$. In this equation the term $\\epsilon$ indicates",
+  answer("the standard error of the slope."),
+  answer("the combined standard error of the intercept and slope."),
+  answer("the residuals, which estimate the model error.", correct = T),
+  answer("the residual standard error."),
+  answer("None of the above."),
+  allow_retry = T
+),
+
+question("Imagine a scatter plot showing a linear regression line through the data points. The residuals associated with this linear regression fit are computed as", 
+         answer("the difference between the actual $y$-values and the mean of $y$."),
+         answer("the difference between the actual $y$-values and the predicted $y$-values", correct = T),
+         answer("the square root of the slope."),
+         answer("the difference between the predicted $y$-values and the average $x$-value."),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+
+question("Which of the following is not an assumption of linear regression?",
+  answer("Linearity between the predictor and response variable(s)."),
+  answer("Homoscedasticity, meaning constant variance of errors."),
+  answer("The response variable must follow a normal distribution.", correct = T),
+  answer("Independence of errors (residuals)."),
+  answer("None of the above."),
+  allow_retry = T),
+
+question("Which of the following statements about the model diagnostic plots for linear regression models is incorrect?",
+  answer("The quantile-quantile plot shows the quantiles of the model residuals plotted against the quantiles of a theoretical (a perfect) normal distribution."),
+  answer("When the points in the quantile-quantile plot fall on the 1:1 diagonal line, one can safely assume 	normally distributed errors."),
+  answer("A fan-shaped pattern in the residuals versus fitted values plot indicates variance homogeneity.", correct = T),
+  answer("Points beyond the Cook’s distance lines are considered influential observations."),
+  answer("None of the above."),
+  allow_retry = T
+),
+question("If the coefficient of determination (_R_^2^) in a linear regression model is exactly 1.0, then",
+  answer("the residual sum of squares must be 1.0."),
+  answer("the total sum of squares must be 1.0."),
+  answer("the residual sum of squares must be 0.", correct = T),
+  answer("the total sum of squares must be 0."),
+  answer("None of the above."),
+  allow_retry = T
+),
+question("If the coefficient of determination (_R_^2^) in a linear regression model is exactly 0.5, then",
+  answer("50% of the residuals lie below the regression line."),
+  answer("the total sum of squares must be 0.5 as well."),
+  answer("the residual sum of squares must be 0.5."),
+  answer("the explanatory variable explains 50% of the variation in the response variable.", correct = T),
+  answer("None of the above."),
+  allow_retry = T
+),
+  question("Which of the following statements describes the null hypothesis of the significance test on a regression coefficient, $\\beta$, in a simple linear regression model?",
+    answer("$\\beta$ > 0"),
+    answer("$\\beta$ ≤ 0"),
+    answer("$\\beta$ = 0", correct = T),
+    answer("$\\beta$ < $\\beta$ + 1"),
+    answer("None of the above."),
+    allow_retry = T
+  ),
+question("In a multiple regression model, multicollinearity occurs when",
+    answer("the predictors provide redundant information about the response variable."),
+    answer("the predictors are linearly correlated.", correct = T),
+    answer("the predictors have opposing relationships with the response variable."),
+    answer("the predictors are flawed due to inaccurate measurements."),
+    answer("None of the above."),
+    allow_retry = T
+  ),
+question("Which of the following statements about multiple linear regression is true?",
+    answer("Multiple linear regression must include both continuous and categorical predictor variables."),
+    answer("Multicollinearity is not a concern in multiple linear regression models."),
+    answer("The relationship between the predictor variables and the response variable can vary from linear to nonlinear."),
+    answer("The coefficient of determination (_R_^2^) indicates the strength of the relationship between the predictor variables and the response variable.", correct = T),
+    answer("None of the above."),
+    allow_retry = T
+  )
+)
+```
+<p style="margin-bottom:-20px">
+**A team of ecologists hypothesise a relationship between precipitation and the number of trees growing in a certain area. They collect a dataset of yearly rainfall ($x$, explanatory variable, measured in mm) and the area of ground in hectares covered by tree stems ($y$, the response variable) across 49 geographic locations. In the sample data, $x$ has a mean of 1184.7 and a standard deviation of 226.0, while $y$ has a mean of 49.7 and a standard deviation of 7.1 (all given values are rounded to one decimal place).**
+</p>
+```{r quiz3}
+quiz(caption = "",
+  question(text = "Given the provided information above, which is the correct regression equation?",
+  answer("Tree cover = –25371.8 + 21.5 Rainfall"),
+  answer("Tree cover = 24.70 + 0.0211 Rainfall", correct = T),
+  answer("Tree cover = 21.5 – 25371.8 Rainfall"),
+  answer("Tree cover = 25471.0 + 21.5 Rainfall"),
+  answer("None of the above."),
+  allow_retry = T
+),
+question_numeric(
+  "What is the predicted amount of tree cover for an area that receives 1230 mm of rainfall per year? (Round your answer to one decimal place.)",
+  answer(50.7, correct = T),
+  answer(50.6, correct = T),
+  allow_retry = T
+),
+question(text = "Recall that the linear regression model generates parameter estimates, which are then tested against the null hypothesis that they are not significantly different from zero. For the above dataset, which of the following statements is the alternative hypothesis regarding the slope estimate (in words)?",
+  answer("The population mean of tree cover is not zero."),
+  answer("The population mean of tree cover is zero. "),
+  answer("Tree cover depends on rainfall.", correct = T),
+  answer("Tree cover does not depend on rainfall."),
+  answer("The population mean of tree cover and the average rainfall are not equal."),
+  answer("None of the above."),
+  allow_retry = T
+)
+)
+```
+
+The model code related to the exercises below relies on the following R packages (which are autoloaded behind the scenes in this tutorial):
+
+* _car_
+* _dplyr_
+* _relaimpo_
+
+### Exercise 3 - Understanding a Simple Regression Equation
+
+**The following linear regression equation comes from an analysis of the shelf life of a certain food ($y$ in days) as a function of the duration of a heat shock treatment ($x$ in seconds):**
+
+$$
+y = 4 + 1.2x
+$$
+
+```{r quiz2}
+quiz(caption = "",
+  question_numeric(text = "What is the extra shelf life gained with each second of heat shock treatment?",
+  answer(1.2, correct = T),
+  allow_retry = T,
+  min = 0,
+  max = 2,
+  step = 0.01
+),
+question_numeric(
+  "What is the heat shock time (in seconds) required to achieve a shelf life of 28 days?",
+  answer(20, correct = T),
+  allow_retry = T,
+  min = 0,
+  max = 21,
+  step = 1
+),
+question_numeric(
+  "What is the expected shelf life (in days) if the food was not heat-treated at all?",
+  answer(4, correct = T),
+  allow_retry = T,
+  min = 0,
+  max = 5,
+  step = 1
+),
+question_numeric(
+  "What is the expected shelf life for a 40-second heat shock treatment?",
+  answer(52, correct = T),
+  allow_retry = T)
+)
+```
+
+### Exercise 4 - Building a Simple Linear Regression Model
+
+We will use the built-in dataset `trees` to build a simple linear regression model. These data consists of diameter (mislabeled as girth), height and volume of 31 black cherry (*Prunus serotina*) trees. Volume is most closely related to girth and those two variables will thus make up the response and the predictor variables, respectively.
+
+a. Create a scatter plot of the data with `Volume` on the _y_-axis and `Girth` on the _x_-axis.
+
+b. Enter the code to run a linear regression using `Volume` as response variable and `Girth` as predictor.
+
+c. Examine the model diagnostic plots to assess whether the assumptions of homoscedasticity and normality are violated or if strongly influential observations are present.
+
+d. Interpret the model summary given by the `summary` command. 
+
+```{r lm-exercise, exercise=TRUE, message=FALSE, fig.align='center', fig.width=6, fig.height=6}
+## Load dataset
+data(trees)
+
+## Take a glimpse at the first few observations
+head(trees)
+
+## Check the structure of the dataset
+str(trees)
+
+## Check the summary of the data
+summary(trees)
+```
+```{r lm-exercise-solution, exercise.reveal_solution=TRUE, message=FALSE, fig.align='center', fig.width=4.5, fig.height=4.5}
+## Always plot the data before you start modelling...
+plot(Volume ~ Girth, data = trees)
+
+## Run the simple linear model
+m1 <- lm(Volume ~ Girth, data = trees)
+
+## Check the model diagnostic plots
+par(mfrow = c(2, 2)) # split plotting window in four panels
+plot(m1) # obs. 31 seems to stick out a little
+
+## Check which observations show the greatest height, girth and volume
+summarise(.data = trees, h = which.max(Height), g = which.max(Girth), v = which.max(Volume))
+
+## For all three variables observation 31 has the largest values, i.e. this is simply the largest tree in the dataset, so we should not worry too much about it.
+
+## Call up the model summary
+summary(m1)
+```
+
+<p style="margin-top:40px">
+
+<details><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> for an interpretation of the model diagnostic plots and an example on how to report the model output.</summary>
+
+<p style="margin-top:10px">
+The quantile-quantile plot did not show strong deviations from normality but the plot of the residuals vs. fitted values showed some curvature indicating heteroscedasticity. One observation was flagged in the residuals vs. leverage plot with a Cook's distance just below 1. This observation was related to the largest tree in the dataset. Rerunning the linear regression model without this observation caused only minor changes in the intercept and slope, prompting us to retain this recording in the model.   
+The linear regression results showed a statistically significant slope for girth of ca. 5 cubic feet per inch (ft^3^ in^-1^) (_t_~1,29~ = 20.48, _P_ < 0.001).
+</p>
+</details>
+</p>
+
+### Exercise 5 - Multiple Linear Regression
+
+We stick with the `trees` dataset and develop the simple regression model from Exercise 9.1 into a multiple regression model by adding the `Height` variable as a second predictor.
+
+Usually, one would include the interaction between `Girth` and `Height` from the start but since we need to check for multicollinearity first, we should start with an additive model. Explanation: If your model contains two predictors $x$ and $z$, and their interaction $x\times z$, then it is highly likely that both $x$ and $z$ will be strongly correlated with their product. However, we do not need to worry about that because the _P_-value of the $x\times z$ interaction remains unaffected by the multicollinearity.
+
+a. Create an additive linear model with `Volume` as response variable as a function of the two predictors `Girth` and `Height` ('additive' means that the predictors are joined by a $+$ symbol). 
+b. Check for multicollinearity using the `vif` function (R package _car_).
+c. Generate and inspect the model diagnostic plots. Are the underlying model assumptions of homoscedasticity and normality violated?
+d. Build a multiple regression model including an interaction between `Girth` and `Height` and check the model diagnostic plots again. Are the underlying model assumptions of homoscedasticity and normality violated?
+e. What are the partial _R_^2^ values of the explanatory terms? Use function `calc.relaimpo` (R package _relaimpo_) for this question.
+
+```{r lm-exercise2, exercise=TRUE, exercise.eval=TRUE, fig.align='center', fig.width=6, fig.height=6, message=FALSE}
+
+```
+```{r lm-exercise2-solution, exercise.reveal_solution = TRUE, message=FALSE}
+## Additive model
+m2 <- lm(Volume ~ Girth + Height, data = trees)
+summary(m2)
+
+## Check multicollinearity using variance inflation factors
+vif(m2) # VIFs for both predictors < 5 suggesting no serious multicollinearity issues
+
+## Model diagnostic plot of model m2
+par(mfrow = c(2, 2))
+plot(m2) # variance heterogeneity
+
+## Multiple linear regression model with interaction
+m3 <- lm(Volume ~ Girth * Height, data = trees)
+summary(m3)
+
+## Model diagnostic plots of model m3
+par(mfrow = c(2, 2))
+plot(m3) # no gross violations of the homoscedasticity or normality assumptions
+
+## Partial R-square values
+calc.relimp(m3, rela = F) # Girth explains the bulk of the variation, followed by Height and a minor contribution from the interaction term
+```
+
+
+### Exercise 6 - Interpreting Model Diagnostic Plots
+
+**You perform a simple linear regression on the data you have collected for your postgraduate research project and obtain the following plot of the residuals vs. fitted values:**
+
+```{r, echo=FALSE, fig.align='center', fig.width=4.25, fig.height=4.5}
+# set.seed(6)
+# fitted1 <- 16:45
+# set.seed(126)
+# res.simul3 <- c(rnorm(5, -1.2, 1), rnorm(5, 1, 1.5), rnorm(5, 2.5, 1.25), rnorm(5, 2, 1), rnorm(5, 0, 1), rnorm(5, -0.5, 1))
+# plot(res.simul3 ~ fitted1, tcl = 0.3, ylim = c(-4.75, 4.75), xlim = c(14, 46), 
+#      pch = 21, bg = "black", col = "white", lwd = 0.8, cex = 1.4, ylab = "", xlab = "", las = 1, axes = F)
+
+set.seed(10)
+x <- seq(1, 100, by = 1)
+epsilon <- rnorm(length(x), mean = 0, sd = 0.1 * x) # Noise increases with x
+y <- 5 + 0.3 * x + epsilon
+
+mod <- lm(y ~ x)
+res <- resid(mod)
+# res <- rstandard(mod)
+fit <- fitted(mod)
+plot(res ~ fit, tcl = 0.3, ylim = c(-22.5, 22.5), xlim = c(0, 40), xaxs = "i", pch = 21, bg = "black", col = "white", lwd = 0.8, cex = 1.4, ylab = "", xlab = "", las = 1, axes = F)
+axis(2, tcl = 0.3, mgp = c(3, 0.4, 0), las = 1, cex.axis = 1.1)
+axis(1, tcl = 0.3, mgp = c(3, 0.4, 0), cex.axis = 1.1)
+box()
+abline(h = 0, lty = 2)
+mtext("Residuals", side = 2, line = 1.8, cex = 1.1)
+mtext("Fitted values", side = 1, line = 1.7, cex = 1.1)
+
+#m2 <- lm(Volume ~ Girth * Height, data = trees)
+#summary(m2)
+#car::vif(m2)
+#drop1(m2, test = "Chisq")
+```
+
+```{r quiz4}
+  question(text = "What are your conclusions in terms of the validity of your linear regression model? Justify your answer.", type = "learnr_text", incorrect = "Assessing the correctness of free text in this environment is problematic and ambiguous at best. Please compare your answer to the model answer below.", message = "**Model answer**:  
+           The residual plot shows a strong fan-shaped pattern, indicating that the variance of the residuals increases with the fitted values, which clearly violates the variance homogeneity assumption. Heteroscedasticity commonly results in biased standard errors of the coefficients (here the intercept and slope) making hypothesis tests about their statistical significance unreliable.",
+answer("The residual plot shows a strong fan-shaped pattern, indicating that the variance of the residuals increases with the fitted values, which clearly violates the variance homogeneity assumption. Heteroscedasticity commonly results in biased standard errors of the coefficients (here the intercept and slope) making hypothesis tests about their statistical significance unreliable.", correct = T)
+)
+```
+
+```{r table2}
+
+```
+
+<!-- 
+|             |`Estimate`|`Std. Error`|`t value`|`Pr(>|t|)`|   |
+|:-------------|--------:|----------:|-------:|--------:|:--|
+|  `Intercept`  |`77.574`|`3.096`|  `???` |`< 2.2e-16`|`***`|
+|  `x`          | `???`  |`1.131`|`-6.689`| `9.75e-09`|`***`|  
+-->
+
+### Exercise 7 - Understanding Regression Model Output
+
+**Inspect the simple linear regression model output below and calculate the missing values for the _t_-value of the intercept and the estimate of the slope for $x$.** 
+
+```{r, table, echo=FALSE, message=FALSE}
+library(kableExtra)
+my_tbl <- tibble::tribble(
+          ~` `, ~Estimate, ~`Std.Error`, ~`t value`, ~`P(>\\|t\\|)`, ~` `,
+  "Intercept",  "77.574",       "3.096",    "???", "$<$ 2e-16", "***",
+          "x",     "???",       "1.131", "-6.689", "9.75e-09", "***"
+  )
+#my_tbl
+#kbl(my_tbl, align = "lrrrrl", escape = F) %>% 
+ # kable_material(html_font = "Courier New", full_width = F)
+kbl(my_tbl, align = "lrrrrl", escape = FALSE, booktabs = T) %>% 
+  kable_styling(html_font = "Courier New", bootstrap_options = "basic", full_width = F)
+#require(rhandsontable)
+#rhandsontable(my_tbl, colHeaders = c("", "Estimate", "Std.Error", "t value", "Pr(>|t|)"), rowHeaders = NULL,
+              # digits = 3, useTypes = FALSE, search = FALSE,
+              # width = NULL, height = NULL)
+```
+
+```{r quiz5}
+  quiz(caption = "", 
+       question_numeric(text = "The _t_-value of the intercept estimate is",
+                        answer(25.0562, correct = T),
+                        answer(25.056, correct = T),
+                        answer(25.05, correct = T),
+                        answer(25.06, correct = T),
+                        answer(25.1, correct = T),
+                        allow_retry = T,
+                        min = 0,
+                        max = 30,
+                        step = 0.01
+),
+question_numeric(text = "The estimate of the slope of $x$ is",
+                 answer(-7.565, correct = T),
+                 answer(-7.5, correct = T),
+                 answer(-7.6, correct = T),
+                 answer(-7.56, correct = T),
+                 answer(-7.57, correct = T),
+                 answer(-7.565259, correct = T),
+                 allow_retry = T,
+                 min = -10,
+                 max = 10,
+                 step = 0.01
+)
+)
+```

@@ -1,0 +1,495 @@
+---
+title: "R-ticulate Exercises"
+author: "Martin Bader and Sebastian Leuzinger"
+output: learnr::tutorial
+runtime: shiny_prerendered
+description: >
+  Hypotheses, Variables, Data
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+## List of packages required for this tutorial
+# pkgs <- c("learnr", "dplyr", "tidyr")
+# 
+# ## Check whether the specified package is available
+#   inst.pack <- rownames(installed.packages()) # list of installed packages
+#   if (length(setdiff(x = pkgs, y = inst.pack)) > 0) { # setdiff() returns the elements of x that don't occur in y
+#     install.packages(setdiff(pkgs, inst.pack), repos = "https://cloud.r-project.org", dependencies = T)  
+#   }
+  
+## Load required packages
+library(learnr)
+library(dplyr)
+library(tidyr)
+
+x <- c(5, 8, 13, 4, 21, 30, 2, 11)
+
+size <- c(180, 156, 177, 169, 162)
+success <- c(0, 1, 1, 1, 0)
+colour <- c("red", "purple", "green", "blue", "grey")
+rank <- c(3, 2, 5, 4, 2)
+
+d1 <- data.frame(size, success, colour, rank)
+
+timestamp <- c("Mon 22.Jan 2024 17:00", "Mon 22.Jan 2024 23:00", "Tue 23.Jan 2024 06:00")
+
+mouse <- data.frame(mouse = rep(1:6, times = 3), week1 = round(rnorm(6, 13, sd = 2), 1),
+                    week2 = round(rnorm(6, 14, sd = 2), 1),
+                    week3 = round(rnorm(6, 16, sd = 2), 1))
+```
+<br>
+
+## Chapter 1 - Hypotheses, Variables, Data
+
+### Exercise 1 - Multiple-choice quiz
+
+Please note that there is only one correct (or most correct) answer to each question.
+
+<p style="margin-top:-30px;">
+</p>
+
+```{r quiz1, echo=FALSE}
+quiz(caption = "",
+    question("A scientific hypothesis is a", 
+         answer("proven fact about the natural world."),
+         answer("belief system that cannot be tested or verified."),
+         answer("well-founded, testable assumption.", correct = T),
+         answer("conclusion drawn from anecdotal evidence."),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+    question("What is the quickest and most convenient way to set the working directory for an RStudio session?",
+    answer("File &#10132; New File &#10132; R Script."),
+    answer("Tools &#10132; Global Options... &#10132; Code"),
+    answer("Code &#10132; Source File"),
+    answer("Session &#10132; Set Work Directory &#10132; Choose Directory", correct = T),
+    answer("None of the above."),
+    allow_retry = T
+  ),
+  question("What is the correct keyboard shortcut for inserting the assignment operator `<-`?",
+    answer("Ctrl + a (Windows) or Cmd + a (Mac)."),
+    answer("Ctrl + Shift + M (Windows) or Cmd + Shift + M (Mac)"),
+    answer("Alt + minus (Windows) or Option + minus (Mac).", correct = T),
+    answer("Alt + Shift + ^ (Windows) or Option + Shift + ^ (Mac)"),
+    answer("None of the above."),
+    allow_retry = T
+  ),
+  question("Work out time per day is a(n)",
+  answer("nominal variable."),
+  answer("continuous variable", correct = T),
+  answer("ordinal variable."),
+  answer("binomial variable."),
+  answer("None of the above."),
+  allow_retry = T
+),
+  question("The stage of a disease (1, 2, 3, 4) is a(n)",
+  answer("continuous variable."),
+  answer("discrete numeric variable."),
+  answer("ordinal variable", correct = T),
+  answer("nominal variable."),
+  answer("None of the above."),
+  allow_retry = T
+),
+question("The number of mistakes in these online exercises is a(n)",
+  answer("binomial variable."),
+  answer("ordinal variable"),
+  answer("continuouse variable."),
+  answer("discrete numeric variable.", correct = T),
+  answer("None of the above."),
+  allow_retry = T
+),
+question("Which of the following is an example of a discrete numerical variable?",
+  answer("Tree height in meters."),
+  answer("Plant health status from 0 (dead) to 5 (healthy)."),
+  answer("Photosynthetic carbon uptake (&mu;mol m<sup>-2</sup> s<sup>-1</sup>)."),
+  answer("Blood group."),
+  answer("Number of lion cubs in a litter.", correct = T),
+  allow_retry = T
+),
+question("Which of the following is an example of an ordinal variable?",
+  answer("An animal's weight in kilograms."),
+  answer("Number of elephants in a herd."),
+  answer("Serum hormone concentration (ng L<sup>-1</sup>)."),
+  answer("Plant health status from 0 (dead) to 5 (healthy).", correct = T),
+  answer("Blood group."),
+  allow_retry = T
+),
+ question("You need to get help on the `summary` function in R. Which of the following statements does that correctly?",
+         answer("help summary"),
+         answer("summary(help)"),
+         answer("search.help(summary)"),
+         answer("?summary", correct = T),
+         answer("summary?"),
+         allow_retry = T
+         ),
+question("Why should you refrain from giving a data frame the name `df`?",
+    answer("Because the name `df` is too short."),
+    answer("Because the name `df` does not contain any punctuation marks."),
+    answer("Because an object name should be in upper-case letters."),
+    answer("Because an object name should be a mix of lower- and upper-case letters."),
+    answer("Because the name `df` is already in use for the built-in density function of the _F_-distribution.", correct = T),
+    allow_retry = T
+  ),
+question("Sometimes we wish to convert a categorical variable (factor), whose levels have a true quantitative meaning into a numeric variable. Imagine the following categorical variable storing three different concentration levels `conc.levels <- factor(x = c(\"0\", \"50\", \"100\"))`. Which of the followings commands returns the actual numerical concentration values?",
+        answer("`as.numeric(conc.levels)`"),
+        answer("`as.numeric(as.character(conc.levels))`", correct = T),
+        answer("`as.character(as.numeric(conc.levels))`"),
+        answer("`as.vector(conc.levels, mode = \"numeric\")`"),
+        answer("None of the above."),
+        allow_retry = T
+        ),
+ question("For the dataset shown below this box (named 'dat'), which of the following R code snippets produces a subset that only contains the variables 'Ozone' and 'Wind'?", 
+    answer("`dat$Wind[\"Ozone\"]`"),
+    answer("`dat$Ozone[\"Wind\"]`"),
+    answer("`dat[c(\"Ozone\", \"Wind\"), ]`"),
+    answer("`dat[ , c(\"Ozone\", \"Wind\")]`", correct = T),
+    answer("None of the above."),
+    allow_retry = T
+  ),
+head(airquality)
+)
+```
+
+<br>
+
+After downloading and installing R and RStudio (follow the simple instructions on Rstudio.com), try to do the following exercises.
+
+The model code related to the exercises below relies on the following R packages (which are autoloaded behind the scenes in this tutorial but when using similar coding on your own machine you need install and load them):
+
+* _dplyr_
+* _tidyr_
+
+### Exercise 2 - Using R as a calculator
+
+Use the basic mathematical operators in R (+, -, *, /) on some numbers of your choice. Perform these operations in the console. Then set up an editor file (File > New File > R Script) and carry out the same operations. You will see that R only executes your commands when you send them to the console (pressing Ctrl + Enter on PC or Cmd + Enter on Mac in the editor will send the line of code where the cursor is currently located down to the console but you can also highlight multiple lines of code and send those simultaneously to the console with the same keyboard shortcuts). Save your R script under a name of your choice in a clearly labelled folder.
+
+```{r calculator, exercise=T, comment = NA}
+## For example:
+523 + 234
+
+1023-177 # spaces don't matter, but make things more readable
+
+5*6
+
+108/9
+
+119 %/% 13 # integer division
+
+119 %% 13 # modulo, i.e. the remainder of an integer division
+
+## Using some built-in functions
+sqrt(16)
+
+log(10) # natural logarithm
+
+log(10, base = 10) # common decadal logarithm
+
+exp(1) # Euler's number
+
+0/0 # Not defined, returns NaN (not a number)
+
+## Now it's your turn...
+
+```
+
+### Exercise 3 - Creating and manipulating vectors
+
+To get started we provide a few more examples
+a. Create a variable called `x` and assign the following numeric values: 5, 8, 13, 4, 21, 30, 2, 11.
+
+```{r vector_exercise1, exercise=T, comment=NA}
+```
+
+```{r vector_exercise1-solution, exercise.reveal_solution=T, comment=NA}
+x <- c(5, 8, 13, 4, 21, 30, 2, 11)
+x
+```
+
+b. Count the number of elements in `x`.
+
+```{r vector_exercise2, exercise=T, comment=NA}
+```
+
+```{r vector_exercise2-solution, exercise.reveal_solution=T, comment=NA}
+length(x)
+```
+
+c. Extract the fifth element of `x`.
+
+```{r vector_exercise3, exercise=T, comment=NA}
+```
+
+```{r vector_exercise3-solution, exercise.reveal_solution=T, comment=NA}
+x[5]
+```
+
+d. Extract the first two and the last two elements of `x`. 
+
+```{r vector_exercise4, exercise=T, comment=NA}
+```
+
+```{r vector_exercise4-solution, exercise.reveal_solution=T, comment=NA}
+x[c(1, 2, 7, 8)]
+
+## With longer vectors, we can simply use 'length' whose count conveniently marks the position of the last element at the same time.
+x[c(1, 2, length(x) - c(1, 0))] # length(x) - c(1, 0) gives the position of the second to last and last element
+```
+
+<p style="font-size:90%;line-height:1.2;margin-bottom:30px;">**Remark:** The `dplyr` package, the go-to resource in the `tidyverse` package collection for data wrangling, is strongly geared towards data frames and has limited capabilities to deal with vectors. Perhaps the most relevant functions related to exercise 3 d are `first`, `last` and `nth`, extracting the first, last or a specified element of a vector.</p>
+
+e. Extract all elements of `x` that are greater than 20.
+
+```{r vector_exercise5, exercise=T, comment=NA}
+```
+
+```{r vector_exercise5-solution, exercise.reveal_solution=T, comment=NA}
+x[x > 20]
+```
+
+f. Reverse the previous selection using the logical NOT operator '!'.
+
+```{r vector_exercise6, exercise=T, comment=NA}
+```
+
+```{r vector_exercise6-solution, exercise.reveal_solution=T, comment=NA}
+x[!x > 20]
+```
+
+g. Create a subset of `x` containing values smaller than 5 or greater than or equal to 13.
+
+```{r vector_exercise7, exercise=T, comment=NA}
+```
+
+```{r vector_exercise7-solution, exercise.reveal_solution=T, comment=NA}
+x[x < 5 | x >= 13]
+```
+
+h. Remove element 6 from `x`.
+
+```{r vector_exercise8, exercise=T, comment=NA}
+```
+
+```{r vector_exercise8-solution, exercise.reveal_solution=T, comment=NA}
+x[-6] # Note that this command will only print vector x without the sixth element into the console. You will have to create a new variable (or overwrite the original 'x' vector) to make this removal stick, e.g. x2 <- x[-6]
+```
+
+i. Remove element 6 and 8 from `x`.
+
+```{r vector_exercise9, exercise=T, comment=NA}
+```
+
+```{r vector_exercise9-solution, exercise.reveal_solution=T, comment=NA}
+x[-c(6, 8)]
+```
+
+### Exercise 4 - Creating variables and data frames
+
+a. In your newly created R script, define four random variables of your choice, each containing five values, and give them an appropriate name. One should be continuous, one binomial, one nominal, and one ordinal.
+
+```{r variable_creation_exercise, exercise=T, comment=NA}
+```
+
+```{r variable_creation_exercise-solution, exercise.reveal_solution = TRUE}
+size <- c(180, 156, 177, 169, 162)
+success <- c(0, 1, 1, 1, 0)
+colour <- c("red", "purple", "green", "blue", "grey")
+rank <- c(3, 2, 5, 4, 2)
+```
+
+b. Combine the newly created variables into a 'data frame' using the appropriate function in R. Assign the data frame a name of your choice.
+
+```{r variable_creation2_exercise, exercise=T, comment=NA}
+```
+
+```{r variable_creation2_exercise-solution, exercise.reveal_solution = TRUE}
+d1 <- data.frame(size, success, rank, colour)
+```
+
+c. Using the previously created data frame, calculate the square roots of the values of the continuous variable
+
+```{r variable_creation3_exercise, exercise=T, comment=NA}
+```
+
+```{r variable_creation3_exercise-solution, exercise.reveal_solution=T, comment=NA}
+sqrt(d1$size)
+```
+
+d. Again using the same data frame, describe two scenarios, one in which your continuous variable could be a predictor, and one where it could be a response variable. 
+
+<p style="margin-top:20px">
+<details><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> to view the answer.</summary>
+<p style="margin-top:10px">
+The size of the subjects could predict their rank, in which case 'size' is a predictor, and 'rank' a response variable. Alternatively, the colour of the subjects could predict their size, in which case 'size' would become a response variable and 'colour' a predictor variable.
+</p>
+</details>
+</p>
+
+e. To the above data frame, add another (random) binomial variable, and remove the continuous variable. Do this in a way that preserves the original data frame and assign the new one to a new name.
+
+```{r variable_creation4_exercise, exercise=T, comment=NA}
+```
+
+```{r variable_creation4_exercise-solution, exercise.reveal_solution=T, comment=NA}
+## Adding a variable using 'cbind' and removing another by selection
+survival <- c(0, 0, 1, 1, 1)
+d2 <- cbind(d1, survival) 
+d2 <- d2[, c('success', 'colour', 'rank', 'survival')] 
+
+## Alternatively, you can create the new variable on the fly using the $ operator and remove a variable using the NULL object
+d2 <- d1
+d2$survival <- c(0, 0, 1, 1, 1) # add variable on the fly
+d2$size <- NULL # remove variable
+
+## Yet another way to add and remove columns is with dplyr functions
+d2 <- d1
+d2 <- mutate(.data = d2, survival = c(0, 0, 1, 1, 1))
+d2 <- dplyr::select(.data = d2, -size) # there are multiple select functions in various packages, so we need to explicitly refer to the one in the dplyr package using the '::' operator
+```
+
+### Exercise 5 - Data wrangling
+
+Use base R functions and/or functions in the popular _dplyr_ package for this exercise.
+
+<p style="margin-top:20px">
+</p>
+
+a. For the built-in dataset `infert`, calculate the mean ages for the two levels of the binomial variable 'case'. 
+
+<p style="margin-top:20px">
+</p>
+
+**Hint:** The functions in the _dplyr_ package (and in the other packages of the _tidyverse_ package collection) are often chained together using the so-called pipe operator `%>%`, which can be produced using the keyboard shortcut **Cmd + Shift + M** on Mac or **Ctrl + Shift + M** on Windows.
+
+```{r wrangling1_exercise, exercise=T, comment=NA}
+```
+
+```{r wrangling1_exercise-solution, exercise.reveal_solution=T, comment=NA}
+## Using base R
+aggregate(age ~ case, FUN = mean, data = infert)
+
+## Using the dplyr package (contained in the tidyverse package collection)
+infert %>% group_by(case) %>% summarise(avg_age = mean(age))
+```
+
+b. Create a subset of the data frame only containing observations where age is greater than 32.
+
+```{r wrangling2_exercise, exercise=T, comment=NA}
+```
+
+```{r wrangling2_exercise-solution, exercise.reveal_solution=T, comment=NA}
+## Base R
+infert[infert$age > 32, ]
+
+## Using the dplyr approach
+infert %>% filter(age > 32)
+```
+
+c. Create a subset of the data frame only containing observations where 'education' is 6-11 years and 'age' is greater than or equal to 25.
+
+```{r wrangling3_exercise, exercise=T, comment=NA}
+```
+
+```{r wrangling3_exercise-solution, exercise.reveal_solution=T, comment=NA}
+## Using base R
+infert[infert$education == "6-11yrs" & infert$age >= 25, ]
+
+## Using the dplyr approach
+infert %>% filter(education == "6-11yrs" & age >= 25)
+```
+
+d. Create a subset of the data frame only containing observations where 'education' is 0-5 years or 6-11 years.
+
+```{r wrangling4_exercise, exercise=T, comment=NA}
+```
+
+```{r wrangling4_exercise-solution, exercise.reveal_solution=T, comment=NA}
+## Using base R
+infert[infert$education %in% c("0-5yrs", "6-11yrs"), ]
+
+## Using the dplyr approach
+infert %>% filter(education %in% c("0-5yrs", "6-11yrs"))
+```
+
+
+### Exercise 6 - Formatting dates
+
+a. When you read in data into R, date-time formatting is lost and time-related information are read as character strings. Bring the following variable called 'timestamp' into the R time format, i.e. transform it from class 'character' to class 'POSIXlt' (POSIX stands for _Portable Operating System Interface [for Unix]_). Then use the `unclass` function to strip the newly created POSIXlt object from its class properties to see how the temporal information is stored under the hood.
+
+`timestamp <- c("Mon 22.Jan 2024 17:00", "Mon 22.Jan 2024 23:00", "Tue 23.Jan 2024 06:00")`
+
+Please note that this variable is pre-loaded and can thus be called up straight away in the R code field.
+
+```{r date_exercise1, exercise=T, comment=NA}
+```
+
+```{r date_exercise1-solution, exercise.reveal_solution=T, comment=NA}
+timestamp.r <- strptime(timestamp, format = "%a %d.%b %Y %H:%M")
+timestamp.r
+unclass(timestamp.r)
+```
+
+Note that the result will depend on your time zone/operating system (which you can set using the 'tz' argument in the `strptime` and other date-time functions). The `unclass` action shows that a POSIXlt object is a list of vectors representing seconds, minutes, days, months and years. For plotting and other operations class POSIXct, which simply stores date-time information as the number of seconds elapsed since the beginning of 1970 (convention), is often easier to work with.
+
+b. Use the function `as.POSIXct` to convert the character vector `date` into a date-time object and then use the `unclass` function to view the seconds since the start of 1970.
+
+```{r date_exercise2, exercise=T, comment=NA}
+```
+
+```{r date_exercise2-solution, exercise.reveal_solution=T, comment=NA}
+timestamp.r2 <- as.POSIXct(timestamp, format = "%a %d.%b %Y %H:%M")
+timestamp.r2
+unclass(timestamp.r2)
+```
+
+### Exercise 7 - Character vectors
+
+Using built-in objects 'LETTERS' and 'letters', create a variable with all letters of the alphabet, each value containing the capital and the lower case letter, with no space in between. Repeat this exercise including the additional argument `collapse = ""` (empty quotes without space) and check what happens. In both cases, apply the `nchar` function to your result and find out what it does.
+
+```{r chr_exercise2, exercise=T, comment=NA}
+```
+
+```{r chr_exercise2-solution, exercise.reveal_solution=T, comment = NA}
+alphabet <- paste0(LETTERS, letters)
+alphabet
+nchar(alphabet) # counts the number of characters in each string (26 strings of two letters each)
+
+alphabet <- paste0(LETTERS, letters, collapse = "")
+alphabet
+nchar(alphabet) # single string with 52 characters
+```
+
+
+### Exercise 8 - Pivoting datasets <font size="3">(transforming data from wide to long format, or vice versa)</font>
+
+Turn the pre-loaded dataset `mouse` from wide into into 'long format'. This process is called _pivoting data_ or _reshaping data_. Of course, this procedure can be done manually, but this is the least efficient and most error-prone way. The base installation of R comes with the `reshape` function, designed to perform these operations. The `tidyr` package contains the very powerful `pivot_longer` and `pivot_wider` functions, which have become perhaps the most popular tools for pivoting datasets.
+
+```{r pivoting_exercise, exercise=T, comment = NA}
+```
+
+```{r pivoting_exercise-solution, exercise.reveal_solution=T, comment = NA}
+## Getting you started by taking a glimpse at the data
+head(mouse)
+
+## The least efficient way of pivoting is done by hand
+data.frame(mouse = rep(mouse$mouse, times = 3),
+           week = rep(1:3, each = 18),
+           x = c(mouse$week1, mouse$week2, mouse$week3))
+
+## Using the 'reshape' function in base R
+mouse_long <- reshape(data = mouse, varying = list(2:4), v.names = "response", idvar = "week", direction = "long")
+
+## Back to wide format
+mouse_wide <- reshape(data = mouse_long, v.names = "response", direction = "wide")
+
+
+## Using the functions pivot_longer and pivot_wider in package tidyr (part of the tidyverse package collection)
+mouse_long <- pivot_longer(data = mouse, cols = 2:4, values_to = "response", names_to = "week")
+
+## Pivoting from long to wide format can at times be tricky because of duplicates that may be difficult to assign clearly.
+## This issue is overcome by adding a unique identifier, i.e. a variable holding the row numbers (which are unique). Using the pipe operator (%>%), we can create this unique identifier on the fly and remove it again after the pivoting step. 
+mouse_wide <- mouse_long %>% 
+              group_by(week) %>% 
+              mutate(row = row_number()) %>% 
+              pivot_wider(values_from = response, names_from = week) %>% dplyr::select(-row)
+```

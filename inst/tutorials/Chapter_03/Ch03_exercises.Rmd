@@ -1,0 +1,455 @@
+---
+title: "R-ticulate Exercises"
+author: "Martin Bader and Sebastian Leuzinger"
+output: learnr::tutorial
+runtime: shiny_prerendered
+description: >
+  Distributions and Probabilities
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Chapter 3 - Distributions and Probabilities
+
+### Exercise 1 - Multiple-choice quiz
+
+Please note that there is only one correct (or most correct) answer to each question.
+
+<p style="margin-top:-30px;">
+</p>
+
+```{r anova_quiz, echo=FALSE}
+quiz(caption = "",
+     question("Which of the following distributions is known as the 'bell curve'?",
+         answer("Exponential distribution."),
+         answer("Gamma distribution."),
+         answer("Chi-squared distribution"),
+         answer("Normal (Gauss) distribution.", correct = T),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+     
+       question("Which of the following is true for a probability density function (PDF) of a continuous random variable?",
+        answer("The PDF can take negative values."),
+        answer("The area under the PDF curve is equal to 1.", correct = T),
+        answer("The PDF always integrates to infinity."),
+        answer("The PDF must be uniform."),
+        answer("None of the above."),
+  allow_retry = T
+),
+
+question("If a random variable follows a normal distribution with a mean of 0 and a standard deviation of 1, it is called a",
+        answer("standard normal distribution.", correct = T),
+        answer("uniform distribution."),
+        answer("gamma distribution."),
+        answer("_t_-distribution."),
+        answer("None of the above."),
+  allow_retry = T
+),
+     
+question("Which of the following distributions is discrete (i.e. not continuous)?",
+         answer("Normal distribution."),
+         answer("Beta distribution."),
+         answer("Poisson distribution.", correct = T),
+         answer("Gamma distribution."),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+     
+      question("In a uniform distribution, all outcomes",
+         answer("are normally distributed."),
+         answer("have the same probability.", correct = T),
+         answer("are exponentially distributed."),
+         answer("follow a Poisson process."),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+     
+         question("The Central Limit Theorem states that the distribution of the sample mean (regardless of the original distribution) will approach a normal distribution as the sample size becomes", 
+         answer("smaller."),
+         answer("larger.", correct = T),
+         answer("exactly 30."),
+         answer("approaches zero."),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+     
+     question("Why does the Poisson distribution not have a dispersion parameter?",
+         answer("Because it only models the frequency of occurrences in fixed intervals."),
+         answer("Because it is only defined for discrete outcomes."),
+         answer("Because it is symmetric around the mean."),
+         answer("Because it assumes that the variance is equal to the mean.", correct = T),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+     
+         question("Which of the following is a characteristic of the gamma distribution?",
+         answer("It is defined by its mean and standard deviation."),
+         answer("Its variance is always greater than its mean."),
+         answer("It can only take on discrete values."),
+         answer("It is always skewed to the right.", correct = T),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+     
+      question("In which distribution are the outcomes of a sequence of identical experiments either 'success' or 'failure'?",
+         answer("Exponential distribution."),
+         answer("Binomial distribution.", correct = T),
+         answer("Negative binomial distribution."),
+         answer("Poisson distribution."),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+     
+      question("You have collected data on the number of reptiles in 20 &times; 20 m rainforest plots. What type of distribution would this data follow?",
+         answer("Normal distribution"),
+         answer("Chi-squared distribution"),
+         answer("Poisson distribution.", correct = T),
+         answer("Uniform distribution."),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+
+question("To numerically describe the age structure of a population, which set of metrics would you use?",
+        answer("The mean and the range."),
+        answer("Only the minimum and the maximum."),
+        answer("The median along with the first and third quartile.", correct = T),
+        answer("The mean and the standard deviation."),
+        answer("None of the above."),
+  allow_retry = T
+),
+
+question("What is a common characteristic of a beta distribution?",
+        answer("It is defined only for positive integers."),
+        answer("It is used to model continuous random variables bounded between 0 and 1.", correct = T),
+        answer("It is symmetric and has a mean equal to 0."),
+        answer("It is characterised by a single parameter that determines its shape."),
+        answer("None of the above."),
+  allow_retry = T
+)
+)
+```
+
+### Exercise 2
+
+The _F_-distribution plays an important role in hypothesis testing and model evaluation in statistics, especially when comparing variances (ANOVA) or assessing the significance of regression models. Its non-negative, right-skewed shape is characterised by two degrees of freedom parameters, the numerator degrees of freedom and the denominator degrees of freedom.  
+
+a. Draw a graph of an _F_-distribution with 3 numerator degrees of freedom (_df_~num~) and 27 denominator degrees of freedom (_df_~den~). 
+
+```{r f-dist-exercise, comment=NA, exercise=TRUE}
+
+```
+
+**Hint:** Use the `df` function (to produce the probability density values, i.e. the $y$-values) in conjunction with `seq` (to generate a sequence of quantiles, i.e. the $x$-values) and `plot` to produce this graph. Alternatively, use the `df` function with the `curve` function.
+
+```{r f-dist-exercise-solution, exercise.reveal_solution = TRUE}
+## Creating the graph manually
+xv <- seq(from = 0, to = 4, length.out = 200) # x-values
+yv <- df(x = xv, df1 = 3, df2 = 27) # y-values (probability density)
+plot(xv, yv, type = "l", xlab = "F-value", ylab = "Probability density")
+
+## Using the built-in curve function
+curve(expr = df(x, df1 = 3, df2 = 27), from = 0, to = 4, n = 200, xlab = "F-value", ylab = "Probability density")
+```
+
+b. What is the critical _F_-value for the given degrees of freedom (_df_~num~ = 3, _df_~den~ = 27) and a significance level ($\alpha$) of 0.05?
+
+```{r f-value-exercise, comment=NA, exercise=TRUE}
+
+```
+```{r f-value-exercise-solution, comment=NA, exercise.reveal_solution=TRUE}
+qf(p = 0.05, df1 = 3, df2 = 27, lower.tail = F)
+```
+
+
+```{r F-quiz}
+question_text(text = "The critical _F_-value (rounded to two decimal places) is:",
+         answer(2.96, correct = T),
+         allow_retry = T
+)
+```
+
+### Exercise 3
+
+The likelihood ratio test is widely used in various natural science fields to compare nested models, commonly a more complex model with a simpler one (e.g. contrasting a more complex model with an extra predictor or interaction term to a simpler model that lacks this term but is otherwise identical). The likelihood ratio test statistic (_L_-statistic) approximately follows a chi-squared distribution with degrees of freedom (_df_) equal to the difference in the number of parameters between the two models. A significant outcome of a likelihood ratio test lends support to the alternative hypothesis that the more complex model is superior. 
+
+a. What is the critical _L_-statistic for a likelihood ratio test with two degrees of freedom ('critical' means associated with a probability of 0.05 or smaller, i.e. the commonly used default significance level $\alpha$)? 
+
+```{r chi-exercise, comment=NA, exercise=TRUE}
+
+```
+**Hint:** Use the `qchisq` function to answer this question.
+```{r chi-exercise-solution, comment=NA, exercise.reveal_solution=TRUE}
+qchisq(p = 0.05, df = 2, lower.tail = F)
+```
+
+```{r chi-quiz}
+question_text(text = "The critical _L_-value (rounded to two decimal places) is:",
+         answer(5.99, correct = T),
+         allow_retry = T
+)
+```
+
+b. Suppose we obtain an _L_-statistic of 12.43 with two degrees of freedom (_df_) from a likelihood ratio test. Does it exceed the critical value of an _L_-statistic with 2 _df_ we have established above? What is the associated _P_-value and what conclusions do you draw from that? 
+
+```{r chi-exercise2, comment=NA, exercise=TRUE}
+
+```
+
+```{r chi-exercise2-solution, comment=NA, exercise.reveal_solution=TRUE}
+pchisq(q = 12.43, df = 2, lower.tail = F)
+```
+**Hint:** Use the `pchisq` function to answer this question.
+
+```{r quiz_chi}
+  question_text(text = "Provide your answers to the questions in 3.2 b. here and submit to view the model answer.", incorrect = "Assessing the correctness of free text in this environment is problematic and ambiguous at best. Please compare your answer to the model answer below.", message = "**Model answer**:  
+           Yes, the hypothetical _L_-value of 12.43 by far exceeds the critical value of 5.99 associated with an _L_-statistic with 2 degrees of freedom. The _P_-value of 0.002 is smaller than our significance threshold $\\alpha$ = 0.05, prompting us to reject the null hypothesis and to conclude that the more complex model describes the patterns in our data better than the simpler model.",
+answer("Yes, the hypothetical _L_-value of 12.43 by far exceeds the critical value of 5.99 associated with an _L_-statistic with 2 degrees of freedom. The _P_-value of 0.002 is smaller than our significance threshold $\\alpha$ = 0.05, prompting us to reject the null hypothesis and to conclude that the more complex model describes the patterns in our data better than the simpler model.", correct = T)
+)
+```
+
+### Exercise 4
+
+The length of the eastern deer mouse (without tail) is normally distributed with a mean of 89 mm and a standard deviation of 4 mm. 
+If we pick one specimen of this species at random, what is the probability that it is
+
+a. longer than 96 mm? 
+
+```{r norm-exercise1, comment=NA, exercise=TRUE}
+
+```
+**Hint:** Use the `pnorm` function to answer this question.
+```{r norm-exercise1-solution, comment=NA, exercise.reveal_solution=TRUE}
+pnorm(q = 96, mean = 89, sd = 4, lower.tail = F) # ~ 4%
+```
+
+```{r quiz_norm1, message=FALSE}
+  question_numeric(text = "The probability of randomly choosing a specimen longer than 96 mm is (give answer as a single digit percentage):",
+                   answer(4, correct = T, message = "Yes, only 4% of the population exceeds 96 mm in length."),
+                   allow_retry = T
+                   )
+```
+
+b. between 80 and 90 mm long?
+
+```{r norm-exercise2, comment=NA, exercise=TRUE}
+
+```
+
+```{r norm-exercise2-solution, comment=NA, exercise.reveal_solution=TRUE}
+pnorm(q = 90, mean = 89, sd = 4) - pnorm(q = 80, mean = 89, sd = 4) # 58.6%
+```
+
+```{r quiz_norm2, message=FALSE}
+  question_numeric(text = "The probability of randomly choosing a specimen that is between 80 and 90 mm long is (give answer as a percentage with a single decimal place):",
+                   answer(58.6, correct = T, message = "In other words, about 59% of the population shows body lengths in this range."),
+                   allow_retry = T
+                   )
+```
+
+c. If only the top 15% of the eastern deer mouse population were considered very large in terms of body length, what would be the minimum size of a specimen to belong to this group? (Round your answer to the nearest integer.)
+
+```{r norm-exercise3, comment=NA, exercise=TRUE}
+
+```
+
+```{r norm-exercise3-solution, comment=NA, exercise.reveal_solution=TRUE}
+qnorm(p = 0.15, mean = 89, sd = 4, lower.tail = F) # 93 mm
+qnorm(p = 0.85, mean = 89, sd = 4) # same but ramped up from the lower tail
+```
+
+```{r quiz_norm3, message=FALSE}
+  question_numeric(text = "To be considered a very large specimen, the minimum length (in mm) of an eastern deer mouse would need to be at least:",
+                   answer(93, correct = T),
+                   allow_retry = T
+                   )
+```
+
+### Exercise 5
+
+A farmer has a flock of 237 crossbred lambs. The mean weight of the lambs is 35 kg with a standard deviation of 2 kg.
+If lambs weighing between 33 and 39 kg are suitable for export, how many lambs in this flock could the farmer expect to export?
+
+```{r norm-exercise4, comment=NA, exercise=TRUE}
+
+```
+
+```{r norm-exercise4-solution, comment=NA, exercise.reveal_solution=TRUE}
+prop <- pnorm(q = 39, mean = 35, sd = 2) - pnorm(q = 33, mean = 35, sd = 2) # 82%
+prop * 237 # 194
+```
+
+```{r quiz_norm4, message=FALSE}
+  question_numeric(text = "The farmer could expect to export", correct = "lambs.",
+                   answer(194, correct = T, message = "Correct!"),
+                   allow_retry = T
+                   )
+```
+
+### Exercise 6
+
+Assume that the average male person in your home town is 176.5 cm tall and the mean female height is 163.4 cm. For both genders the height data are normally distributed with mean = 176.5 and standard deviation (sd) = 10, and with mean = 163.4 and sd = 7 for males and females, respectively.
+If you randomly and independently encounter a woman and then a man in your home town, which is more likely:
+
+- that the woman will be between 164 and 166 cm tall?
+- or that the man will be taller than 200 cm or shorter than 165 cm?
+
+```{r norm-exercise5, comment=NA, exercise=TRUE}
+
+```
+
+```{r norm-exercise5-solution, comment=NA, exercise.reveal_solution=TRUE}
+## Probability that a randomly encountered woman will be between 164 and 166 cm tall.
+pnorm(q = 166, mean = 163.4, sd = 7) - pnorm(q = 164, mean = 163.4, sd = 7) # 11.1%
+
+## Probability that a randomly encountered man will be taller than 200 cm or shorter than 165 cm.
+pnorm(q = 200, mean = 176.5, sd = 10, lower.tail = F) + pnorm(q = 165, mean = 176.5, sd = 10) # 13.4%
+```
+
+```{r quiz_norm5, message=FALSE}
+  question(text = "It is more likely to randomly encounter",
+           answer("a man who is taller than 200 cm or shorter than 165 cm.", correct = T, message = "Man: 13.4%, woman: 11.1%"),
+           answer("a woman who is between 164 and 166 cm tall.", message = "Woman: 11.1%, man: 13.4%"),
+                   allow_retry = T
+                   )
+```
+
+### Exercise 7
+
+a. Simulate 10 tosses of a fair coin using the `rbinom` function. Recall that the function argument `n` indicates the number of observations in a Bernoulli trial, i.e. here the number of coin tosses. The `size` argument refers to the number of trials. In this context, it means how many coins are simultaneously flipped `n` times each. The `prob` argument specifies the probability of a 'success', which is typically defined based on the specific situation or experiment at hand (since we assume a fair coin with equal probability of head or tail, we do not have to think about what to define as success).
+
+```{r binom-exercise1, comment=NA, exercise=TRUE}
+
+```
+
+```{r binom-exercise1-solution, comment=NA, exercise.reveal_solution=TRUE}
+rbinom(n = 10, size = 1, prob = 0.5) # n = 10 means 10 coin tosses, size = 1 means that we only run the experiment with one coin and not multiple coins simultaneously. prob = 0.5 refers to the probability of success (depends on how it is defined, e.g. head), with set to 0.5 means the probability of getting head or tail is equal, i.e. a fair coin.
+```
+
+b. Calculate the exact probability of 4 heads out of 10 coin tosses with a 70% probability of tails (Note that tails are defined as success here).
+
+```{r binom-exercise2, comment=NA, exercise=TRUE}
+
+```
+**Hint:** Use the `dbinom` function.
+```{r binom-exercise2-solution, comment=NA, exercise.reveal_solution=TRUE}
+dbinom(x = 4, size = 10, prob = 0.3)
+```
+
+```{r quiz_binom2, message=FALSE}
+  question_numeric(text = "The probability of obtaining 4 heads out of 10 coin tosses given a 70% probability of tails is about (give your answer as a percentage with two digits).",
+           answer(20, correct = T),
+                   allow_retry = T
+                   )
+```
+
+c. Calculate the cumulative probability of getting at least 8 heads out of 20 coin tosses assuming a fair coin. Compare the answer with the average proportion of trials with 8 or more heads out of 10,000 simulated trials. Do both methods give similar results?
+
+```{r binom-exercise3, comment=NA, exercise=TRUE}
+
+```
+**Hint:** Use the `pbinom` function.
+
+```{r binom-exercise3-solution, comment=NA, exercise.reveal_solution=TRUE}
+pbinom(q = 7, size = 20, prob = 0.5, lower.tail = F) # 'at least 8' means 8 or higher and because we are dealing with integers, we need to calculate the cumulative probabilities associated with number of successes up to 7.
+set.seed(2)
+mean(rbinom(n = 10000, size = 20, prob = 0.5) >= 8) # This approach is different. Here we can calculate the proportion of trials with 8 or more heads as a proxy for the probability.
+```
+
+```{r quiz_binom3, message=FALSE}
+  question_text(text = "The probability of obtaining at least 8 heads out of 20 tosses with a fair coin is about (round your answer and enter it as a two digit percentage)",
+           answer("87", correct = T), allow_retry = T)
+```
+
+d. What is the probability of getting between 6 and 11 heads out of 20 coin tosses?
+
+```{r binom-exercise4, comment=NA, exercise=TRUE}
+
+```
+**Hint:** Use the `pbinom` function.
+
+```{r binom-exercise4-solution, comment=NA, exercise.reveal_solution=TRUE}
+pbinom(11, size = 20, prob = 0.5) - pbinom(7, size = 20, prob = 0.5)
+```
+
+```{r quiz_binom4, message=FALSE}
+  question_text(text = "The probability of seeing between 6 and 11 heads out of 20 coin tosses is (round your answer and enter it as a two digit percentage)",
+           answer("62", correct = T), allow_retry = T)
+```
+
+### Exercise 8
+
+A geyser erupts periodically every 17 minutes.
+
+a. What is the probability that the geyser will erupt in 5 minutes or less when a visitor arrives at the viewing platform?
+
+```{r uniform-exercise1, comment=NA, exercise=TRUE}
+
+```
+**Hint:** Use the `punif` function.
+
+```{r uniform-exercise1-solution, comment=NA, exercise.reveal_solution=TRUE}
+punif(q = 5, min = 0, max = 17)
+```
+
+```{r quiz_uniform1, message=FALSE}
+  question_text(text = "The probability of an eruption occurring within 5 minutes after arrival at the viewing platform is (round your answer and enter it as a two digit percentage):",
+           answer("29", correct = T), allow_retry = T)
+```
+
+b. Ninety percent of the time, the waiting time a visitor must spend to see an eruption falls below what value?
+
+```{r uniform-exercise2, comment=NA, exercise=TRUE}
+
+```
+**Hint:** Use the `qunif` function.
+
+```{r uniform-exercise2-solution, comment=NA, exercise.reveal_solution=TRUE}
+qunif(p = 0.9, min = 0, max = 17)
+```
+
+```{r quiz_uniform2, message=FALSE}
+  question_text(text = "Ninety percent of the time, to view an eruption, a visitor must wait no longer than (give your answer in minutes with one decimal place):", correct = "minutes.",
+           answer("15.3", correct = T, message = "Correct!"), allow_retry = T)
+```
+
+### Exercise 9
+
+The feeding duration of an adult wolf spider is uniformly distributed between 34 and 62 minutes. 
+
+a. What is the probability that a feeding event will last at least 45 minutes?
+
+```{r uniform-exercise3, comment=NA, exercise=TRUE}
+
+```
+**Hint:** Use the `punif` function.
+
+```{r uniform-exercise3-solution, comment=NA, exercise.reveal_solution=TRUE}
+punif(q = 45, min = 34, max = 62, lower.tail = F)
+```
+
+```{r quiz_uniform3, message=FALSE}
+  question_text(text = "The probability of a feeding event lasting at least 45 minutes is (give your answer as a percentage with one decimal place):",
+           answer("60.7", correct = T), allow_retry = T)
+```
+
+b. What is the probability that a feeding event will last between 55 and 60 minutes?
+
+```{r uniform-exercise4, comment=NA, exercise=TRUE}
+
+```
+**Hint:** Use the `punif` function.
+
+```{r uniform-exercise4-solution, comment=NA, exercise.reveal_solution=TRUE}
+punif(q = 60, min = 34, max = 62) - punif(q = 55, min = 34, max = 62)
+```
+
+```{r quiz_uniform4, message=FALSE}
+  question_text(text = "The probability of a feeding event taking between 55 and 60 minutes is (give your answer as a percentage with one decimal place):",
+           answer("17.9", correct = T),
+           answer("17.8", correct = T), allow_retry = T)
+```

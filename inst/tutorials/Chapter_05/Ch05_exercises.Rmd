@@ -1,0 +1,384 @@
+---
+title: "R-ticulate Exercises"
+author: "Martin Bader and Sebastian Leuzinger"
+output: learnr::tutorial
+runtime: shiny_prerendered
+description: >
+  Two-Sample and One-Sample Tests
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+## List of packages required for this tutorial
+# pkgs <- c("learnr", "kableExtra", "dplyr", "ggplot2", "ggpubr")
+# 
+# ## Check whether the specified package is available
+#   inst.pack <- rownames(installed.packages()) # list of installed packages
+#   if (length(setdiff(x = pkgs, y = inst.pack)) > 0) { # setdiff() returns the elements of x that don't occur in y
+#     install.packages(setdiff(pkgs, inst.pack), repos = "https://cloud.r-project.org", dependencies = T)  
+#   }
+  
+## Load required packages
+library(learnr)
+library(dplyr)
+library(ggplot2)
+library(ggpubr)
+library(kableExtra)
+
+## Provide datasets
+# Burger patties, data for one-sample t-test
+patty.weight <- c(89.9, 98.4, 92, 97.8, 101.0, 85.8, 94, 100.2, 94.4, 92.8, 101.3, 
+92.7, 96.5, 94.7, 86.7, 100.3, 89.2, 85.7, 90.6, 101.2, 100.1, 
+96.8, 95.9, 101.9, 96.1, 97, 94.2, 95.1, 90.1, 87.5)
+
+# NO2, data for two-sample t-test
+set.seed(9)
+no2 <- data.frame(conc = round(c(rnorm(n = 10, mean = 25, sd = 8), rnorm(n = 10, mean = 60, sd = 15)), digits = 1), calming = gl(n = 2, k = 10, labels = c("yes", "no")))
+
+set.seed(889688)
+bread.dough <- data.frame(treat = factor(rep(c("control", "additive"), each = 10), levels = c("control", "additive"), ordered = T), em = round(c(
+  rnorm(n = 20, mean = 10^5, sd = 7500)/10^6, 
+  rnorm(n = 20, mean = 10^5.07, sd = 7500)/10^6), digits = 3))
+
+set.seed(6546574)
+dolphins <- data.frame(ind = 1:10, drone = factor(rep(c("no", "yes"), each = 10), levels = c("no", "yes")), cortisol = round(c(rnorm(n = 10, mean = 3.25, sd = 0.8), rnorm(n = 10, mean = 5, sd = 0.8)), digits = 2))
+```
+<br>
+
+## Chapter 05 - Two-Sample and One-Sample Tests
+
+### Exercise 1 - Multiple-choice quiz
+
+Please note that there is only one correct (or most correct) answer to each question.
+
+<p style="margin-top:-30px">
+</p>
+```{r quiz1, echo=FALSE}
+quiz(caption = "",
+    question("Which of the following statements about the _t_-test is **incorrect**?", 
+         answer("The _t_-test assumes normally distributed samples."),
+         answer("The _t_-test should not be applied to data that follow a uniform distribution."),
+         answer("The _t_-test relies on the _t_-distribution, which is related to the normal distribution."),
+         answer("The _t_-test operates free from any assumptions on the sample distributions.", correct = T),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+    question("When the _P_-value of a _t_-test is less than the significance level (&#x1D6FC;), which of the following decisions is correct?", 
+         answer("Fail to reject the null hypothesis."),
+         answer("Perform a Chi-square test instead."),
+         answer("Compute the Pearson correlation coefficient."),
+         answer("Reject the null hypothesis.", correct = T),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+    question("All other things being equal, if the standard deviation increases to the same extent in both groups to be compared with a two-sample _t_-test, then",
+    answer("the absolute value of the _t_-statistic becomes greater."),
+    answer("the absolute value of the _t_-statistic becomes smaller.", correct = T),
+    answer("the sample distribution becomes non-normal."),
+    answer("the variance homogeneity assumption becomes violated."),
+    answer("None of the above."),
+    allow_retry = T
+  ),
+  question("Which of the following statements describes the alternative hypothesis of a two-tailed test?",
+  answer("µ > 6"),
+  answer("µ ≤ 6"),
+  answer("µ = 6"),
+  answer("µ < 6"),
+  answer("None of the above.", correct = T),
+  allow_retry = T
+),
+question("A common problem of hypothesis tests is that a real effect (such as a difference between group means) may not be detected. This issue is most likely to occur when",
+  answer("the effect is small and the sample size is large."),
+  answer("the effect is large and the sample size is large."),
+  answer("the effect is small and the sample size is small", correct = T),
+  answer("the effect is large and the sample size is small"),
+  answer("None of the above."),
+  allow_retry = T
+),
+question("In hypothesis tests such as the _t_-test, a type II error represents a so-called 'false negative' and means that",
+  answer("the null hypothesis is not rejected when it is true."),
+  answer("the null hypothesis is rejected when the alternative hypothesis is true."),
+  answer("the null hypothesis is rejected when the null hypothesis is true."),
+  answer("the null hypothesis is not rejected when the alternative hypothesis is true", correct = T),
+  answer("None of the above."),
+  allow_retry = T
+),
+ #question(c("A random sample of 25 people were asked to state their actual weight and at the same time report their desired weight. A 95 % confidence interval for the average difference between their actual and desired weight (µ~diff~) was 2 to 10 kg. Based on this confidence interval, which of the following null hypotheses of a two-tailed _t_-test can be rejected?"),
+  #  answer("_H_~0~: µ~diff~ = 1", correct = T),
+   # answer("_H_~0~: µ~diff~ = 2"),
+    #answer("_H_~0~: µ~diff~ = 5"),
+    #answer("_H_~0~: µ~diff~ = 10"),
+    #answer("None of the above."),
+    #allow_retry = T
+  #),
+question("Which of the following statements applies to a statistically significant result of a _t_-test?",
+         answer("The obtained _t_-value exceeds the &#x1D6FC; level."),
+         answer("The type I error probability must be significantly different from the type II error probability."),
+         answer("&#x1D6FC; must be set to 0.05."),
+         answer("The probability that a difference in group means at least as large as the one observed could be a product of chance is less than the &#x1D6FC; level.", correct = T),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+ question(c("A two-tailed _t_-test with a sample size of 20 (10 samples per group) resulted in a _t_-statistic of 1.86. Use the correct one of the following functions `dt`, `pt`, `qt`, or `rt` to calculate the _P_-value associated with this _t_-statistic and identify the correct answer below.", "<p style='font-size:12px;font-weight:normal;margin-top:-5px;'>(Hint: recall that in a two-tailed scenario the <em>P</em>-value is multiplied by two to account for the fact that both tails of the <em>t</em>-distribution are considered.)</p>"),
+    answer("_P_ = 0.742"),
+    answer("_P_ = 0.105"),
+    answer("_P_ = 0.079", correct = T),
+    answer("_P_ = 0.003"),
+    answer("None of the above."),
+    allow_retry = T
+  ),
+ question(c("At a significance level (error probability) of 0.01, the critical _t_-value of a two-tailed _t_-test with a sample size of 20 (10 samples per group) is:", "<p style='font-size:12px;font-weight:normal;margin-top:-5px;'>(Hint: use the correct one of the following functions <span style='font-family:Courier New;'>dt, pt, qt, rt</span> to determine the critical <em>t</em>-value and recall that in a two-tailed scenario the error probability is equally split between both tails of the <em>t</em>-distribution and therefore needs to be divided by two to calculate the critical <em>t</em>-value correctly.)</p>"),
+    answer("_t_ = 1.734"),
+    answer("_t_ = 2.552"),
+    answer("_t_ = 2.101"),
+    answer("_t_ = 2.878", correct = T),
+    answer("None of the above."),
+    allow_retry = T
+  ),
+question(c("A researcher wants to test whether the mean weight of apples harvested from a new orchard differs from a standard weight of 150 grams. Provided that the apple weight approximately follows a normal distribution, which statistical test should the researcher use?"),
+    answer("Two-tailed one-sample _t_-test.", correct = T),
+    answer("One-tailed one-sample _t_-test."),
+    answer("Two-tailed two-sample _t_-test."),
+    answer("One-tailed two-sample _t_-test."),
+    answer("Paired _t_-test."),
+    allow_retry = T
+  ),
+question(c("In an independent _t_-test scenario, which of the following outcomes will result in the largest _t_-statistic?"),
+    answer("If there are 10 samples per group and the difference in the mean response is 2 with standard deviations of 1 in each group."),
+    answer("If there are 10 samples per group and the difference in the mean response is 2 with standard deviations of 2 in each group."),
+    answer("If there are 20 samples per group and the difference in the mean response is 1 with standard deviations of 1 in each group."),
+    answer("If there are 20 samples per group and the difference in the mean response is 2 with standard deviations of 1 in each group.", correct = T),
+    answer("If there are 20 samples per group and the difference in the mean response is 2 with standard deviations of 2 in each group."),
+    allow_retry = T
+  ),
+question(c("Which of the tests below is an alternative to the two-sample _t_-test when the assumption of normality is violated, or when the data are skewed or ordinal?"),
+    answer("Shapiro-Wilk test."),
+    answer("Bartlett's test."),
+    answer("Wilcoxon rank sum test (Mann-Whitney _U_-test).", correct = T),
+    answer("_F_-test."),
+    answer("Two-sample Komogorov-Smirnov test."),
+    allow_retry = T
+  )
+)
+```
+
+The model code related to the exercises below relies on the following R packages (which are autoloaded behind the scenes in this tutorial):
+
+* _ggplot2_
+* _ggpubr_
+* _dplyr_
+
+### Exercise 2
+Nitrogen dioxide (NO~2~) is an air pollutant originating from fossil fuel combustion. In a study on human health in urban areas mean annual NO~2~ concentrations (µg m^-3^) were gathered in 10 cities without traffic calming initiatives and in 10 cities where traffic calming measures had been implemented. The data are available in the pre-loaded dataset `no2`. 
+
+a. Check whether the data are approximately normally distributed. 
+
+b. Perform an appropriate test to compare the two samples and report the results in a scientifically appropriate way.
+
+c. Produce a publication-quality figure including statistical annotation indicating the outcome of the statistical analysis.
+
+```{r two-sample_ttest_exercise, exercise=TRUE, fig.align='center', fig.width=5, fig.height=3.5}
+  
+```
+```{r two-sample_ttest_exercise-solution, exercise.reveal_solution = TRUE, fig.align='center', fig.width=5, fig.height=3.5}
+## a. Check normality
+ggqqplot(no2, x = "conc", facet.by = "calming", xlab = "Theoretical quantiles", ylab = "Sample quantiles") # looks reasonable
+
+## b. Run a two-sample t-test
+t.test(conc ~ calming, data = no2)
+
+## c. 
+# Normal boxplot
+ggplot(data = no2, aes(x = calming, y = conc)) +
+  geom_boxplot(fill = "grey") +
+  labs(y = expression(paste("NO"[2], " concentration in urban air (", mu, "g m"^-3, ")")), x = "Traffic calming") +
+  scale_y_continuous(limits = c(0, 100), expand = c(0, 0)) +
+  annotate(geom = "text", x = c(1, 2), y = c(45, 95), label = c("a", "b")) +
+  theme_test()
+
+# Fancy box-and-violin plot
+ggplot(data = no2, aes(x = calming, y = conc)) +
+  geom_violin(colour = "transparent", fill = "grey85") +
+  geom_boxplot(width = 0.1) +
+  labs(y = expression(paste("NO"[2], " concentration in urban air (", mu, "g m"^-3, ")")), x = "Traffic calming") +
+  scale_y_continuous(limits = c(0, 100), expand = c(0, 0)) +
+  annotate(geom = "text", x = c(1, 2), y = c(45, 95), label = c("a", "b")) +
+  theme_test()
+
+## Calculate the percentage difference in NO2 concentration for reporting.
+group_by(.data = no2, calming) %>% summarise(conc = mean(conc)) %>% mutate(change = 1 - conc[1]/conc) # traffic calming resulted in ca. 60% lower NO2 concentrations
+
+## We can recalculate the P-value by hand like this:
+pt(q = -5.7271, df = 10.465) * 2 # '* 2' because we are dealing with a two-sided test
+```
+<br>
+<details><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> to view the correct answer.</summary>
+<p style="margin-top:10px">
+Cities with traffic calming measures had on average ca. 60 % lower mean annual NO~2~ concentrations than cities lacking calming initiatives (_t_ = -5.73, _df_ = 10.47, _P_ < 0.001).
+</p>
+</details>
+
+### Exercise 3
+A fast food chain advertises that their burgers contain 100 grams of meat. Following customer complaints about undersized patties (patties are the flat meat slices on burgers), a consumer group conducts a sampling campaign to determine whether the average amount of meat differs significantly from the stated quantity. 
+
+a. Assuming that the collected data do not follow a normal distribution, what statistical test would you apply in this scenario? 
+
+<details><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> to view the correct answer.</summary>
+
+<p style="margin-top:10px">
+A one-sample Wilcoxon signed-rank test comparing the sample data with the expected mean of 100 grams would be an appropriate statistical test. To give the fast food chain the benefit of doubt, this test should be run as a two-sided (two-tailed) test to accommodate both scenarios, i.e. a potentially lower or higher patty weight than the 100 g stated in the advertisement.
+</p>
+</details>
+
+<p style="margin-top:10px">
+b. Here are 30 random samples taken from different fast food restaurants of this chain:
+89.9, 98.4, 92, 97.8, 101.0, 85.8, 94, 100.2, 94.4, 92.8, 101.3, 92.7, 96.5, 94.7, 86.7, 100.3, 89.2, 85.7, 90.6, 101.2, 100.1, 
+96.8, 95.9, 101.9, 96.1, 97, 94.2, 95.1, 90.1, 87.5. <br> 
+These values are stored in the object `patty.weight` and can readily be used in the R code field below.
+Apply a suitable test and report your findings and conclusions.
+
+<p style="margin-top:20px">
+</p>
+For those who would like to work with these data in their own RStudio session, you can use your mouse or touchpad to highlight and copy the above values (PC: Strg + C, Mac: CMD + C) and then read them into R with the following code:
+
+<p style="margin-left:0px;">On PC use: `patty.weight <- scan(file = "clipboard", sep = ",")`<br>
+On Mac use: `patty.weight <- scan(pipe(description = "pbpaste"), sep = ",")`
+
+<p style="margin-top:20px">
+</p>
+
+```{r one-sample_ttest_exercise, exercise = TRUE, fig.align='center', fig.width=5, fig.height=5}
+## Check the distribution of the data
+# Histogram
+hist(patty.weight)
+
+# Quantile-quantile plot
+qqnorm(patty.weight)
+qqline(patty.weight)
+```
+```{r one-sample_ttest_exercise-solution, exercise.reveal_solution = TRUE, warning=FALSE}
+## Wilcoxon signed-rank test
+wilcox.test(patty.weight, mu = 100)
+
+## Compute the median (Wilcoxon test relies on median) and mean
+median(patty.weight) - 100
+
+mean(patty.weight)
+```
+
+<p style="margin-top:40px">
+
+<details><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> for an example of how to report the test findings and their meaning.</summary>
+
+<p style="margin-top:10px">
+Compared to the advertised quantity, the median patty weight is statistically significantly lower by 5.1 g (V = 29, _P_ < 0.001).
+</p>
+</details>
+</p>
+
+### Exercise 4 
+A food scientist is investigating the effect of different dough additives on the viscoelastic properties of bread dough (i.e. the ability to deform under stress and then return to its original shape once the stress is removed). The scientist hypothesises that the addition of a specific additive will enhance the dough's elasticity compared to a control group without any additives. To test this hypothesis, the scientist prepares a large batch of dough and subdivides it in 10 control samples without additive and 10 samples receiving the additive. He stores the dough samples in the same cooling chamber and the same type of container. In the lab, the elastic modulus (a measure of dough elasticity measured in units of pressure in megapascal, MPa) between the control samples and the samples treated with the additive was measured. The data are available in the pre-loaded dataset `bread.dough`. Perform the appropriate statistical test and report the results in a scientifically appropriate way. 
+
+<p style="margin-top:15px">
+</p>
+
+Enter your R code for this exercise here.
+
+```{r t-test-exercise1, exercise = TRUE, fig.align='center', fig.height=3.5, fig.width=4}
+## Check structure and data summary
+head(bread.dough)
+str(bread.dough)
+summary(bread.dough)
+```
+
+```{r t-test-exercise1-solution, exercise.reveal_solution = TRUE, fig.align='center', fig.height=3.5, fig.width=4}
+## Check normality
+ggqqplot(data = bread.dough, x = "em", facet.by = "treat", xlab = "Theoretical quantiles", ylab = "Sample quantiles") # looks 
+
+## Perform a two-sample, independent t-test
+t.test(em ~ treat, data = bread.dough)
+
+## Publication-quality figure
+# Fancy box-and-violin plot
+ggplot(data = bread.dough, aes(x = treat, y = em)) +
+  geom_violin(colour = "transparent", fill = "grey85", width = 0.8) +
+  geom_boxplot(width = 0.25) +
+  labs(y = "Elastic modulus (MPa)", x = "Treatment") +
+  scale_y_continuous(limits = c(0, 0.150), expand = c(0, 0)) +
+  scale_x_discrete(labels = c("Control", "Additive")) +
+  annotate(geom = "text", x = c(1, 2), y = 0.135, label = c("a", "a")) +
+  theme_test()
+```
+
+<p style="margin-top:40px">
+<details><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> for an example how to report the statistical findings.</summary>
+
+<p style="margin-top:10px">
+The tested additive failed to significantly enhance the elastic modulus of the bread dough (_t_ = -0.778, _df_ = 37.84, _P_ = 0.442). 
+</p>
+</details>
+</p>
+
+### Exercise 5
+To test the response of bottlenose dolphins to drone exposure, stress hormone levels (serum cortisol concentrations in ng ml^-1^) were compared in a group of 10 individuals (5 males, 5 females) before and after drone flyovers at 10 m altitude. The data are available in the pre-loaded dataset `dolphins`, containing the variables 'ind' (indicating the 10 individuals), 'drone' (indicating the abscence or presence of the drone), 'cortisol' (the serum cortisol concentration).
+
+```{r paired-t-test-exercise, exercise=TRUE, fig.align='center', fig.width=2.5, fig.height=4}
+## Sanity check
+head(dolphins, n = 3)
+
+## Examine structure 
+str(dolphins)
+
+## View summary
+summary(dolphins)
+```
+
+```{r paired-t-test-exercise-solution, exercise.reveal_solution=TRUE}
+## Exploratory plot
+ggplot(data = dolphins, aes(x = drone, y = cortisol)) +
+  geom_boxplot()
+
+## Paired t-test (note that the paired t-test cannot be implemented with the formula interface)
+t.test(x = dolphins[dolphins$drone == "no", "cortisol"], y = dolphins[dolphins$drone == "yes", "cortisol"], paired = T)
+
+## Puclication-quality figure
+dolphins2 <- group_by(.data = dolphins, drone) %>% summarise(cort = mean(cortisol), pos = mean(cortisol) + sd(cortisol)/sqrt(n()), neg = mean(cortisol) - sd(cortisol)/sqrt(n())) %>% mutate(change = cort/cort[1])
+
+ggplot(data = dolphins2, aes(x = drone, y = cort)) +
+  geom_col(col = "black", fill = "grey", width = 0.5) +
+  geom_errorbar(aes(ymin = neg, ymax = pos), width = 0.2) +
+  labs(y = expression(paste("Cortisol concentration (ng ml"^-1, ")")), x = "Drone flyover") +
+  scale_x_discrete(labels = c("No", "Yes")) +
+  scale_y_continuous(limits = c(0, 7), expand = c(0, 0)) +
+  annotate(geom = "text", x = 1:2, y = dolphins2$pos + 0.5, label = c("a", "b")) +
+  theme_test()
+```
+
+<p style="margin-top:40px">
+<details><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> for an example how to report the statistical findings.</summary>
+
+<p style="margin-top:10px">
+Drone flyovers at 10 m altitude caused a significant increase in serum cortisol levels in bottlenose dolphins by 35 % (paired _t_-test, _t_ = -3.56, _df_ = 9, _P_ = 0.006). 
+</p>
+</details>
+</p>
+
+### Exercise 6
+Use the information below about the means ($\bar{x}$), standard deviations ($s$) and the number of samples (_n_) from a hypothetical independent _t_-test (do not worry about the true meaning of the values or their units) to compute the _t_-statistic and determine whether the difference in means between the control and treated group are significantly different from each other.
+
+<p style="margin-top:30px">
+
+$$Control~group:~\bar{x}_{1} = 37,~s_{1} = 5.2,~n_{1} = 15$$
+$$Treated~group:~\bar{x}_{2} = 43,~s_{2} = 5.8,~n_{2} = 15$$
+</p>
+
+<details><summary><p class="btn btn-default" style="background-color:#00873E;color:white;font-size:110%;padding: 7px 15px 7px 15px;">Solution</p></summary>
+<br>
+The _t_-statistic is calculated as follows: 
+
+<br>
+
+$$t~=\frac{\bar{x}_{1} - \bar{x}_{2}}{\sqrt{\frac{s^{2}_{1}}{n_{1}} + \frac{s^2_{2}}{n_{2}}}}$$
+
+$$t~=\frac{37 - 43}{\sqrt{\frac{5.2^{2}}{15} + \frac{5.8^2}{15}}} = \frac{-6}{\sqrt{1.8027 + 2.2427}} = -2.983$$
+The degrees of freedom associated with this _t_-statistic are: _n_~1~ + _n_~2~ -- 2 = 28. Using the `pt` function we can now calculate the related _P_-value by executing `pt(-2.983, df = 28)`, which yields 0.0029. As this _P_-value is smaller than the default $\alpha$ threshold of 0.05, we conclude that there is a significant difference in group means. Accordingly, we can report that on average the response in the treatment group is significantly greater by 16 % compared to the control group (_t_ =-2.98, _df_ = 28, _P_ = 0.003). 

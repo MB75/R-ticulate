@@ -1,0 +1,392 @@
+---
+title: "R-ticulate Exercises"
+author: "Martin Bader and Sebastian Leuzinger"
+output: learnr::tutorial
+runtime: shiny_prerendered
+description: >
+  Replication and Randomisation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+## List of packages required for this tutorial
+# pkgs <- c("learnr", "dplyr", "rsample")
+# 
+# ## Check whether the specified package is available
+#   inst.pack <- rownames(installed.packages()) # list of installed packages
+#   if (length(setdiff(x = pkgs, y = inst.pack)) > 0) { # setdiff() returns the elements of x that don't occur in y
+#     install.packages(setdiff(pkgs, inst.pack), repos = "https://cloud.r-project.org", dependencies = T)  
+#   }
+  
+## Load required packages
+library(learnr)
+library(dplyr)
+library(rsample)
+
+location <- gl(n = 3, k = 30, labels = c("A", "B", "C"))
+bird_individual <- gl(n = 5, k = 6, length = 90)
+iso <- round(rnorm(n = 90, mean = 0.71, sd = 0.0015), digits = 4)
+feathers <- data.frame(location, bird_individual, feather_id = factor(rep(1:6, times = 15)), iso)
+
+# Simulate pH data for batches of milk sampled at different times
+set.seed(123)  # For reproducibility
+
+# pH measurements for three different times from the same batch
+milk <- data.frame(
+  batch = factor(rep(1:4, each = 18)),
+  treat = factor(rep(c("control", "preservative"), each = 3, times = 24)),
+  time = factor(rep(c("Morning", "Noon", "Evening"), each = 6)),
+  pH = sample(seq(6.8, 7.5, by = 0.05), size = 36, replace = T)
+)
+```
+
+## Chapter 04 - Replication and Randomisation
+
+### Exercise 1 - Multiple-choice quiz
+
+Please note that there is only one correct (or most correct) answer to each question.
+
+<p style="margin-top:-30px;">
+</p>
+
+```{r anova_quiz, echo=FALSE}
+quiz(caption = "",
+       question("Which of the following statements best describes the purpose of replication in scientific experiments?",
+        answer("To increase the complexity of the experiment."),
+        answer("To reliably distinguish between systematic and unsystematic variation.", correct = T),
+        answer("To introduce new variables to test multiple hypotheses simultaneously."),
+        answer("To reduce the amount of data collected from a single trial."),
+        answer("None of the above."),
+  allow_retry = T
+),
+
+question("A common assumption of statistical tests is that the sampling units (the individual subjects or objects on which a measurement or observation is made) are independent from each other. This means that",
+        answer("each sampling unit has equal weight in the analysis, i.e. a similar influence on the outcome."),
+        answer("each sampling unit is representative of the entire population, so that generalisations can be made."),
+        answer("all sampling units have an equal chance of being selected, i.e. the selection bias is minimised."),
+        answer("the measurements for each sampling unit are not affected by or related to the measurements of other sampling units.", correct = T),
+        answer("None of the above."),
+  allow_retry = T
+), 
+
+question("Which of the following scenarios best illustrates pseudoreplication in the context of experimental design?",
+        answer("Using multiple independent samples to ensure the validity of the experimental results."),
+        answer("Applying different treatments to separate groups to test for experimental effects."),
+        answer("Aggregating data from different experiments to increase sample size and statistical power."),
+        answer("Repeating the same measurements on the same experimental unit and treating them as independent replicates.", correct = T),
+        answer("None of the above."),
+  allow_retry = T
+),
+
+   question("Which of the following experiments is pseudoreplicated?", 
+         answer("Collecting multiple soil samples from 10 different fields and analysing the means of each field as independent data points."),
+         answer("Measuring the weight of 10 different mice, each held in separate cages, and treating each measurement as an independent data point."), 
+         answer("Measuring the area of 20 leaves on 30 plants and treating each measurement as an independent data point.", correct = T),
+         answer("Conducting a randomised controlled trial where each subject from a pool of 20 individuals is randomly assigned to either the treatment or control group and analysed accordingly."),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+
+      question("A researcher measured the length of 3 new shoots on 5 branches on each of 10 trees. Which of the following statements is correct?",
+         answer("In this experiment, 150 replicates are available for analysis."),
+         answer("This experiment is pseudoreplicated. The 3 shoot lengths per branch need to be averaged to yield a total of 50 replicates."),
+         answer("This experiment is pseudoreplicated. Therefore, the 3 shoot lengths per branch must first be averaged, followed by averaging over the 5 branches per tree to obtain a total of 10 replicates.", correct = T),
+         answer("This experiment is pseudoreplicated. Therefore, 2 of the three shoot length recordings per branch must be discarded by random selection."),
+         answer("This experiment is pseudoreplicated. Therefore, 2 of the 3 branch measurements and 4 of the 5 branches must be discarded by random selection."),
+         allow_retry = T
+         ),
+     
+     question("What is the main purpose of randomisation?",
+         answer("To ensure that the sample size is large enough to achieve adequate statistical power."),
+         answer("To maximise the difference between treatment groups (i.e. increase the effect size)."),
+         answer("To ensure that the experimenter can control all variables."),
+         answer("To increase the complexity of the experimental design for better data analysis."),
+         answer("To eliminate bias and minimise the effects of confounding variables resulting in more robust inference about causal relationships.", correct = T),
+         allow_retry = T
+         ),
+     
+      question("Which R function can you use to randomly sample values from data?",
+         answer("`subset`"),
+         answer("`replicate`"),
+         answer("`sample`", correct = T),
+         answer("`rnorm`"),
+         answer("`set.seed`"),
+         allow_retry = T
+         ),
+     
+     question("What is a potential consequence of a lack of randomisation in a scientific experiment?",
+         answer("Increased statistical power, reducing the risk of type II errors."),
+         answer("Reduced bias in treatment effects, resulting in a stronger signal-to-noise ratio."),
+         answer("Increased selection bias and accidental bias, which hampers comparisons.", correct = T),
+         answer("Enhanced control over confounding variables, resulting in reduced unsystematic variation."),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+     
+         question("You read in a report that the experimental units were haphazardly allocated to the treatments. What do you conclude?",
+         answer("The allocation was meticulously planned and executed."),
+         answer("The experimental units were randomly assigned to treatments."),
+         answer("The experimental units were systematically assigned to treatments, which increases the effect size and improves representativeness."),
+         answer("The experimental units were arbitrariliy assigned to treatments (i.e. no systematic or random allocation) which potentially introduces bias.", correct = T),
+         answer("The treatments were allocated based on controlled conditions, which reduces the likelihood of sampling errors, increases the statistical power and the generalisability of the findings."),
+         allow_retry = T
+         ),
+     
+      question("Why is it important to incorporate both replication and randomisation in a scientific experiment?",
+         answer("To ensure the sample size is small and manageable."),
+         answer("To minimise the cost and time of the experiment."),
+         answer("To enhance the reliability and generalisability of the results and eliminate bias.", correct = T),
+         answer("To guarantee that each group receives the exact same treatment."),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+     
+      question("When assigning spatial sampling points in an experimental area, what approach can you use to avoid undersampled or oversampled patches?",
+         answer("Random sampling."),
+         answer("Systematic sampling, i.e. applying a sampling grid of sampling points."),
+         answer("Haphazard sampling, where sampling points are determined in an arbitratry way, i.e. in a non-systematic and non-random manner."),
+         answer("Stratified random sampling, i.e. creating sub-areas whithin which sampling points are chosen randomly.", correct = T),
+         answer("Purposive sampling, i.e. locations are selected based on the researcher's knowledge or judgment of where important features or phenomena are likely to occur."),
+         allow_retry = T
+         ),
+
+question("Which of the following statements best describes random sampling in a research study?",
+        answer("Selecting sample units based on their availability, to set up the study in the fastest and most economic way."),
+        answer("Choosing sample units without any predetermined pattern, so that each unit has an equal chance of being included.", correct = T),
+        answer("Including sample units that are representative of the population to ensure that results are generalisable to the entire population."),
+        answer("Ensuring a sufficiently large sample size to enhance statistical power."),
+        answer("None of the above."),
+  allow_retry = T
+)
+)
+```
+
+The model code related to the exercises below relies on the following R packages (which are autoloaded behind the scenes in this tutorial):
+
+* _dplyr_
+* _rsample_
+
+### Exercise 2 - Random Sampling and Randomisation
+
+2.1 Produce a random sample of 10 letters from the English alphabet. 
+
+**Hint:** Use one of the built-in objects `letters` or `LETTERS`, which give the 26 letters of the alphabet in lower- or upper-case, respectively.
+
+```{r rand1-exercise, exercise=TRUE, fig.align='center', fig.width=4.5, fig.height=4.5, message=FALSE, warning=FALSE}
+```
+
+```{r rand1-exercise-solution, exercise.reveal_solution = TRUE}
+## Generate a random sample of 10 letters from the alphabet
+sample(x = LETTERS, size = 10)
+```
+<br>
+
+2.2 Sample 5 elements with replacement from the vector `1:5`. 
+
+```{r rand2-exercise, exercise=TRUE, fig.align='center', fig.width=4.5, fig.height=4.5, message=FALSE, warning=FALSE}
+```
+
+```{r rand2-exercise-solution, exercise.reveal_solution = TRUE}
+## Sample 5 elements allowing replacement
+sample(x = 1:5, size = 5, replace = T)
+```
+<br>
+
+2.3 By default, all elements have the same probability of being selected in a simple random sampling procedure. However, under certain circumstances it may be desirable to give specific elements a higher probability of being chosen, e.g. we may want the probability of selecting an item to be proportional to its weight. This can be achieved by assigning so-called _probability weights_ to the elements of the vector to be sampled.
+
+Create a vector containing differently sized animals (e.g. rat, cheetah, okapi, elephant). Then create a vector of probability weights of 0.1, 0.2, 0.3 and 0.4 (corresponding to the increasing animal size) and perform weighted random sampling with replacement to select 10 elements from the animal vector. The larger animals are more likely to be selected and should thus appear more frequently in the sample. Run your code or the model solution multiple times to get a better sense.
+
+```{r rand3-exercise, exercise=TRUE, fig.align='center', fig.width=4.5, fig.height=4.5, message=FALSE, warning=FALSE}
+```
+
+```{r rand3-exercise-solution, exercise.reveal_solution = TRUE}
+## Sample 5 elements allowing replacement
+animals <- c("rat", "cheetah", "okapi", "elephant")
+probs <- c(0.1, 0.2, 0.3, 0.4)
+sample(x = animals, size = 10, replace = T, prob = probs)
+```
+<br>
+
+2.4 Randomly assign 30 sampling units to 5 different treatments (labeled A-E). In practice, one would number the sample units beforehand.
+
+**Hint:** You can use the `gl` function to generate the treatment levels according to the number of replicates per group.
+
+```{r rand4-exercise, exercise=TRUE, fig.align='center', fig.width=4.5, fig.height=4.5, message=FALSE, warning=FALSE}
+```
+
+```{r rand4-exercise-solution, exercise.reveal_solution = TRUE}
+## Generate replicated treatment levels
+treat <- gl(n = 5, k = 6, labels = LETTERS[1:5])
+treat
+
+## Shuffle the 30 sample unit IDs
+unit <- sample(x = 1:30, size = 30, replace = F)
+
+## Combine the vectors into a data frame
+dat <- data.frame(treat, unit)
+dat
+```
+<br>
+
+2.5 Cross-validation is a statistical technique used to evaluate the performance and applicability of a predictive model. It commonly involves a random partitioning of the dataset into two subsets, one for training the model (training set) and the other one for model validation (test set). This iterative process (multiple training/test cycles) promotes robust model performance by reducing overfitting, balance bias and variance, and ensures that the model performs well with new, unseen data. 
+
+Use the `sample` function to create a random 80/20 split (assign 80 % of the observations to the training set and 20 % to the test set) of the built-in dataset `rock`, which contains measurements of physical properties of rock samples. Alternatively, you can use the function `slice_sample` in the _dplyr_ package to create the training set. Then use the `anti_join` function in the same package to create the test set. Consult the corresponding help files to familiarise yourself with these powerful functions.
+
+**Hint:** The approach based on the _dplyr_ package requires the addition of an ID column to the `rock` dataset indicating the row numbers, which can be done using the `row_number` function. Supply this ID variable to the `by` argument of the `anti_join` function, which creates the test set from the original data by excluding the rows from the training set.
+
+```{r cv1-exercise, message=FALSE, exercise=TRUE, warning=FALSE}
+## Load dataset
+data(rock)
+
+## View the first few observations
+head(rock, n = 3)
+
+## Determine the number of rows in the dataset
+nrow(rock)
+
+```
+
+```{r cv1-exercise-solution, exercise.reveal_solution = TRUE}
+## Create a random 80/20 data split
+## Base R
+## First, generate a random row index for the training subset comprising 80 % of the rows in the original dataset. The round() function rounds the number of rows to the nearest integer.
+train_index <- sample(x = 1:nrow(rock), size = round(0.8 * nrow(rock)), replace = F) # 38 out of the original 48 rows
+
+## Create the training set
+train <- rock[train_index, ]
+train
+
+## Create the test set (the complement of the train_index) simply by removing the rows designated to the training subset from the original dataset.
+test <- rock[-train_index, ]
+test
+
+## Using the dplyr package (tidyverse approach)
+## Add row ID
+rock <- mutate(.data = rock, id = row_number())
+
+## Create the training set
+train <- rock %>% slice_sample(prop = 0.8)
+
+# Create the test set
+test <- anti_join(x = rock, y = train, by = "id") #  returns all rows from 'rock' without a match in 'train'
+```
+<br>
+
+2.6 Stratified random sampling -- Often datasets contain grouping variables (such as treatments or species identity) and then a stratified sampling approach is needed, i.e. the random sampling occurs within the levels of the grouping variable. This ensures that the training and test subsets show roughly the same representation of the levels of the grouping variable as in the original dataset. Use the built-in `iris` dataset, which contains flower measurements from three _Iris_ species. Use the _dplyr_ functions `group_by` and `slice_sample` to create the training set (consult corresponding help files). Then use the _dplyr_ function `anti_join` to create the test set. 
+
+**Hint:** Alternatively, the `initial_split` function and the associated `training` and `testing` functions in R package _rsample_ can be used.
+
+```{r cv2-exercise, exercise=TRUE, fig.align='center', fig.width=4.5, fig.height=4.5, warning=FALSE, message=FALSE}
+## Examine the structure of the dataset
+str(iris)
+
+## Check the summary
+summary(iris) # 50 observations per species
+
+## View the first few observations
+head(iris)
+```
+
+```{r cv2-exercise-solution, exercise.reveal_solution = TRUE}
+## Add a row ID
+iris <- mutate(.data = iris, id = row_number())
+
+## Create the training set
+train <- group_by(.data = iris, Species) %>% slice_sample(prop = 0.8) %>% as.data.frame()
+nrow(train)
+
+## Create the test set
+test <- anti_join(x = iris, y = train, by = "id") # contains 30 observations, 10 of each species. Check for yourself.
+nrow(test)
+
+## Stratified random sampling using the 'rsample' package
+iris_split <- initial_split(iris, strata = Species, prop = 0.8)
+iris_split
+
+## Create the training set
+train_data <- training(iris_split)
+nrow(train_data)
+
+## Create the test set
+test_data <- testing(iris_split)
+nrow(test_data)
+
+## You may want to do a sanity check by calling up the test_data for example (30 observations, 10 of each species)
+```
+
+```{r eval=FALSE, echo=FALSE}
+## Alternative approach leaving the dataset intact by simply adding a binary variable indicating whether an observation belongs to the training or the test set.
+train_test <- group_by(.data = iris, Species) %>% mutate(set = sample(c("train", "test"), size = n(), replace = TRUE, prob = c(0.8, 0.2))) %>% as.data.frame()
+
+head(train_test, n = 10)
+
+## Check split using a contingency table (recall that this is a random process, so the row partitioning will vary each time you recreate the 'train_test' object)
+xtabs(~ set, data = train_test)
+
+```
+
+<br>
+
+### Exercise 3 - Dataset evaluation
+
+3.1 Inspect the pre-loaded dataset `feathers`, which contains strontium isotope ratios (^87^Sr/^86^Sr) in feathers of a certain bird species sampled from three different locations (A-C). The ^87^Sr/^86^Sr isotope ratios can provide valuable information about migration patterns and breeding sites. Besides taking a close look at the dataset, make sure to apply commonly used exploratory tools such as `str`, `summary` to get at grips with the data.
+
+Keeping in mind that statistical models typically assume that each row in a dataset corresponds to an independent replicate, can this dataset be used as is in a statistical analysis to compare the isotope ratios across sites?
+
+**Hint:** You can also use the following code to produce a contingency table, which might facilitate understanding the experimental design `ftable(xtabs(~ bird_individual + feather_id + location, data = feathers))`.
+
+```{r eval1, exercise=TRUE, message=FALSE, warning=FALSE}
+## View the first few rows of the data frame
+head(feathers, n = 10)
+```
+
+<p style="margin-top:30px;">
+
+<details style="margin-bottom:30px;"><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> for a model answer.</summary>
+
+<p style="margin-top:10px;">
+No, in a conventional statistical model, this data cannot be used as is, because the six feathers sampled from each bird individual are subsamples and not true replicates. Clearly, feathers collected from the same bird cannot be considered independent samples. Prior to analysis, the isotope values of the six feathers per bird individual need to be averaged to obtain a mean value for each bird individual. A bird individual represents a statistical replicate here and in total we therefore have 3 locations &times; 5 individuals = 15 replicates in this dataset (_n_ = 15). If these data were to be used for analysis as is, then this would have to be considered a case of pseudoreplicated analysis since the model assumes that each observation (each row in the dataset) constitutes a true replicate, which would incorrectly suggest 90 replicates (3 locations &times; 5 individuals &times; 6 feathers = 90). However, modern statistical modelling approaches, such as mixed effects models (not covered in this introductory textbook), can handle multiple or repeated measurements within the same experimental unit, which obviates the need to average pseudoreplication away.
+</p>
+</details>
+</p>
+
+3.2 Inspect the built-in dataset `PlantGrowth`, which contains the findings from a study comparing yields (dry weight of plants) under a control and two different treatment conditions (in statistical terms this would simply be called the 'treatment' variable and considered a categorical predictor with three levels: control, treatment1 and treatment2). Take a close look at the data, read the help file and use common exploratory tools such as `str`, `summary` to familiarise yourself with this dataset.
+
+Keeping in mind that statistical models typically assume that each row in a dataset corresponds to an independent replicate, can this dataset be used as is in a statistical analysis to compare the plant yields across treatments?
+
+```{r eval2, exercise=TRUE, message=FALSE, warning=FALSE}
+## Load dataset
+data(PlantGrowth)
+
+## The PlantGrowth data only comprises 30 observations, so we can simply look at the whole dataset.
+PlantGrowth
+```
+
+<p style="margin-top:30px;">
+
+<details style="margin-bottom:30px;"><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> for a model answer.</summary>
+
+<p style="margin-top:10px;">
+The data does not indicate any obvious dependencies (such as the nesting of feathers within bird individuals in exercise 3.1) and in the absence of any other information, it seems that this data can indeed be used as is, because each row (observation) corresponds to a true replicate. That means, there is a replication of 10 per group, resulting in _n_ = 30 for the entire dataset.
+</p>
+</details>
+</p>
+
+3.3 Inspect the pre-loaded dataset `milk`, which gives the results of a study on the effect of a new preservation method on the pH of milk. There were 4 batches of milk, each divided into two halves, which were randomly allocated to the control group or the group subjected to the new preservation method. Three samples of the control and three samples of the preservative treatment were taken from each batch at different times of the day (morning, noon, and evening). For each sample, the pH value was measured in the laboratory. 
+
+Keeping in mind that statistical models typically assume that each row in a dataset corresponds to an independent replicate, can this dataset be used as is in a statistical analysis to compare the plant yields across treatments?
+
+```{r eval3, exercise=TRUE, message=FALSE, warning=FALSE}
+## View the first few observations
+head(milk, n = 10)
+```
+
+<p style="margin-top:30px;">
+
+<details style="margin-bottom:30px;"><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> for a model answer.</summary>
+
+<p style="margin-top:10px;">
+If we treat each pH measurement as an independent replicate, then we commit pseudoreplication because the samples taken from the same batch are not independent. To make these data suitable for analysis, we would first have to average the pH values of the three samples taken per treatment at each time of the day and then average those means over the daily measurement time points because the batch is ultimately the true level of replication. That would leave us with one pH value for the control and one for the treatment per batch, i.e. _n_ = 8. However, modern statistical modelling approaches, such as mixed effects models (not covered in this introductory textbook), can handle multiple or repeated measurements within the same experimental unit, which obviates the need to average pseudoreplication away.
+</p>
+</details>
+</p>

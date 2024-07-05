@@ -1,0 +1,469 @@
+---
+title: "R-ticulate Exercises"
+author: "Martin Bader and Sebastian Leuzinger"
+output: learnr::tutorial
+runtime: shiny_prerendered
+description: >
+  Analysis of Covariance (ANCOVA)
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+## List of packages required for this tutorial
+# pkgs <- c("learnr", "kableExtra", "tibble", "dplyr", "ggplot2", "emmeans", "MASS")
+# 
+# ## Check whether the specified package is available
+#   inst.pack <- rownames(installed.packages()) # list of installed packages
+#   if (length(setdiff(x = pkgs, y = inst.pack)) > 0) { # setdiff() returns the elements of x that don't occur in y
+#     install.packages(setdiff(pkgs, inst.pack), repos = "https://cloud.r-project.org", dependencies = T)  
+#   }
+#   
+## Load required packages
+library(learnr)
+library(tibble)
+library(dplyr)
+library(ggplot2)
+library(emmeans)
+library(MASS)
+library(kableExtra)
+  
+data(cabbages)
+dough <- structure(list(flour = structure(c(1L, 1L, 1L, 1L, 1L, 2L, 2L, 
+2L, 2L, 2L, 3L, 3L, 3L, 3L, 3L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 
+2L, 2L, 3L, 3L, 3L, 3L, 3L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 
+2L, 3L, 3L, 3L, 3L, 3L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 
+3L, 3L, 3L, 3L, 3L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 3L, 
+3L, 3L, 3L, 3L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 3L, 3L, 
+3L, 3L, 3L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 3L, 3L, 3L, 
+3L, 3L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 3L, 3L, 3L, 3L, 
+3L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 3L, 3L, 3L, 3L, 3L
+), levels = c("A", "B", "C"), class = "factor"), protein = c(10, 
+10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 
+11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 
+12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 13, 13, 13, 13, 
+13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 14, 14, 14, 14, 14, 
+14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 
+15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 
+16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 
+17, 17, 17, 17, 17, 17, 17, 18, 18, 18, 18, 18, 18, 18, 18, 18, 
+18, 18, 18, 18, 18, 18), visco = c(794.3, 1172.21, 505, 961.05, 
+1015.76, 1801.12, 2488.93, 2391.82, 2788.34, 2207.76, 988.47, 
+1040.95, 1127.86, 506.29, 767.87, 1158.77, 963.6, 1637.62, 1162.1, 
+1456.18, 2784.52, 2504.21, 2940.08, 2960.53, 2986.8, 1540.54, 
+777.08, 1445.31, 1393.08, 1061.84, 1727.18, 1583.78, 891.63, 
+946.36, 1538.86, 3360.99, 2948.26, 2677.34, 3056.96, 2884.37, 
+1480.3, 1521.39, 1325.57, 1613.45, 1156.82, 1544.73, 1143.07, 
+1414.63, 844.12, 1845.68, 2933.82, 3516.98, 3359.66, 2809.35, 
+2993.23, 1392.28, 1443.69, 923.83, 1529.51, 1746.65, 1868.35, 
+1045.96, 1352.54, 1288.32, 1370.58, 4045.9, 3204.49, 4001.71, 
+3479.17, 3403.47, 1957.26, 1845.7, 1530.49, 1599.89, 2503.78, 
+1767.76, 1832.34, 1735.07, 1298.48, 1491.9, 3870.99, 4051.68, 
+3664.64, 3544.65, 4222.37, 1767.67, 1795.87, 1740.37, 2039.99, 
+2581.73, 1786.81, 1966.6, 1496.92, 2456.02, 2156.43, 3806.23, 
+4525.84, 4028.16, 3999.85, 4226.59, 2656.82, 2263.26, 2418.17, 
+1858.4, 2072.29, 2246.96, 1866.52, 1349.69, 2406.01, 1523.92, 
+4014.32, 4162.03, 4367.44, 3696.53, 4855.4, 2306.65, 2465.43, 
+1814.23, 2980.53, 2461.55, 2249.29, 1966.71, 2342.14, 1820.37, 
+2005.65, 4395.58, 4663.07, 4503.67, 4985, 4504.23, 2683.5, 2252.49, 
+2473.79, 2229.75, 2664.7)), row.names = c(NA, -135L), class = "data.frame")
+```
+<br>
+
+## Chapter 11 - Analysis of Covariance (ANCOVA)
+
+### Exercise 1 - Multiple-choice quiz
+
+Please note that there is only one correct (or most correct) answer to each question.
+
+<p style="margin-top:-30px;">
+</p>
+```{r ancova_quiz, echo=FALSE}
+quiz(caption = "",
+      question("Which of the following statements best describes the purpose of analysis of covariance (ANCOVA)?",
+         answer("ANCOVA is used to analyse a discrete numeric response variable as a function of a mix of continuous and binomial predictors."),
+         answer("ANCOVA is used to analyse an ordinal response variable as a function of a mix of continuous and binomial predictors."),
+         answer("ANCOVA is used to analyse a continuous response variable as a function of a mix of ordinal and binomial predictors."),
+         answer("ANCOVA is used to analyse a continuous response variable as a function of a mix of categorical and continuous predictors.", correct = T),
+         answer("ANCOVA is used to analyse a categorical response variable as a function of a mix of continuous and categorical predictors."),
+         allow_retry = T
+         ),
+     question("Familiarise yourself with the built-in dataset `Toothgrowth` (consult the help file). If you attempted to run an ANCOVA with these data, which of the following commands would be appropriate?",
+         answer("`lm(summary(len ~ dose * supp, data = Toothgrowth)`"),
+         answer("`summary(lm(len ~ dose * supp, data = Toothgrowth)`", correct = T),
+         answer("`lm(summary(dose ~ len * supp, data = Toothgrowth)`"),
+         answer("`summary(lm(dose ~ len * supp, data = Toothgrowth)`"),
+         answer("`lm(summary(supp ~ dose * len, data = Toothgrowth)`"),
+         answer("`summary(lm(supp ~ dose * len, data = Toothgrowth)`"),
+         allow_retry = T
+         ),
+         question("Which of the following statements gives the most appropriate interpreation of a significant interaction between a continous and a categorical predictor in an ANCOVA model? <br> Such an interaction means that", 
+         answer("the slopes and the intercepts of the regression lines are similar among the groups of the categorical predictor, implying a constant effect on the response across all values of the continuous predictor."),
+         answer("the slopes of the regression lines are similar among the groups of the categorical predictor but the intercepts vary, implying significant difference between the groups of the categorical predictor but a consistent effect of the continuous predictor."),
+          answer("the slopes of the regression lines are of opposite signs between the groups of the categorical predictor. In other words: the categorical predictor has a significant effect on the response but at least in two groups we see opposite effects, i.e. negative vs. positive slopes along the range of the continuous predictor."),
+          answer("the slopes of the regression lines vary significantly between the groups of the categorical predictor. In other words: the categorical predictor has a significant effect on the response but the size of this effect varies across the range of the continuous predictor.", correct = T),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+         question("Which of the following research scenarios does not lend itself to an analysis of covariance?",
+         answer("Is there a difference between Italy, the United Kingdom, Germany and Spain in the amount of CO~2~-emissions considering the size of the emitting enterprises?"),
+         answer("An investigation on the effect of habitat type on species diversity taking habitat area into account."),
+         answer("A study on the impact of urbanisation on water quality in streams contingent on stream flow rate."),
+         answer("A chemical experiment on the effect of catalyst concentration on the rate of a chemical reaction, taking temperature into account.", correct = T),
+         answer("A materials science study about the impact of different processing methods on the strength of a composite material, while taking air humidity into account."),
+         allow_retry = T
+         ),
+         question("A _post hoc_ analysis following an ANCOVA with a significant interaction term, tests for",
+         answer("differences in group means."),
+         answer("differences in group variance."),
+         answer("differences in slopes between groups.", correct = T),
+         answer("an overall combined effect of the categorical and the continuous predictor."),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+      question("Which of the following functions is suitable for a _post hoc_ analysis following an ANCOVA with a significant interaction term?",
+         answer("`pairwise.t.test`"),
+         answer("`pairwise.wilcox.test`"),
+         answer("`TukeyHSD`"),
+         answer("`emmeans`"),
+         answer("`emmtrends`", correct = T),
+         allow_retry = T
+         ),
+        question("Imagine an ANCOVA scenario with one continuous and a categorical predictor that only comprises a control and a treatment group. Which of the following pairwise slope comparisons in a _post hoc_ analysis most likely indicates similar slopes?",
+        answer("Control -- Treatment: -20.7"),
+        answer("Control -- Treatment: 32.4"),
+        answer("Control -- Treatment: 0.1", correct = T),
+        answer("Control -- Treatment: 10.8"),
+        answer("Cannot be determined with the information provided."),
+  allow_retry = T
+),
+         question(c("In an ANCOVA model the interaction between the categorical and the continuous predictor resulted in an _F_ value of 2.86 with 3 numerator degrees of freedom (_df_~num~) and 112 denominator degrees of freedom (_df_~den~). The corresponding _P_-value (rounded to three decimal points) is", "<p style='font-size:14px;font-weight:normal;margin-top:-5px;line-height:1.1;'>Hint: Use the <span style='font-family:Courier New;'>pf</span> function to answer this question.</p>"),
+         answer("0.084"),
+         answer("0.127"),
+         answer("0.612"),
+         answer("0.040", correct = T),
+         answer("0.013"),
+         allow_retry = T
+         ),
+        question("Imagine an ANCOVA scenario, where the categorical predictor consists of two treatment levels (treatA, treatB) and a concentration of a chemical compound as continuous predictor. The interaction between the categorical and the continuous predictor was significant and showed up in the `summary` output with a negative estimate: <span style='font-family:Courier New;'>treatB:conc -0.588</span>. What does a negative sign of the estimate of an interaction term mean in this context?",
+        answer("This indicates a model misspecification."),
+        answer("This indicates a negative slope of treatB."),
+        answer("This indicates that the slope of treatB is 0.588 units shallower than that of treatA.", correct = T),
+        answer("This indicates that the intercept of treatB is 0.588 units lower than that of treatA."),
+        answer("None of the above."),
+  allow_retry = T
+),
+question("A friend sends you a dataset together with an R script that runs an ANCOVA with interaction and asks you to check it. You run the code and notice in the model summary output that the interaction term is not statistically significant (_P_ = 0.076). You also detect a fan-shaped pattern in the residual vs. fitted values plot. Which of the following suggestions would be most appropriate for your friend?",
+        answer("Everything seems fine with the model and the statistical inference."),
+        answer("The model could be simplified by removing the non-significant interaction term."),
+        answer("The variance homogeneity assumption is violated, which commonly results in biased standard errors and thus flawed statistical inference. The heteroscedasticity needs to be dealt with before the model results can be considered credible.", correct = T),
+        answer("The normality assumption is violated. A switch to a generalised linear model (GLM) to allow for a more suitable error distribution would be advisable to resolve this issue and ensure robust statistical inference."),
+        answer("None of the above."),
+  allow_retry = T
+),
+question("At a lab meeting, a co-worker presents the findings of a study where a continuous response variable was measured as a function of a continuous predictor and a categorical predictor with three levels. The results were analysed using an ANCOVA approach and the associated figure shows identical slopes for all three levels of the categorical variable (factor). However, judging by the data pattern, it seems to you that a different slope might be appropriate for one of the factor levels. Which constructive criticism would you offer?",
+        answer("The plot seems to distort the relationship and should be redrawn with a different aspect ratio."),
+        answer("The deviating factor level should be excluded from the analysis."),
+        answer("The common slope should be adjusted a little so that it fits all three factor levels reasonably well."),
+        answer("The interaction between the continuous and categorical predictor should be included in the model to test for differences in slopes among factor levels.", correct = T),
+        answer("None of the above."),
+  allow_retry = T
+),
+question(c("A researcher has measured the biodegradation potential (continuous response) of two bacterial species (factor with two levels) in wastewater across a range of pH<sup>*</sup> values (continuous predictor). An exploratory plot of the data shows a linear pattern for one of the species, but a nonlinear pattern for the other one. What recommendation would you make regarding the analysis approach?", 
+           "<p style='font-size:12px;font-weight:normal;margin-top:-5px;margin-bottom:8px;'>* pH = the negative base ten logarithm of the H<sup>+</sup> concentration in solution</p>"),
+        answer("An ANCOVA approach is suitable as the model can deal with nonlinear patterns and thus allows for a comparison of the biodegradation potential of the two bacterial species."),
+        answer("The linearity assumption of the ANCOVA is violated. Therefore, the data should be analysed separately by bacterial species using a simple linear regression and a nonlinear regression approach, respectively."),
+        answer("An ANCOVA assumes linear relationships. A transformation of the nonlinear subset may linearise the relationship and thus help meet the linearity assumption. Otherwise, a more flexible modelling framework that can accommodate linear and nonlinear trends may be required to compare the biodegradation potential of the two bacterial species.", correct = T),
+        answer("The pH variable should be disregarded and the data subjected to an analysis of variance to compare the biodegradation potential between the two bacterial species regardless of pH."),
+        answer("None of the above."),
+  allow_retry = T
+)
+)
+```
+
+<p style="margin-top:20px">
+<details><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> to display an elaboration on the last multiple-choice question.</summary>
+
+<p style="margin-top:10px">
+You may be wondering why the intuitive second answer is wrong (a data split by bacterial species followed by separate linear and nonlinear analyses). If we apply different statistical models to the two species-specific subsets of the data, then we can no longer formally (in a statistical sense) compare the biodegradation response of the two bacterial species. A valid species comparison requires the whole dataset to be analysed within the same modelling framework.
+</p>
+
+</details>
+</p>
+
+<br>
+
+The model code related to the exercises below relies on the following R packages (which are autoloaded behind the scenes in this tutorial):
+
+* _dplyr_
+* _emmeans_
+* _ggplot2_
+* _MASS_
+
+### Exercise 2
+Familiarise yourself with the built-in data set `cabbages` (in the built-in package _MASS_). Identify the response and the explanatory variables, you can disregard the 'Date' variable. <br>
+Tip: Make use of data exploration tools such as `str` and `summary` to get an overview of the data.
+
+a. Create an exploratory plot of the data.
+
+b. Build and run an appropriate ANCOVA model. 
+
+c. Use model diagnostic plots to check the underlying assumptions of variance homogeneity and normality and report your findings.
+
+d. If the model assumptions are met, report the analysis results in a scientifically sound way.
+
+e. Produce a publication-quality figure of the data showing the linear fits for the two cabbage cultivars.
+
+<p style="margin-top:20px">
+</p>
+
+<br>
+Enter your R code for exercise 2 a-e here.
+
+```{r ancova1_exercise, exercise = TRUE, fig.align='center', fig.width=6, fig.height=3.5}
+
+```
+
+```{r ancova1_exercise-solution, exercise.reveal_solution = TRUE, fig.align='center', fig.width=5, fig.height=5}
+## a. Exploratory plot
+ggplot(data = cabbages, aes(x = HeadWt, y = VitC)) +
+  geom_point() +
+  facet_wrap(facets = ~ Cult)
+
+## b. Build and run an ANCOVA model
+m1 <- lm(VitC ~ HeadWt * Cult, data = cabbages)
+summary(m1)
+
+## In linear models, the F-test is the equivalent to a likelihood ratio test. The F-test examines whether the additional variables or interaction terms in the more complex model contribute significantly to explaining the variance in the response variable compared to a simpler model.
+drop1(m1, test = "F")
+
+## Since the interaction between head weight and cultivar is not statistically significant, we could simplify the model by removing the interaction term.
+
+m2 <- lm(VitC ~ HeadWt + Cult, data = cabbages)
+summary(m2)
+drop1(m2, test = "Chisq")
+
+## c. Model diagnostic plots
+op <- par(mfrow = c(2, 2), mar = c(2.5, 3.5, 1.5, 1.5), oma = c(0, 3, 0, 3), tcl = -0.3, mgp = c(1.5, 0.45, 0)) # temporarily change graphical parameters to create more space
+plot(m2)
+par(op) # reset the default overall graphical parameters
+
+## e. Publication-quality figure
+## Since we should not extrapolate (generate predictions that fall outside the range of our data), we should check if the two cultivars have equal ranges in regard to their head weight and create cultivar-specific ranges of new predictors values to predict from. 
+
+## The cabbage cultivars have different ranges:
+group_by(.data = cabbages, Cult) %>% group_map(.f = ~ range(.x$HeadWt))
+
+## Create a data frame to predict from, containing 100 head weight values for each of the two cabbage cultivars spanning their specific ranges:
+newdat <- group_by(.data = cabbages, Cult) %>% group_modify(.f = ~ data.frame(HeadWt = seq(min(.x$HeadWt), max(.x$HeadWt), length.out = 100))) %>% as.data.frame
+
+## Model predictions incl. 95% confidence intervals
+preds <- predict(m2, newdata = newdat, interval = "confidence", level = 0.95)
+
+## Add model predictions to the newdat data frame
+newdat <- cbind(newdat, preds)
+head(newdat)
+newdat$VitC <- 0 # The 'fit' are the predictions for VitC, but geom_ribbon requires a VitC variable in the data frame because it occurs in the ggplot call at the start.
+
+ggplot(data = cabbages, aes(x = HeadWt, y = VitC)) +
+  labs(x = "Head weight (kg)", y = expression(paste("Vitamin C (mg 100 g"^-1, ")"))) +
+  geom_ribbon(data = newdat, aes(ymin = lwr, ymax = upr), fill = "grey", colour = "grey") +
+  geom_point() +
+  geom_line(data = newdat, aes(x = HeadWt, y = fit)) +
+  facet_wrap(facets = ~ Cult) +
+  theme_test()
+```
+
+<p style="margin-top:40px">
+
+<details><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> for an example of how to report the statistical findings as specified in Exercise 2 c and d.</summary>
+
+<p style="margin-top:10px">
+2 c. The plot of the residuals vs. fitted values shows no conspicuous pattern and relatively equal spread of the residuals. Most of the points in the quantile-quantile plot lie on or close to the 1:1 line. Therefore, one may conclude that there are no gross violations of the variance homogeneity or normality assumptions. The Cook’s distance plot flags no observations as highly influential.<br>
+<p style="margin-top:15px">
+</p>
+2 d. With only two levels of a categorical variable, we could use the model `summary` output but with more than two levels it is advisable to use the `drop1` function to get an overall significance for the interaction or main terms. We stuck to this procedure here, too: <br>
+
+There was no significant interaction between cabbage head weight and cultivar (_F_~1,57~ = 1.13, _P_ = 0.292), meaning that vitamin C content changed in the same manner with head weight in both cultivars. Vitamin C content declined significantly by 5.7 mg Vitamin C 100 g^-1^ per kilogram of head weight increase (_F_~1,57~ = 66.192, _P_ < 0.001, _r_^2^ = 0.61, Fig. X^†^). There was a significant difference in Vitamin C content between the two cultivars, with c52 showing on average 9.4 mg vitamin C 100 g^-1^ more than c39 (_F_~1,56~ = 28.81, _P_ < 0.001).
+
+<font size="2">^†^Refers to the publication-quality figure created as part of this exercise. </font>
+</p>
+</details>
+</p>
+
+### Exercise 3
+Rupture viscosity in bread dough refers to the viscosity of the dough at the point of rupture or breakage during mechanical testing. A food lab tests the effect of protein enrichment on rupture viscosity of bread dough prepared from flour originating from two wheat cultivars (A and B). Rupture viscosity (mPa·s) is a measure of the dough's resistance to deformation and its ability to maintain its structure under stress before ultimately breaking. The dataset is pre-loaded under the name `dough`. The categorical variable `flour` stores the two flour types, the continuous `protein` variable indicates the protein content as a percentage and the response variable rupture viscosity is in the `visco` column.  
+Tip: Make use of data exploration tools such as `str` and `summary` to get an overview of the data.
+
+a. Create an appropriate exploratory plot of the data. 
+
+b. Fit an ANCOVA model with interaction to the data.
+
+c. Inspect the model diagnostic plots and comment on whether the variance homogeneity and the normality assumption are met, and if any outliers were flagged.
+
+d. If there is a significant interaction term, follow up with a _post hoc_ comparison, i.e. test for differences in slopes using functions in the `emmeans` package.
+
+e. Report the statistical findings as you would in a scientific paper, thesis or report and produce a publication-quality figure with lower-case letters indicating the results of the _post hoc_ test.
+
+<p style="margin-top:15px">
+</p>
+
+<br>
+Enter your R code for exercise 3 here.
+
+```{r ancova2_exercise, exercise=TRUE, fig.height=4, fig.width=7.5, fig.align='center', comment=NA}
+
+```
+
+```{r ancova2_exercise-solution, exercise.reveal_solution=TRUE, comment=NA}
+## a. Graphical data exploration
+ggplot(data = dough, aes(x = protein, y = visco, colour = flour)) +
+  geom_point() +
+  facet_wrap(facets = ~ flour)
+
+## b. Fit an ANCOVA model with interaction
+m1 <- lm(visco ~ protein * flour, data = dough)
+
+## Check model results
+summary(m1) # Does not give us an overall P-value of the interaction term.
+
+anova(m1) # Valid for the interaction term, but as the sequence of predictors in the model formula matter, their P-values change when their order changes in the model.  
+
+drop1(m1, test = "F") # This likelihood ratio test approach overcomes the 'sequence of predictors issue' and should routinely be used. As the position of a single two-way interaction at the bottom of the stats table is invariable, the F- and P-values from anova() and drop1() are in this case identical. 
+
+## c. Inspect model diagnostic plots
+op <- par(mfrow = c(2, 2), mar = c(2.5, 3.5, 1.5, 1.5), oma = c(0, 3, 0, 3), tcl = -0.3, mgp = c(1.5, 0.45, 0)) # temporarily change graphical parameters to create more space
+plot(m1)
+par(op)
+
+# The plot of the residuals vs. fitted values indicates homoscedasticity and the Q-Q plot shows no deviations from normality. No influential observations are flagged.
+
+## d. Post hoc analysis. 
+emt <- emtrends(object = m1, specs = "flour", var = "protein")
+pairs(emt, adjust = "fdr") # fdr = false discovery rate method (more powerful than other multiplicity adjustments such as the Bonferroni method)
+
+## Publication-quality figure
+
+## Get model predictions
+newdat <- expand.grid(flour = levels(dough$flour), protein = seq(min(dough$protein), max(dough$protein), length.out = 100)) # data frame with 100 evenly spaced protein values per flour type to predict from
+preds <- predict(m1, newdata = newdat, interval = "confidence") # ANCOVA model predictions
+newdat <- cbind(newdat, preds, visco = 0) # add the model predictions incl. the 95% confidence interval to the newdat data frame
+newdat <- arrange(.data = newdat, flour) # order data frame by flour type
+
+## Pre-define axis labels
+xlab <- "Protein content (%)"
+ylab <- "Rupture viscosity (mPa\u00B7s)" # \u00B7 is the unicode character for a floating point
+
+## Pre-define the strip labels for the individual panels
+strip.lab <- function(x) { c("Flour type A", "Flour type B", "Flour type C") }
+
+## Polished figure in ggplot2
+ggplot(data = dough, aes(x = protein, y = visco)) +
+  geom_ribbon(data = newdat, aes(y = fit, ymin = lwr, ymax = upr), colour = "grey80", fill = "grey80") +
+  geom_point(shape = 21, size = 1.8, fill = "white") +
+  labs(x = xlab, y = ylab) +
+  geom_line(data = newdat, aes(x = protein, y = fit), col = "white", linewidth = 1.25, show.legend = F) +
+  geom_line(data = newdat, aes(x = protein, y = fit), col = "black", show.legend = F) +
+  facet_wrap(facets = ~ flour, labeller = labeller(flour = strip.lab)) +
+  scale_y_continuous(limits = c(0, 5500), expand = c(0, 0)) +
+  scale_x_continuous(breaks = seq(10, 18, by = 2), limits = c(9, 19), expand = c(0, 0)) +
+  theme_test()
+```
+
+<p style="margin-top:40px">
+<details><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> for an example how to report the statistical findings as specified in Exercise 3 c and e.</summary>
+
+<p style="margin-top:10px">
+3 c. The model diagnostic plots neither showed gross violations of the variance homogeneity or normality assumptions nor any outliers. <br>3 e. We found a statistically significant protein content `r knitr::asis_output("\u00D7")` flour type interaction implying a difference in slopes among the flour types (_F_~2,129~ = 14.94, _P_ < 0.001; Figure X^†^). A _post hoc_ analysis showed that all slopes of all three flour types differed significantly from each other (Table 1). The steepest slope of 271 mPa&#xB7;s per percent increase in protein content was seen in flour type B, followed by flour type C with a slope value of 201 and the shallowest slope of 135 was associated with flour type A (Figure X).
+```{r, ancova_table, echo=FALSE, message=FALSE}
+my_tbl <- tibble::tribble(
+          ~`Contrast`, ~Estimate, ~`SE`, ~`Df`, ~`t`, ~`P`, ~` `,
+        "A -- B", "-136.1", "24.9", "129", "-5.46", "&lt; 0.001", "\\***",
+        "A -- C", "-65.6", "24.9", "129", "-2.63", "0.001", "\\**",
+        "B -- C", "70.5", "24.9", "129", "2.83", "0.008", "\\**"
+  )
+#my_tbl
+names(my_tbl)[4] <-  text_spec(names(my_tbl)[4], italic=TRUE)
+names(my_tbl)[5] <-  text_spec(names(my_tbl)[5], italic=TRUE)
+names(my_tbl)[6] <-  text_spec(names(my_tbl)[6], italic=TRUE)
+kbl(my_tbl, caption = "<FONT COLOR='#3b3b3b'>**Table 1** Results of a _post hoc_ analysis of the interaction between protein content and flour type on rupture viscosity. <span style='font-size:80%;'>Contrast = the respective pairwise comparison, Estimate = difference in slope values, SE = standard error of the difference, _Df_ = degrees of freedom, _t_ = _t_-statistic, _P_ = _P_-value. *** _P_ &lt; 0.001, ** _P_ &lt; 0.01</span></FONT>", label = NA, align = "crrrrrl", escape = FALSE, booktabs = T) %>% 
+  kable_styling(html_font = "Arial", bootstrap_options = "basic", full_width = F)
+```
+
+<font size="2">^†^Refers to the publication-quality figure created as part of this exercise. </font>
+</p>
+</details>
+</p>
+
+### Exercise 4 - Understanding ANCOVA tables
+
+An experiment was carried out to compare the thermal expansion ($\mu$m/m °C) of three different carbon fibre-reinforced polymers (A, B, C). 
+
+a. Inspect the ANCOVA output below and calculate the missing values in the table below. Note that small rounding errors may occur. 
+
+b. What is the slope value for polymer B? 
+
+```{r, table1, echo=FALSE, message=FALSE}
+# dat <- iris
+# dat$Sepal.Width <- anyscale(x = dat$Sepal.Width, a = 0, b = 40)
+# dat$Petal.Length <- dat$Petal.Length * 100
+# summary(test <- lm(Petal.Length ~ Sepal.Width * Species, data = dat))
+# emt <- emtrends(test, specs = "Species", var = "Sepal.Width")
+# cld(emt)
+# ggplot(dat, aes(x = Sepal.Width, y = Petal.Length)) +
+#   geom_point() +
+#   facet_wrap(facets = ~Species)
+my_tbl <- tibble::tribble(
+          ~` `, ~Estimate, ~`Std. Error`, ~`t value`, ~`P(>\\|t\\|)`, ~` `,
+        "(Intercept)", "134.575",  "21.439",  "6.277", "3.82e-09", "\\***",
+        "Temperature", "0.489", "0.871", "???", "0.5759", "",
+        "PolymerB", "226.793", "25.918", "8.751", "5.16e-15", "\\***",
+        "PolymerC", "353.778", "???", "12.786", "&lt; 2e-16", "\\***",
+"Temperature:PolymerB", "4.548", "1.366", "3.329", "???", "\\**",
+"Temperature:PolymerC", "???", "1.345", "2.699", "0.0078", "\\**",
+  )
+#my_tbl
+kbl(my_tbl, align = "rrrrrl", escape = FALSE, booktabs = T) %>% 
+  kable_styling(html_font = "Courier New", bootstrap_options = "basic", full_width = F)
+
+```
+
+
+```{r quiz1, echo=FALSE, eval=FALSE}
+quiz(caption = "",
+question_numeric(
+  "How many denominator degrees of freedom do we have? (Round your answer to an integer.)",
+  answer(27, correct = T),
+  allow_retry = T
+),
+question_numeric(
+  "What is the _F_-value? (Report the value with three decimals.)",
+  answer(4.846, correct = T),
+  allow_retry = T
+)
+)
+```
+
+
+<details><summary><p class="btn btn-default" style="background-color:#00873E;border-color:#00873E;color:white;font-size:110%;padding: 7px 15px 7px 15px;">Solution</p></summary>
+```{r, table1_solution, echo=FALSE, message=FALSE}
+my_tbl <- tibble::tribble(
+          ~` `, ~Estimate, ~`Std. Error`, ~`t value`, ~`P(>\\|t\\|)`, ~` `,
+        "(Intercept)", "134.575",  "21.439",  "6.277", "3.82e-09", "\\***",
+        "Temperature", "0.489", "0.871", "0.561", "0.5759", "",
+        "PolymerB", "226.793", "25.918", "8.751", "5.16e-15", "\\***",
+        "PolymerC", "353.778", "27.670", "12.786", "&lt; 2e-16", "\\***",
+"Temperature:PolymerB", "4.548", "1.366", "3.329", "0.0011", "\\**",
+"Temperature:PolymerC", "3.629", "1.345", "2.699", "0.0078", "\\**",
+  )
+#my_tbl
+kbl(my_tbl, align = "rrrrrl", escape = FALSE, booktabs = T) %>% 
+  kable_styling(html_font = "Courier New", bootstrap_options = "basic", full_width = F)
+```
+</details>
+<br>
+
+<p style="margin-top:40px">
+<details><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> to view the solution to question 4 b.</summary>
+<p style="margin-top:10px">
+The slope of polymer B is obtained by adding the slope of polymer A given by the `Temperature` estimate to the estimate of `Temperature:PolymerB`, which is the difference between the slopes of polymer B and A. Consequently, the slope of polymer B is: 0.489 + 4.548 = 5.037 $\mu$m/m °C.
+</p></details></p>

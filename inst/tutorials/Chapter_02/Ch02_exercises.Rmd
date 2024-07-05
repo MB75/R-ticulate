@@ -1,0 +1,223 @@
+---
+title: "R-ticulate Exercises"
+author: "Martin Bader and Sebastian Leuzinger"
+output: learnr::tutorial
+runtime: shiny_prerendered
+description: >
+  Measuring Variation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+## List of packages required for this tutorial
+# pkgs <- "learnr"
+# 
+# ## Check whether the specified package is available
+#   inst.pack <- rownames(installed.packages()) # list of installed packages
+#   if (length(setdiff(x = pkgs, y = inst.pack)) > 0) { # setdiff() returns the elements of x that don't occur in y
+#     install.packages(setdiff(pkgs, inst.pack), repos = "https://cloud.r-project.org", dependencies = T)  
+#   }
+  
+## Load required packages
+library(learnr)
+
+set.seed(456)
+dat1 <- rnorm(n = 30, mean = 5) # sd = 1
+dat2 <- rnorm(n = 30, mean = 5, sd = 2) # sd = 2
+```
+<br>
+
+## Chapter 2 - Measuring Variation
+
+### Exercise 1 - Multiple-choice quiz
+
+Please note that there is only one correct (or most correct) answer to each question.
+
+<p style="margin-top:-30px;">
+</p>
+```{r quiz1, echo=FALSE}
+quiz(caption = "",
+     question("In an experiment exploring the effects of caffeine on memory retention, you are tasked with designing a control group. Which of the following experimental designs provides an appropriate control group?",
+    answer("Group A receives a moderate dose of caffeine before completing a memory test, while Group B receives no caffeine and completes the same memory test."),
+    answer("Group A receives a placebo before completing a memory test, while Group B receives a high dose of caffeine and completes the same memory test.", correct = T),
+    answer("Group A receives a moderate dose of caffeine before completing a memory test, while Group B receives a moderate dose of caffeine and completes a different memory test."),
+    answer("Group A receives no treatment and completes a memory test, while Group B receives a moderate dose of caffeine and completes the same memory test."),
+    answer("None of the above."),
+    allow_retry = T
+  ),
+  
+    question("Which of the following statements best describes systematic and unsystematic variation in statistical analysis?", 
+         answer("Systematic variation refers to the variation linked to a reference system, whereas unsystematic describes variation outside the reference system."),
+         answer("Systematic variation refers to random fluctuations in data, while unsystematic variation refers to consistent patterns or trends."),
+         answer("Systematic variation refers to consistent patterns or trends in data, while unsystematic variation refers to random fluctuations.", correct = T),
+         answer("Unsystematic variation can be controlled or minimized through proper experimental design, while systematic variation cannot be controlled."),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+  
+  question("What plot types can be used to visualise variation in a single variable?",
+    answer("Scatter plot and pie chart."),
+    answer("Dot chart and histogram", correct = T),
+    answer("Boxplot and bar chart"),
+    answer("Line plot and mosaic plot."),
+    answer("None of the above."),
+    allow_retry = T
+  ),
+  
+  question("Which of the following equations is used to calculate the variance?",
+  answer("$\\sum\\left(x_{i} - \\bar{x}\\right)^{2}$"),
+  answer("$\\sqrt{\\frac{\\sum(x_{i} - \\bar{x})^{2}}{n - 1}}$"),
+  answer("$\\frac{\\sum(x_{i} - \\bar{x})^{2}}{n - 1}$", correct = T),
+  answer("$\\frac{s}{\\sqrt{n}}$"),
+  answer("None of the above."),
+  allow_retry = T
+),
+
+  question("Which of the following statements accurately distinguishes between standard deviation (SD) and standard error (SE)?",
+  answer("Standard deviation measures the spread of data points around the mean, while standard error measures the precision of the sample mean estimate.", correct = T),
+  answer("Standard deviation measures the precision of the sample mean estimate, while standard error measures the spread of data points around the mean."),
+  answer("Standard deviation is used for population parameters, whereas the standard error is used for sample statistics."),
+  answer("Standard deviation is calculated as the square root of the variance, while standard error is calculated as the mean of the sample standard deviations."),
+  answer("None of the above."),
+  allow_retry = T
+),
+
+question("Which of the following statements correctly distinguishes between a sample and the population?",
+  answer("A population is a subset of individuals selected for study, while a sample consists of all individuals in the dataset."),
+  answer("A population refers to the entire group of individuals or objects of interest, while a sample is a subset of that population selected for study.", correct = T),
+  answer("A population refers to a local group of individuals or objects of interest, while a sample comprises observations from many distinct populations."),
+  answer("A sample consists of individual observations, while a population is the entire dataset collected for a study."),
+  answer("None of the above."),
+  allow_retry = T
+),
+
+question("Identify the population and sample:
+A conservation group aims to gauge the opinions of the local residents on the establishment of wind turbines in a coastal area. The group conducts a survey among 800 residents living near the proposed wind farm site. Of these, 200 residents express support for the construction of the wind turbines, while 600 residents oppose it. The group concludes that local residents generally dislike the idea of the installation of wind turbines in the coastal region.",
+  answer("Population: 800 residents; Sample: 200 residents."),
+  answer("Population: 800 residents; Sample: 600 residents."),
+  answer("Population: local residents; Sample: 800 residents.", correct = T),
+  answer("Population: 800 residents; Sample: local residents."),
+  answer("None of the above."),
+  allow_retry = T
+),
+
+question("A random sample consisting of values 2, 4, 6, 8, 10 has a variance of",
+    answer("6"),
+    answer("8"),
+    answer("10", correct = T),
+    answer("12"),
+    answer("20"),
+    allow_retry = T
+  ),
+
+question("A random sample consists of four observations with values 1, 4, 5, 7. The sample standard deviation is",
+  answer("6.25"),
+  answer("4.25"),
+  answer("1.25"),
+  answer("4.5"),
+  answer("2.5", correct = T),
+  allow_retry = T
+),
+
+ question("The mean and standard deviation of a random sample of 50 observations are 33 and 6, respectively. If 2 is added to each observation, then the new mean and standard deviation will be",
+         answer("35, 8"),
+         answer("35, 10"),
+         answer("34, 8"),
+         answer("35, 6", correct = T),
+         answer("35, 4"),
+         allow_retry = T
+         ),
+
+ question("A random sample of 36 cichlid fish of the same species taken from Lake Victoria in Africa, yielded a mean length of 32 cm and a standard deviation of 4.8 cm. Calculate the standard error of the sample mean.",
+         answer("0.133"),
+         answer("7.50"),
+         answer("0.80", correct = T),
+         answer("6.82"),
+         answer("0.365"),
+         allow_retry = T
+         ),
+
+question("Sticking with the previous fish example, how many samples are required to halve the standard error (assuming a constant standard deviation)?",
+         answer("72"),
+         answer("216"),
+         answer("65"),
+         answer("144", correct = T),
+         answer("432"),
+         allow_retry = T
+         )
+)
+```
+<br>
+
+### Exercise 2 - Writing functions in R
+
+a. The coefficient of variation (CV) is a measure of the relative variability of a dataset compared to its mean. It is 
+defined as the ratio of the standard deviation ($\sigma$) to the mean ($\mu$): 
+
+$$
+CV = \left(\frac{\sigma}{\mu}\right) \times 100 %
+$$
+The CV provides a standardised measure of dispersion, allowing for the comparison of variability between datasets with different units of measurement or scales. Larger CV values indicate greater relative variability, while smaller CV values indicate lower relative variability.
+
+Write a function that calculates the CV and apply it to the two simulated datasets with varying dispersion below.
+
+```{r coefvar_exercise, exercise=TRUE, exercise.eval=TRUE, comment=NA}
+## Fixing the seed of the random number generator to ensure that we share the same two sets of random values
+set.seed(456)
+
+## Create two random samples from a normal distribution
+dat1 <- rnorm(n = 30, mean = 5, sd = 1)
+dat2 <- rnorm(n = 30, mean = 5, sd = 2)
+```
+
+```{r coefvar_exercise-solution, exercise.reveal_solution=TRUE}
+## Custom function for the caluclation of the coefficient of variation
+cv <- function(x) {sd(x, na.rm = T)/mean(x, na.rm = T) * 100}
+cv(dat1) # dat1 has a smaller standard deviation and thus smaller CV than dat2
+cv(dat2) 
+```
+
+<p style="margin-top:40px;">
+b. The volume of a sphere is given by the equation:
+
+
+$$ V = \frac{4}{3} \pi r^{3} $$
+where $r$ indicates the radius. 
+<br>
+Write an R function that calculates the volume of a sphere based on its radius. Use your newly created function to compute the volume of a sphere with _r_ = 5 cm.
+</p>
+
+```{r sphere_exercise, exercise=T, comment=NA}
+```
+
+```{r sphere_exercise-solution, exercise.reveal_solution=TRUE}
+sphere_vol <- function(x) { 4/3 * pi * x^3 }
+sphere_vol(x = 5)
+```
+
+<p style="margin-top:40px;">
+</p>
+
+c. Now we can step it up a notch and write a versatile function that converts temperatures from degrees Fahrenheit to degrees Celsius. The two corresponding conversions are:
+
+$$y~°C = (x~°F - 32) \times 5/9$$
+$$y~°F = (x~ °C \times 9/5) + 32$$
+Have a look at the first example in the help file of the `switch` function and mimic it when devising the temperature conversion function.
+```{r temp-conv-exercise, exercise=T, comment=NA}
+```
+
+```{r temp-conv-exercise-solution, exercise.reveal_solution = TRUE}
+## Custom function for the conversion of temperatures from degree Fahrenheit to Celsius and vice versa
+convert_temp <- function(x, type) { 
+  switch(type, 
+         FtoC = (x - 32) * 5/9,
+         CtoF = x * 9/5 + 32
+         )
+}
+
+## Convert 0 °C to °F
+convert_temp(x = 0, type = "CtoF")
+
+## Convert 95 °F to °C
+convert_temp(x = 95, type = "FtoC")
+```

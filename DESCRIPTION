@@ -1,0 +1,35 @@
+Package: Rticulate
+Type: Package
+Title: Companion to 'R-ticulate - A Beginner's Guide to Data Analysis for Natural Scientists'
+Version: 0.1.0
+Author: Martin Bader & Sebastian Leuzinger
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: The companion package contains interactive exercises and provides all datasets used in the book ``R-ticulate - A Beginner's Guide to Data Analysis for Natural Scientists'' by Martin Bader and Sebastian Leuzinger (first edition 2024, ISBN: 978-1-119-71799-7).
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Depends: 
+    R (>= 3.8.0),
+Imports: 
+    car,
+    cowplot,
+    dplyr,
+    emmeans,
+    ggcorrplot,
+    ggplot2,
+    ggpubr,
+    kableExtra,
+    learnr,
+    MASS,
+    mgcv,
+    multcomp,
+    multcompView,
+    nlsMicrobio,
+    relaimpo,
+    rpart,
+    rsample,
+    tidyr
+Suggests: 
+    roxygen2 (>= 7.0.0)
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2

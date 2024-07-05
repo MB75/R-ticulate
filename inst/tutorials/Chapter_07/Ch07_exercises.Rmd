@@ -1,0 +1,278 @@
+---
+title: "R-ticulate Exercises"
+author: "Martin Bader and Sebastian Leuzinger"
+output: learnr::tutorial
+runtime: shiny_prerendered
+description: >
+  Working with Categorical Data
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+## List of packages required for this tutorial
+# pkgs <- c("learnr", "rpart")
+# 
+# ## Check whether the specified package is available
+#   inst.pack <- rownames(installed.packages()) # list of installed packages
+#   if (length(setdiff(x = pkgs, y = inst.pack)) > 0) { # setdiff() returns the elements of x that don't occur in y
+#     install.packages(setdiff(pkgs, inst.pack), repos = "https://cloud.r-project.org", dependencies = T)  
+#   }
+  
+## Load required packages
+library(learnr)
+library(rpart)
+  
+## Provide datasets
+# Chi-squared test ex. 3
+freq = c(2, 3, 2, 2, 3, 2, 3, 2, 2, 2, 3, 5, 5, 2, 3, 4, 3, 5, 4, 5, 2, 3, 6, 5, 5, 6, 3, 2, 7, 4)
+type = rep(0:2, each = 10)
+masting = data.frame(freq, type)
+
+
+# Decision Tree data set
+sex = c(0,1,1,1,0,0,0,1,1,1,1,0,0,0,1,0,0,0,1,1,1,0,1,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,1,1,0,1,0,1,0,0,1,0,0,1,0,1,0,0,0,0,0,1,0,1,1,0,1,0,1,1,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,1,0,0,1,0,0,0,1,1,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,1,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,1,1,0,0,1,0,1,1,1,1,0,0,0,0,0,1,0,0,1,1,1,0,1,0,0,1,1,0,1,0,1,0,0,1,0,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,1,1,0,1,0,0,1,0,0,0,1,0,1,0,1,1,1,1,0,0,0,0,0,1,0,1,1,0,1,1,1,0,0,0,1,1,0,1,1,0,0,1,1,1,0,1,1,1,0,0,0,0,1,1,0,1,1,0,0,0,1,1,1,0,0,0,0,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,1,0,0,0,1,1,0,1,0,0,1,1,1,1,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,0,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,0,0,1,0,1,0,0,1,0,0,1,1,1,1,1,1,0,0,1,1,0,1,1,0,0,0,0,0,1,0,1,1,0,0,0,0,1,0,0,1,1,1,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,1,0,1,1,1,1,0,0,1,1,0,1,0,1,0,1,0,0,1,0,0,1,0,1,1,1,0,0,1,0,0,1,0,1,1,0,1,1,0,1,1,1,0,0,0,0,0,1,1,1,1,0,0,1,1,1,1,1,0,0,1,0,1,0,0,1,0,0,0,0,1,1,0,1,0,0,1,1,1,0,0,1,0,0,1,0,0,1,1,0,0,0,0,1,0,1,0,1,0,1,0,0,0,0,1,0,1,1,0,1,1,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,1,0,0,1,0,1,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,0,0,0,0,1,1,1,1,1,0,0,0,1,1,0,1,0,0,0,1,0,1,0,0,1,0,0,0,0,0,1,0,1,0,1,0,0,1,0,0,1,1,0,0,1,1,0,0,0,1,0,1,1,0,1,0,0,0,0,0,1,0,1,1,1,1,0,0,0,1,0,1,0,0,0,0,1,1,0,0,0,1,1,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,1,0,1,0,1,1,1,1,0,0,1,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,1,1,1,1,0,0,1,0,1,1,0,1,0,1,0,0,1,1,0,0,1,1,0,0,0,0,0,0,1,1,0)
+clutchSize = c(3,1,3,1,3,1,3,3,2,3,1,3,3,3,2,3,3,2,2,3,1,3,3,1,1,2,1,1,3,3,3,3,2,2,3,3,3,3,1,2,1,2,3,2,3,3,1,1,3,2,3,3,3,2,3,2,3,3,3,2,3,3,3,1,2,3,3,1,3,3,3,1,3,3,1,1,2,2,3,1,3,3,3,3,3,1,3,3,3,3,3,3,2,1,3,2,2,2,1,3,3,3,3,3,3,2,2,2,1,1,3,1,3,3,3,2,2,3,3,2,2,2,1,3,3,1,3,3,3,2,3,3,3,3,3,3,1,3,3,3,1,3,1,2,3,3,2,3,1,3,3,2,2,3,2,1,1,3,2,3,3,3,3,3,3,3,3,1,3,2,3,2,1,3,2,1,2,3,2,3,1,3,2,3,2,1,3,2,3,2,2,2,2,2,2,3,3,1,3,2,1,2,3,1,3,3,3,1,1,2,3,1,1,2,3,3,1,1,3,2,1,1,3,3,3,3,3,3,3,3,3,3,2,3,1,1,2,3,3,3,1,1,3,1,1,2,1,1,1,2,3,2,3,2,2,1,1,3,3,2,2,1,3,2,3,1,1,1,3,1,1,3,1,2,1,2,2,2,2,2,3,3,3,3,3,3,1,2,3,2,3,3,3,1,1,1,3,3,1,3,3,1,3,3,1,3,3,1,2,3,2,2,1,3,3,1,3,3,3,2,2,2,3,3,3,3,3,2,3,2,3,1,3,2,2,2,3,3,3,3,3,2,2,3,1,2,3,1,1,3,2,1,2,2,3,3,2,1,2,1,3,1,2,1,1,3,1,2,1,3,1,2,3,1,3,3,2,2,3,2,3,3,3,3,3,3,1,1,1,3,3,3,1,1,3,1,1,3,3,3,3,1,1,2,3,3,3,1,1,3,1,2,2,3,1,3,1,3,2,3,2,2,3,3,2,1,1,1,1,3,3,2,1,1,2,3,2,1,2,3,3,1,1,1,3,3,2,3,3,3,3,2,1,1,3,3,2,1,3,2,1,2,1,1,2,1,3,3,1,3,2,3,3,1,2,3,1,3,3,1,2,1,3,3,2,3,3,2,2,3,1,3,3,3,1,2,1,3,1,3,1,3,2,3,2,3,3,1,3,3,1,3,1,3,2,3,3,2,3,2,1,1,3,1,3,3,2,2,3,2,1,2,2,3,3,3,3,1,1,3,3,2,2,3,3,3,1,1,3,3,1,2,3,1,3,1,1,3,3,3,2,2,1,1,1,1,3,2,3,1,2,3,2,3,2,2,1,3,2,2,3,1,3,2,2,3,3,1,1,1,3,3,1,3,2,1,3,2,3,3,3,2,2,3,2,3,1,3,3,1,3,1,3,3,3,3,2,2,3,3,1,3,1,1,3,3,3,3,3,1,2,3,2,1,3,3,3,2,2,1,3,3,3,1,3,2,1,3,3,2,3,3,3,2,3,3,1,3,1,3,3,2,1,3,2,3,3,1,3,3,3,2,1,3,3,3,3,2,3,3,3,1,2,3,1,1,3,3,2,1,2,2,2,1,3,3,1,1,3,2,3,3,3,1,2,3,3,2,3,3,2,1,1,3)
+clutchNumber = c(0,1,1,1,0,0,0,1,1,1,1,0,0,1,1,0,1,0,0,1,0,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,1,1,0,1,0,1,0,0,1,0,0,1,0,1,0,0,1,0,0,0,0,0,1,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,1,0,0,1,0,1,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,1,1,0,0,1,0,0,0,1,1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0,0,1,0,1,0,1,1,0,1,0,0,0,0,1,0,0,1,0,0,1,0,0,1,1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,1,1,0,0,1,0,0,1,1,1,1,1,0,0,0,0,0,0,1,1,0,1,0,1,1,0,1,0,0,0,0,0,0,0,0,1,1,1,0,1,0,0,1,1,0,0,1,0,1,1,1,1,0,0,1,1,0,1,1,0,0,1,1,1,0,1,1,1,0,0,0,0,1,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,0,0,1,1,0,0,0,0,1,1,0,0,0,1,1,0,1,0,0,1,1,0,0,0,1,1,0,1,0,0,1,0,0,1,0,1,0,0,0,0,1,0,1,1,0,1,0,0,1,0,1,1,0,0,1,0,0,1,1,1,0,0,1,0,0,1,0,1,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,1,1,1,0,0,0,1,0,0,1,0,1,0,0,0,0,0,0,0,1,1,0,0,1,1,1,0,1,0,0,0,0,1,0,0,1,1,0,1,0,1,0,1,0,0,1,0,1,1,0,1,1,1,1,1,0,0,0,1,0,0,0,0,0,1,0,1,1,1,0,0,0,0,1,0,0,1,0,0,0,1,1,0,1,1,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,1,1,0,1,0,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1,1,0,0,1,0,1,1,1,0,0,0,1,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0,1,0,0,0,1,0,1,1,0,0,0,0,1,1,0,1,0,0,0,0,0,1,0,1,1,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,0,1,0,0,0,0,1,0,0,1,0,1,1,0,0,0,1,1,0,1,1,1,1,0,0,0,1,0,0,0,0,0,0,1,1,0,1,0,1,0,0,0,0,0,1,0,1,0,0,0,1,0,1,0,0,0,1,0,0,1,0,0,1,1,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,0,1,0,0,1,0,1,1,0,0,0,1,0,0,1,1,0,0,1,1,0,1,0,0,1,0,1,0,0)
+femaleSize = c(2.2,3.8,2.6,3.5,3.5,5.4,0.2,2.7,1.4,0.4,5.8,2,3.9,1.4,5.5,0.2,3.1,3.5,3.4,1.5,2.8,0.8,3.8,1.9,4,6.6,2.8,4.2,2.1,1.8,1.4,4,2.7,0.3,1.9,1.8,0.7,2.1,4.9,2.9,6.5,2.1,2.85,0.5,1.1,2.2,3.8,4.5,0.4,2.9,1.9,1.7,2.6,3.2,1.6,2.1,2.6,3.2,2.5,0.083,3,2.2,2.9,2.8,1.7,3.3,1.6,2.3,2.4,2.9,2,4.6,2.6,5.9,7.1,2.3,3.4,3.4,2.8,2.1,3.3,3.7,2.8,2.1,3.8,4.7,1.45,2.2,2,1.7,2.1,7.05,2.9,2.4,0.2,2.1,3.25,3.25,5.4,1.2,2.4,4.5,3.3,2,4.7,2.9,2.5,2.3,1.9,3.7,1.6,2.4,2.2,2.4,1.9,1.8,1.9,2.7,0.9,3.65,4.2,5.1,2.2,5.55,4.05,5.1,1.6,3,4.4,4,2.6,1.7,0.1,0.9,4.5,2.8,6.1,0.4,0.1,2.1,5.6,1.8,5,3,3.6,0.9,0.1,0.4,4.5,4,3.6,3.2,1.9,1.9,0.3,4.4,5.8,4.2,2.4,2.8,3.4,4.55,1.8,0.2,3.2,2.6,1.6,4,2.4,3.5,2.2,3,3.1,2.7,4.2,3.2,3,1.6,2.7,5.1,3.8,2.2,1.9,2.05,1.8,3.5,2.9,5.9,0.5,2.4,4.4,0.8,1.9,3.3,2.9,2.2,3,4.4,2.5,2.4,3.7,5.4,2.9,6.2,3,4.1,2.9,3,3.5,5,0.3,5.2,4,3.6,1.6,2.5,5.8,3.5,2.5,4.1,3.7,6.3,4.5,0.7,3.5,6.5,2.8,1.6,1.9,3.3,3,2.2,4.2,2.2,2.6,1.9,3.6,2.4,2.4,2.35,0.2,5,1.9,0.092,1.7,3,3,2.4,1.8,2.6,2.8,4.3,2.6,2.4,5.4,3.1,4,2.2,2.7,3,2.2,3.6,6.1,3.6,3.1,1.6,4.55,3.8,1.6,2.9,4.1,4.5,4.5,0.2,2.4,2.8,2.5,3.6,2.4,4,0.3,4.2,2.3,1.5,2.5,2.8,2.2,3.8,4,2.9,4.5,3.5,3,6,2.4,2.5,1.8,1.9,2.2,0.3,2.2,2.7,2,1.9,4.2,0.1,3.2,3.5,1.8,0.1,3.6,1.7,3.6,2.1,2.8,2.3,2.4,2.2,3.1,4.6,2.3,2.8,3.9,2.6,2.1,2.8,2,3.4,5.1,0.3,2.1,3.3,4.4,3.4,1.8,3,1,2.1,2.9,2.8,1.8,2.8,1.9,3.2,2.8,4.2,1.7,5,1.4,2.1,2.4,6.4,3.1,4.5,2,2.5,2.8,0.4,1.3,3.4,0.5,5.2,3.6,3,4.9,2.9,6.5,5,4.8,3.4,4.7,4.8,3.8,5.6,0.075,3.8,3.3,2.3,2.2,3.4,2.9,2.2,0.2,0.9,5,6.3,2.5,3.5,5.8,3,0.9,2.1,5.5,7.1,2.1,5.4,2.5,2.4,1.7,2.1,3.7,1.6,1.8,3.3,2.8,2.6,2.9,3.6,5.4,2.4,4.7,3.4,3.6,3.2,3,2.2,4.4,4.05,5,3.9,2.3,0.2,1.7,3,0.7,4.5,3,2.2,3.6,0.9,1.1,3.2,5,6.4,1.9,3.3,0.8,1.7,2.7,2.2,2.2,6.2,4.8,3.9,3.6,4,2.8,2.4,1.9,2.9,3.2,6.2,5.3,3.6,1.6,1.9,3.4,3.9,3.2,2.5,3.9,5.4,3.6,1.8,4.7,6,2.2,3.5,5.2,4.7,3.7,3.6,4.9,4.9,2.4,4.4,3.5,3.6,3,2.7,2.2,4,3.9,3.5,2.4,3.4,2.6,0.4,2.6,2.7,4.2,2,2.1,2.1,6.1,5.7,2.1,2.6,8,5.1,3.2,0.9,2.8,3.2,3.1,4.1,2,2.4,0.2,0.075,4.8,1.9,5.6,2.3,1.8,2.1,1.8,2.4,3.2,2.3,5.8,5,4,4.7,3.6,2,3.2,2.5,4.3,4,3.1,7,3.1,1.8,2.45,1.8,4.3,3.6,2.7,2,1.4,6,2.5,1.4,1.9,1.8,1.5,3.1,0.4,2.5,6,5.2,4.4,4.9,4.2,1.8,3.5,1.8,2.5,2.6,3.9,4.5,4.2,2.2,2.4,4.8,2.9,5.2,1.9,3.8,2.7,3.3,0.6,1.7,3.4,5,2.7,2,3,2.5,2.5,2.9,1.1,2.3,2.3,2.85,4.8,3.5,3.6,2.1,2.4,3.1,7,1.6,3,1.9,3.1,0.4,0.6,3.3,2.3,4.8,0.067,2.8,1.8,3.4,3.3,4.1,2,3.6,1.6,5.1,3.05,3.2,2.4,4.8,5.7,5.4,1.8,0.5,4.3,1.3,1.7,2.9,2.5,2.5,1.8,0.8,0.1,4.6,1.6,2.5,3.9,4.9,3.1,3,3,3.4,3.1,1.1,0.042,2.7,3.1,3.9,1.8,3.9,3.3,2.6,3.9,3.5,0.6,3.05,2.3,3.1,4.3,1,5.2,2.7,3.8,2.7,0.2,0.1,6.2,1.5,0.083,2.3,1.8,3.9,2.1,3.2,2,1.6,3,3.45,1.7,4.2,3.5,2.8,0.4,7.4,0.9,1.6,4.4,1.8,4.5,5.1,2.4,4.1,2.1,4.8,2.4,4.2,2.7,3.1,0.4,2.6,4.7,3.3,4.7,2.8,1.5,2,1.9,5.6,2.5,3.3,2.2,2.8,2.5,3.9,2.7,1.9,2.6,3.2)
+
+sexratio = data.frame(sex, clutchSize, clutchNumber, femaleSize)
+set.seed(1)
+#sexratio = sexratio[sample(nrow(sexratio), 500), ]
+sexratio$clutchSize = sexratio$clutchSize * rpois(714, lambda = 6)
+sexratio$sex[grep(0, sexratio$sex)] <- 'M'; sexratio$sex[grep(1, sexratio$sex)] <- 'F'
+```
+<br>
+
+## Chapter 07 - Working with Categorical Data
+
+### Exercise 1 - Multiple-choice quiz
+
+Please note that there is only one correct (or most correct) answer to each question.
+
+<p style="margin-top:-30px">
+</p>
+```{r quiz1, echo=FALSE}
+quiz(caption = "",
+    question("Which of the following sets of variables are likely **not** categorical?", 
+         answer("Blood type, Age group, Education level"),
+         answer("Survival, Sex, number of siblings"),
+         answer("Hair colour, survival, maritial status"),
+         answer("Body height, air speed, weight", correct = T),
+         answer("All of the above."),
+         allow_retry = T
+         ),
+    question("The easiest way to summarise a purely categorical dataset is to", 
+         answer("plot histograms for every variable."),
+         answer("create a contingency table.", correct = T),
+         answer("use summary statistics such as the mean and the standard deviation."),
+         answer("use multiple scatter plots."),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+    question("To plot categorical data, we can best use a",
+    answer("Scatter plot."),
+    answer("Pie chart."),
+    answer("Boxplot."),
+    answer("Mosaic plot.", correct = T),
+    answer("All of the above."),
+    allow_retry = T
+  ),
+  question("Contingency tables are suited to get an overview of how many categorical variables?",
+  answer("One."),
+  answer("Two.", correct = T),
+  answer("A maxium of three."),
+  answer("As many as required."),
+  answer("None of the above."),
+  allow_retry = T
+),
+question("The Chi-squared test is suited to test the dependency between",
+  answer("three variables at most, each with two levels only."),
+  answer("multiple variables, each with multiple levels."),
+  answer("two variables, each with one, two, or multiple levels.", correct = T),
+  answer("two variables, but their values can only contain two levels each."),
+  answer("None of the above."),
+  allow_retry = T
+),
+question("The Chi-squared test operates on the basis of",
+  answer("comparing the actual frequencies of a contingency table to the expected frequencies of a contingency table."),
+  answer("comparing the test statistic (the Chi-squared value) to a random distribution of that test statistic, given the degrees of freedom."),
+  answer("calculating a Chi-squared value based on the expected and the observed frequencies."),
+  answer("comparing a single test statistic to a random distribution of that same test statistic."),
+  answer("All of the above.", correct = T),
+  allow_retry = T
+),
+question("What is the null hypothesis of a Chi-squared test?",
+         answer("There is no dependency between the categorical variables (i.e. they are independent).", correct = T),
+         answer("The two variables in question are not significantly correlated."),
+         answer("There is dependency between the categorical variables (i.e. they are dependent)"),
+         answer("The means of the two variables are not significantly different."),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+ question(c("Plot a histogram of a population using 1000 random numbers that follow a Chi-squared distribution with one degree of freedom. Using your visual judgement, what is the approximate probability of drawing a number larger than 10 from such a distribution?"),
+    answer("Extremely high, close to 1."),
+    answer("About 10%."),
+    answer("Extremely low, less than 0.01%.", correct = T),
+    answer("Low, perhaps 5%."),
+    answer("The question cannot be answered without calculating the exact probability."),
+    allow_retry = T
+  ),
+ question(c("A large company investigates the bullying among their employees. Their findings are: 45 out of 982 male, 63 our of 872 female, and 3 our of 37 gender diverse employees have been bullied. Answer the question 'Does the incidence of bullying depend on gender?' and provide the _P_-value of your Chi-squared test"),
+    answer("No, the _P_-value of 0.46 is just not significant at an alpha level of 5%."),
+    answer("Yes, the _P_-value of 0.046 is just significant at an alpha level of 5%.", correct = T),
+    answer("No, the _P_-value of 0.046 is not significant at an alpha level of 5%."),
+    answer("No, the _P_-value of 0.064 is not significant at an alpha level of 5%."),
+    answer("Yes, the _P_-value of 0.064 is marginally significant at an alpha level of 5%."),
+    allow_retry = T
+  ),
+question(c("Which statement is correct?"),
+    answer("Decision trees can be used for both categorical and continuous data sets.", correct = T),
+    answer("Decision trees can only be used for categorical data sets."),
+    answer("Decision trees can only be used for continuous data sets."),
+    answer("Decision trees can only categorical data sets with one additional continuous variable."),
+    answer("Decision trees are only suited for binomial data sets."),
+    allow_retry = T
+  ),
+question(c("What is the risk of having the `minsplit` parameter set too low in a decision tree using the `rpart` function?"),
+    answer("The decision tree ends up with too many nodes."),
+    answer("The model could suffer from overfitting."),
+    answer("The number of observations per node is too low."),
+    answer("The model might not be as parsimonious as it could be."),
+    answer("All of the above are correct.", correct = T),
+    allow_retry = T
+  ),
+question(c("In a decision tree model using `rpart`, if we decrease the 'complexity parameter' (`cp`),"),
+    answer("the model will increase its predictive power."),
+    answer("the model will become more complex and necessarily less parsimonious."),
+    answer("the model will become more complex and possibly less parsimonious.", correct = T),
+    answer("the model will increase its predictive power at the cost of becoming less parsimonious."),
+    answer("The model will become less complex and also less parsimonious."),
+    allow_retry = T
+  )
+)
+```
+
+The model code related to the exercises below relies on the following R packages (which are autoloaded behind the scenes in this tutorial):
+
+* _rpart_
+
+### Exercise 2
+The beaks of red crossbills (*Loxia curvirostra*) feature crossed bills that act like diagonal pliers, enabling them to spread the scales of conifer cones in order to extract the seed with their tongue. The chirality (or 'handedness') of the bill-crossing is not uniform. The birds can have the tip of the upper bill either right or left of the lower bill (https://en.wikipedia.org/wiki/Red_crossbill).
+
+You hypothesise that right- and left-billed birds occur at a 1:1 ratio and conduct a field survey during which you observe 1732 right-billed and 1865 left-billed crossbills. In this example, you only have a single binary variable, so your null hypothesis will simply be 'the occurrence of left vs. right-billed birds is not significantly different from a 1:1 ratio'. Are there significantly more left-billed crossbills?
+
+a. Construct a contingency table to reflect this scenario. 
+
+b. Test whether there are significantly more left-billed crossbills using an appropriate test.
+
+c. Conclude the result in a complete sentence, including the test statistic.
+
+d. In another collection of crossbill data, you have reason to believe that the right/left crossing beaks occur at a 1:2 ratio and in your survey you count 344 right-billed and 656 left-billed specimens. Consult the `chisq.test` help file and read through the arguments list to work out how to incorporate your prior beliefs.
+
+```{r chiSquared1_exercise, exercise=TRUE, fig.align='center', fig.width=5, fig.height=3.5}
+  
+```
+```{r chiSquared1_exercise-solution, exercise.reveal_solution = TRUE, fig.align='center', fig.width=5, fig.height=3.5}
+## a. Construct the contingency table
+x <- data.frame(right = 1732, left = 1865)
+
+## b. Run a Chi-squared test
+chisq.test(x)
+
+## c. Conclusion
+# There are significantly more left-billed crossbills than right-billed crossbills (Chi-squared = 4.92, df = 1, P-value = 0.027)
+
+## d. Assuming a ratio or 2:1 (left/right)
+y <- data.frame(right = 344, left = 656) # construct the new data frame
+chisq.test(y, p = c(1:2), rescale.p = T) # test using a 1:2 ratio assumption
+```
+<br>
+<details><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> to view a model answer to exercise 2 c.</summary>
+<p style="margin-top:10px">
+There are significantly more left-billed crossbills than right-billed crossbills (&#120594;<sup>2</sup> = 4.92, _df_ = 1, _P_ = 0.027).
+</p>
+</details>
+
+### Exercise 3
+Consider the pre-loaded dataset `masting`. It shows the masting (fruit bearing) frequency of 30 different species belonging to three different functional groups: (0) coniferous trees, (1) angiosperm trees, and (2) shrubs.
+
+a. Summarise the data set in a contingency table.
+
+b. Plot the data using a mosaic plot.
+
+c. Test if plant functional type has a significant influence on masting frequency.
+
+```{r chiSquared2_exercise, exercise=TRUE, fig.align='center', fig.width=5, fig.height=3.5}
+## View the first few observations
+head(masting)
+```
+```{r chiSquared2_exercise-solution, exercise.reveal_solution = TRUE, fig.align='center', fig.width=5, fig.height=3.5}
+## a. Summarise the data in a contingency table
+masting_contingency <- table(masting)
+masting_contingency_margins <- addmargins(masting_contingency) # to add margin sums
+masting_contingency_margins
+
+## b. mosaic plot
+mosaicplot(masting_contingency) # use table without margin sums
+
+## c. Test
+chisq.test(masting_contingency)
+```
+<br>
+<details><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> to view an example of how to report the findings.</summary>
+<p style="margin-top:10px">
+Plant functional type significantly affects masting frequency (&#120594;<sup>2</sup> = 18.45, _df_ = 10, _P_ = 0.048).
+</p>
+</details>
+
+### Exercise 4
+The data set 'sexratio' shows the dependency of the sex (M = male, F = female) of offspring of an amphibian species on clutch size (number of eggs per clutch), female size (in cm), and whether it is the female's first reproductive event (0) or not (1). Is it possible to predict the offspring's sex based on the other parameters? Use a decision tree to answer this question.
+
+a. Set up a training and a test data set using an 80/20 split.
+
+b. Run a basic decision tree model using `rpart`. Stick to the default parameters and plot the tree using `rpart.plot`. On average, what are the odds of any given offspring being male? Knowing it is a female's first reproductive event, what are the odds of any given offspring being male?
+
+c. Assess the accuracy of the predictive model using the test data set and the `accuracy` function we developed in the book (page 111).
+
+d. Play with the 'control parameter' (`cp`) and try to improve the model (scoring a higher percentage of correct predictions). This may or may not be possible depending on your test/training data set split.
+
+e. Which predictor is by far the most important one?
+
+```{r decisionTree_exercise, exercise=TRUE, fig.align='center', fig.width=5, fig.height=3.5}
+  
+```
+```{r decisionTree_exercise-solution, exercise.reveal_solution = TRUE, fig.align='center', fig.width=5, fig.height=3.5}
+## a. Setting up the training and test data set
+set.seed(123) # setting a seed so you can reproduce this
+split <- sample(1:nrow(sexratio), 0.8 * nrow(sexratio)) # 80/20 split
+trainSplit <- sexratio[split, ] # the training data set
+testSplit <- sexratio[-split,] # the test data set
+
+
+## b. basic model and plot
+m1 <- rpart(sex ~ ., data = trainSplit)
+rpart.plot(m1)
+## from the figure you see that the chances for offspring to be male are ca. 60%.
+## If it is a female's first reproductive event (clutchNumber = 0), then chances are about 80% that any given offspring is male. Note that the numbers might differ slightly depending on which lines you use to train the model. Use `set.seed` to reproduce a certain outcome.
+
+## c. Test
+## accuracy function (see page 111 of the book)
+accuracy <- function(x, y) { # x and y are the modelled and true classifications
+  round(100 * sum(diag(table(x, y)))/sum(table(x, y)))
+}
+predictTest <- predict(m1, testSplit, type = "class")
+accuracy(predictTest, testSplit$sex)
+## In our case, about 80% of the predictions are correct. This number may vary as it depends on the training/test data sets you have chosen.
+
+## d. Tuning the model
+m2 <- rpart(sex ~ ., data = trainSplit, control = rpart.control(cp = 0.1))
+predictTest <- predict(m1, testSplit, type = "class")
+accuracy(predictTest, testSplit$sex)
+## No accuracy lost (still 80%), but the model has become much simpler, we therefore prefer m2 over m1. Depending on your training/test data set split, you may get a slightly different result. In most cases, decreasing the control parameter below its default value will not improve the model.
+```
+<br>
+<details><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> to view a model answer to question 4 e.</summary>
+<p style="margin-top:10px">
+The variable with the most predictive power by far is `clutchNumber` (whether it is the female's first reproductive event). All other parameters are either redundant or on the brink of improving the model predictions.
+</p>
+</details>

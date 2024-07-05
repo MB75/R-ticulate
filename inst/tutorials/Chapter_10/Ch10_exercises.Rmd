@@ -1,0 +1,633 @@
+---
+title: "R-ticulate Exercises"
+author: "Martin Bader and Sebastian Leuzinger"
+output: learnr::tutorial
+runtime: shiny_prerendered
+description: >
+  One or More Categorical Predictors – Analysis of Variance
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+## List of packages required for this tutorial
+#   pkgs <- c("learnr", "kableExtra", "dplyr", "ggplot2", "ggpubr", "cowplot", "emmeans", "multcomp", "multcompView")
+# 
+# ## Check whether the specified package is available
+#   inst.pack <- rownames(installed.packages()) # list of installed packages
+#   if (length(setdiff(x = pkgs, y = inst.pack)) > 0) { # setdiff() returns the elements of x that don't occur in y
+#     install.packages(setdiff(pkgs, inst.pack), repos = "https://cloud.r-project.org", dependencies = T)  
+#   }
+  
+## Load required packages  
+library(learnr)
+library(dplyr)
+library(ggplot2)
+library(emmeans)
+library(multcomp)
+library(multcompView)
+library(kableExtra)
+# soilp <- read.csv("soil.csv")
+# copper <- read.csv("copper.csv")
+soilp <- structure(list(loc = factor(c("alluvial", "alluvial", "alluvial", "alluvial", 
+                               "alluvial", "alluvial", "alluvial", "alluvial", "alluvial", "alluvial", 
+                               "alluvial", "alluvial", "alluvial", "alluvial", "alluvial", "alluvial", 
+                               "alluvial", "alluvial", "alluvial", "alluvial", "alluvial", "alluvial", 
+                               "alluvial", "alluvial", "alluvial", "alluvial", "alluvial", "terrace", 
+                               "terrace", "terrace", "terrace", "terrace", "terrace", "terrace", 
+                               "terrace", "terrace", "terrace", "terrace", "terrace", "terrace", 
+                               "terrace", "terrace", "terrace", "terrace", "terrace", "terrace", 
+                               "terrace", "terrace", "terrace", "terrace", "terrace", "terrace", 
+                               "terrace", "terrace")), 
+               horizon = factor(c("A", "A", "A", "A", "A", "A", "A", "A", "A", 
+                                  "B", "B", "B", "B", "B", "B", "B", "B", "B", 
+                                  "C", "C", "C", "C", "C", "C", "C", "C", "C", 
+                                  "A", "A", "A", "A", "A", "A", "A", "A", "A", 
+                                  "B", "B", "B", "B", "B", "B", "B", "B", "B", 
+                                  "C", "C", "C", "C", "C", "C", "C", "C", "C")), 
+               p = c(345.45, 220.64, 224.98, 246.72, 286.6, 283.31, 198.35, 262.94, 
+                     275.38, 155.4, 169.14, 198.07, 195.68, 202.4, 121.96, 236.55, 
+                     115.08, 136.67, 112.78, 227.72, 107.54, 169.59, 129.09, 144.26, 
+                     164.81, 90.23, 160.93, 99.39, 146.31, 115.44, 202.21, 131.53, 
+                     186.65, 147.89, 171.08, 193.95, 107.68, 111.15, 134.49, 84.05, 
+                     157.28, 240.92, 203.09, 122.29, 185.65, 105.05, 141.71, 126.75, 
+                     46.23, 36.72, 80.57, 179.77, 132.66, 85.89), 
+               depth.cm = factor(c("0-10", "0-10", "0-10", "0-10", "0-10", "0-10", "0-10", "0-10", "0-10", 
+                                   "10-20", "10-20", "10-20", "10-20", "10-20", "10-20", "10-20", "10-20", "10-20", 
+                                   "20-30", "20-30", "20-30", "20-30", "20-30", "20-30", "20-30", "20-30", "20-30", 
+                                   "0-10", "0-10", "0-10", "0-10", "0-10", "0-10", "0-10", "0-10", "0-10", 
+                                   "10-20", "10-20", "10-20", "10-20", "10-20", "10-20", "10-20", "10-20", "10-20", 
+                                   "20-30", "20-30", "20-30", "20-30", "20-30", "20-30", "20-30", "20-30", "20-30"))), 
+          class = "data.frame", row.names = c(NA, -54L))
+
+set.seed(10)
+copper <- data.frame(
+  alloy = factor(rep(c("A", "B", "C", "D", "E"), each = 20)), # Predictor with 5 levels
+  cond = round(rnorm(100, mean = 5.8, sd = 1.5), digits = 2) # Response variable (normally distributed)
+)
+copper <- group_by(.data = copper, alloy) %>% mutate(cond = round(cond + rnorm(n = n(), mean = 0, sd = 0.5), digits = 2)) %>% as.data.frame()
+```
+<br>
+
+## Chapter 10 - One or More Categorical Predictors – Analysis of Variance
+
+### Exercise 1 - Multiple-choice quiz
+
+Please note that there is only one correct (or most correct) answer to each question.
+
+<p style="margin-top:-30px;">
+</p>
+```{r anova_quiz, echo=FALSE}
+quiz(caption = "",
+      question("Which of the following statements about ANOVA is _not_ true?",
+         answer("While ANOVA is commonly used to compare the means of three or more groups, it can also be used to compare the mean of two groups."),
+         answer("ANOVA is a non-parametric (distribution-free) test, i.e. it does not assume normally distributed errors.", correct = T),
+         answer("ANOVA models rely on the _F_-statistic to determine if differences between group means are statistically significant."),
+         answer("ANOVA assumes approximately equal variances in each group."),
+         answer("ANOVA is sensitive to outliers."),
+         allow_retry = T
+         ),
+     question("We use an ANOVA model when we have",
+         answer("a discrete response variable (e.g. counts) and one or more continuous predictors."),
+         answer("a continuous response variable and one or more continuous predictors."),
+         answer("a discrete response variable (e.g. counts) and one or more categorical predictors."),
+         answer("a continuous response variable and one or more categorical predictors.", correct = T),
+         answer("any kind of response variable and a mix of continuous and categorical predictors."),
+         allow_retry = T
+         ),
+     question("In a one-way ANOVA, the alternative hypothesis states that",
+         answer("All group means are equal."),
+         answer("All groups show approximately the same variance."),
+         answer("At least one group mean is significantly different from the others.", correct = T),
+         answer("The residuals are normally distributed."),
+         answer("The group means differ from their median."),
+         allow_retry = T
+         ),
+         question("A dataset with a continuous response variable contains three categorical predictor variables each with four levels (i.e. four groups in each). The most likely analysis approach for this type of data
+would be:", 
+         answer("a multiple linear regression model."),
+         answer("a three-way analysis of variance.", correct = T),
+         answer("a four-way analysis of variance."),
+         answer("a twelve-way analysis of variance."),
+         answer("an analysis of covariance."),
+         allow_retry = T
+         ),
+         question("If the between-group variance increases while the within-group variance remains the same, then",
+         answer("the value of the _F_-statistic becomes greater.", correct = T),
+         answer("the value of the _F_-statistic becomes smaller."),
+         answer("the sample distribution becomes non-normal."),
+         answer("the variance homogeneity assumption becomes violated."),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+         question("Which of the diagnostic plots for ANOVA models allows the evaluation of the variance homogeneity (homoscedasticity) assumption?",
+         answer("The plot of the residuals vs. fitted values.", correct = T),
+         answer("The quantile-quantile plot."),
+         answer("The Cook’s distance plot."),
+         answer("The residual-leverage plot."),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+        question("In a one-way ANOVA with 4 groups and a total sample size of 52, the resulting _F_-statistic is 3.13. The corresponding _P_-value",
+        answer("is exactly 0.05."),
+        answer("is less than 0.05.", correct = T),
+        answer("is greater than 0.05."),
+        answer("is out of bounds."),
+        answer("cannot be determined with the information provided."),
+  allow_retry = T
+),
+
+   question("What is the main purpose of a _post hoc_ test following an ANOVA?",
+        answer("To determine if there are differences between groups without any prior hypotheses."),
+        answer("To confirm that the model assumptions are met."),
+        answer("To identify which specific group means are significantly different from each other after finding a significant ANOVA result.", correct = T),
+        answer("To estimate the effect size of each treatment group."),
+        answer("None of the above."),
+  allow_retry = T
+),
+
+    question("Why is a multiplicity adjustment (_P_-value adjustment) necessary in _post hoc_ tests?",
+        answer("To reduce the sample size required for the analysis."),
+        answer("To ensure the independence of tests."),
+        answer("To increase the power of each individual test by reducing the type II error probability (reduce the risk of false negatives)."),
+        answer("To control the overall Type I error rate when performing multiple comparisons (reducing the risk of false positives).", correct = T),
+        answer("None of the above."),
+  allow_retry = T
+),
+
+         question(c("A significant outcome of a one-way ANOVA model comparing the means of six groups (i.e. a categorical explanatory variable with six levels) prompts us to perform a _post hoc_ analysis to determine where the differences lie. How many pairwise comparisons are there?", "<p style='font-size:12px;font-weight:normal;margin-top:-5px;line-height:1.1;'>(Hint: The <span style='font-family:Courier New;'>combn</span> function returns a matrix showing all combinations of elements in a set, each with a certain number of selected elements (e.g. pairwise combinations) and the <span style='font-family:Courier New;'>choose</span> function simply gives the number of combinations for a specified number of elements taken from a set at a time. See the respective help files.)</p>"),
+         answer("6"),
+         answer("12"),
+         answer("15", correct = T),
+         answer("20"),
+         answer("None of the above."),
+         allow_retry = T
+         ),
+        question("In a two-way ANOVA, the term 'main effect' refers to",
+        answer("the overall effect of the response variable on each predictor variable."),
+        answer("the interaction between the two predictors, i.e. their interactive effect on the response variable."),
+        answer("the interaction between the response variable and the predictors."),
+        answer("The overall effect of each predictor on the response variable (while ignoring the effect of the other predictor).", correct = T),
+        answer("None of the above."),
+  allow_retry = T
+),
+question("In a two-way ANOVA, a significant interaction means that",
+        answer("both predictors have significant main effects."),
+        answer("the effect of one predictor on the response variable is dependent on the other predictor.", correct = T),
+        answer("the effects of the two predictors cancel each other out."),
+        answer("the predictors have different effect sizes."),
+        answer("None of the above."),
+  allow_retry = T
+)
+)
+```
+
+The model code related to the exercises below relies on the following R packages (which are autoloaded behind the scenes in this tutorial):
+
+* _ggplot2_
+* _dplyr_
+* _emmeans_
+* _multcomp_
+* _multcompView_
+
+### Exercise 2 - One-way analysis of variance (one-way ANOVA)
+A physics laboratory conducted an experiment to compare the electrical conductivity of five different copper alloys at 20 °C temperature. The data is compiled in the pre-loaded `copper` dataset, which is ready for use in the R code field below. The 'alloy' variable contains the five types of alloy (A, B, C, D, E). The 'cond' variable indicates the electrical conductivity (given in 10^7^ Siemens per meter, S m^-1^) and represents the continuous response variable. For each alloy variety, 20 independent samples were tested. 
+
+a. Create an exploratory plot of the data.
+
+b. Use an analysis of variance (ANOVA) approach to compare the electrical conductivity across the 5 different copper alloys. 
+
+c. Use model diagnostic plots to check the underlying assumptions of variance homogeneity and normality and report your findings
+
+d. If the model assumptions are met and the model summary shows an overall statistically significant effect, then follow up with a _post hoc_ analysis and report which alloy varieties differ from each other given a significance level of $\alpha = 0.05$.
+
+e. Produce a publication-quality figure of the data.
+
+f. Report the results of the statisticaly analysis in a scientifically appropriate way.
+
+<p style="margin-top:20px">
+</p>
+
+```{r data generation, echo=FALSE, eval=FALSE}
+# set.seed(10)
+# copper <- data.frame(
+#   alloy = factor(rep(c("A", "B", "C", "D", "E"), each = 20)), # Predictor with 5 levels
+#   cond = round(rnorm(100, mean = 5.8, sd = 1.5), digits = 2) # Response variable (normally distributed)
+# )
+# copper <- group_by(.data = copper, alloy) %>% mutate(cond = round(cond + rnorm(n = n(), mean = 0, sd = 0.5), digits = 2)) %>% as.data.frame()
+# write.csv(copper, "copper.csv", row.names = F)
+summary(m1 <- aov(cond ~ alloy, data = copper))
+
+boxplot(cond ~ alloy, data = copper)
+
+TukeyHSD(m1)
+
+ems <- emmeans(m1, specs = ~ alloy)
+pairs(ems, adjust = "fdr")
+```
+
+```{r one-way_anova_exercise_prep, fig.width=5, fig.height=5, eval=FALSE, echo=FALSE, message=FALSE}
+## Getting started with a few sanity checks
+
+## Display the top five observations
+head(copper)
+
+## Check data structure ('alloy' should be a factor and 'cond' a numeric variable)
+str(copper)
+
+## Check data summary
+summary(copper)
+```
+<!-- <br>
+Enter your R code for exercise 2 a-e here.
+-->
+```{r one-way_anova_exercise, exercise = TRUE, fig.align='center', fig.width=5, fig.height=5}
+## Getting started with a few sanity checks
+
+## Display the top five observations
+head(copper)
+
+## Check data structure ('alloy' should be a factor and 'cond' a numeric variable)
+str(copper)
+
+## Check data summary
+summary(copper)
+```
+```{r one-way_anova_exercise-solution, exercise.reveal_solution = TRUE, fig.align='center', fig.width=5, fig.height=5}
+## a. Exploratory plot
+# Traditional graphics
+boxplot(cond ~ alloy, data = copper) 
+
+# ggplot2
+ggplot(data = copper, mapping = aes(x = alloy, y = cond)) +
+  geom_boxplot()
+
+## b. Perform a one-way ANOVA
+m1 <- aov(cond ~ alloy, data = copper)
+summary(m1)
+
+## Same as above using the lm function
+# m1 <- lm(cond ~ alloy, data = copper)
+# anova(m1) # same as summary.aov()
+
+## c. Diagnostic plots
+par(mfrow = c(2, 2))
+plot(m1)
+
+## d. Post hoc analysis (given the overall significance of the alloy effect of P = 0.0114)
+TukeyHSD(m1) # works only for function aov()
+
+# More flexible and comprehensive approach using the emmeans package
+ems <- emmeans(m1, specs = "alloy")
+pairs(ems) # we suggest to use the additional argument adjust = "fdr", see ?p.adjust for more information
+cld(ems, Letters = letters) # by default the lowest mean is assigned an 'a'
+
+## e. Publication-quality figure incl. statistical annotation showing the results of the post hoc comparison
+posthoc <- cld(ems, Letters = letters)
+
+## Sort dataset in ascending fashion so that alloy A comes first and E last
+stats <- arrange(.data = posthoc, alloy)
+
+## Remove white space at the start and end of the significance letters to ensure clean alignment in the plot
+stats <- mutate(.data = stats, sig = str_trim(.group))
+
+## Get maximum cond values to guide the placement of the stats annotations
+m <- pull(group_by(copper, alloy) %>% summarise(cond = max(cond)))
+stats <- mutate(.data = stats, cond = m)
+
+## We could have done this all in one go like this:
+stats <- arrange(.data = posthoc, alloy) %>% 
+  mutate(sig = str_trim(.group), cond = pull(group_by(copper, alloy) %>% 
+                                               summarise(cond = max(cond))))
+
+ggplot(data = copper, mapping = aes(x = alloy, y = cond)) +
+  geom_boxplot(fill = "grey") +
+  geom_text(data = stats, aes(x = alloy, y = cond, label = sig), nudge_y = 0.5) +
+  labs(x = "Alloy variety", y = expression(paste("Electrical conductivity (\u00D7 10"^7, " S m"^-1, ")"))) +
+  theme_test()
+
+## Compute the percentage difference in electraical conductance between alloy B (lowest conductance) and the other alloys for reporting.
+group_by(copper, alloy) %>% summarise(cond = mean(cond)) %>% mutate(change = (1 - cond[2]/cond)*100)
+```
+
+<p style="margin-top:40px">
+
+<details><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> for an example of how to report the statistical findings as specified in Exercise 2 f.</summary>
+
+<p style="margin-top:10px">
+The ANOVA results showed a statistically significant alloy effect (_F_~4,95~ = 3.44, _P_ = 0.011). A _post hoc_ analysis revealed that the electrical conductivity of alloy B was significantly lower than that of A, C, and E by more than 20 % (Figure X^†^). The electrical conductivity of alloy D did not differ significantly from any of the other alloys (Figure X).
+
+<font size="2">^†^Refers to the publication-quality figure created as part of this exercise. The statistical annotation in this figure reflects the results of the _post hoc_ analysis, i.e. different lower-case letters indicating statistically significant differences at $\alpha = 0.05$. </font>
+</p>
+</details>
+</p>
+
+### Exercise 3 - Two-way analysis of variance (two-way ANOVA)
+The pre-loaded dataset `soilp` contains soil phosphorus concentrations (mg kg^-1^) derived from two different soil types: an alluvial soil (soil in proximity to a river experiencing regular flooding and thus nutrient input) and soil from an upland terrace (no soil nutrient replenishment through flooding). Soil samples were taken from the A-, B- and C-horizon. In statistical terms we have a continuous response variable (soil phosphorous concentration) and two categorical predictors (soil type given as variable 'loc' and soil horizon given as variable 'horizon').
+
+a. Create an appropriate exploratory plot of the data. 
+
+b. Fit a two-way ANOVA model to the soil phosphorous data using the explanatory variables 'loc' and 'horizon' including their interaction and print the model summary.
+
+c. Inspect the model diagnostic plots and comment on whether the variance homogeneity and the normality assumption are met.
+
+d. If there is a significant interaction term, follow up with a _post hoc_ comparison, i.e. slice^†^ the interaction using the functions in the `emmeans` package.
+
+e. Report the required metrics related to the interaction term (regardless of whether it is statistically significant) as you would in a scientific paper, thesis or report and produce a publication-quality figure with lower-case letters indicating the results of the _post hoc_ test.
+
+<font size="2">^†^Slicing means keeping one level of a categorical predictor constant and comparing the levels of another categorical predictor therein.</font>
+
+<p style="margin-top:15px">
+</p>
+
+```{r anova-exercise1, exercise = TRUE, fig.height=5.5, fig.width=6}
+## Check structure and data summary
+head(soilp, n = 3)
+
+str(soilp)
+
+summary(soilp)
+```
+
+```{r anova-exercise1-solution, fig.cap='**Figure, fig.height=4, 1** Soil phosphorous concentration as a function of soil horizon and landscape location. Different lower-case letters indiciate statistically signifiant differences within each landscape location at $\\alpha$=0.05', exercise.reveal_solution=TRUE}
+## a. Graphical data exploration
+ggplot(data = soilp, mapping = aes(x = horizon, y = p)) + geom_boxplot() + facet_wrap(facets = ~ loc)
+
+## b. Fit a two-way ANOVA model with interaction
+m1 <- lm(p ~ loc * horizon, data = soilp)
+
+## Check model results
+summary(m1) # Does not give us an overall P-value of the interaction term.
+
+anova(m1) # Valid for the interaction term, but as the sequence of predictors in the model formula matter, their P-values change when their order changes in the model.  
+
+drop1(m1, test = "F") # This likelihood ratio test approach overcomes the 'sequence of predictors issue' and should routinely be used.
+
+## c. Inspect model diagnostic plots
+par(mfrow = c(2, 2))
+plot(m1)
+
+# The plot of the residuals vs. fitted values indicates homoscedasticity and the Q-Q plot shows only minor deviations from normality, which we do not need to worry about. No influential observations are flagged.
+
+## d. Post hoc analysis. We can slice the interaction in two ways: i) pairwise comparisons of the horizons with a given soil type or ii) compare the two soil types within each horizon. In cases where it makes sense like in this example, we can also ask for all possible pairwise comparisons.
+ems1 <- emmeans(object = m1, specs = "horizon", by = "loc") # compare horizons within soil type
+ems2 <- emmeans(object = m1, specs = "loc", by = "horizon") # compare soil types within horizon
+ems3 <- emmeans(object = m1, specs = ~ loc * horizon) # get all possible pairwise comparison
+ems1
+ems2
+ems3
+pairs(ems3, adjust = "fdr") # fdr = false discovery rate method (more powerful than other multiplicity adjustments such as the bonferroni method)
+
+## Get significance letters for statistical annotation of the figure
+cld(ems3, Letters = letters, adjust = "fdr")
+
+## e. Publication-quality figure
+locs <- function(x) { c("Alluvial", "Terrace") }  # custom facet labels
+stats <- group_by(soilp, loc, horizon) %>% summarise(max = max(p)) %>% add_column(sig = c("c", "b", "ab", "b", "ab", "a"))
+
+ggplot(data = soilp, mapping = aes(x = horizon, y = p)) + 
+  geom_boxplot() + 
+  geom_text(data = stats, aes(x = horizon, y = max, label = sig), nudge_y = 15, size = 4) +
+  labs(y = expression(paste("Soil phosphorus (mg kg"^-1, ")")), x = "Soil horizon") +
+  facet_wrap(facets = ~ loc, labeller = labeller(loc = locs)) +
+  theme_test()
+```
+<!-- 
+<details><summary>Click <span style="color:blue"> here </span> for an example how to report the statistical findings as specified in exercise 1 e.</summary>
+-->
+<p style="margin-top:40px">
+<details><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> for an example how to report the statistical findings as specified in Exercise 3 e.</summary>
+
+<p style="margin-top:10px">
+We found a statistically significant soil horizon `r knitr::asis_output("\u00D7")` location interaction (_F_~2,48~ = 4.64, _P_ = 0.014). The interaction was mainly driven by the very high phosphorous concentration in the A-horizon of the alluvial soil, which was significantly greater than in all remaining horizons, regardless of soil type (Figure X^†^). The lowest phosphorous concentration was seen in the C-horizon of the terrace soil, which was significantly lower than in all other horizons apart from the C-horizon in the alluvial soil and the B-horizon in the terrace soil (Figure X).
+
+<font size="2">^†^Refers to the publication-quality figure created as part of this exercise. The statistical annotation in this figure reflects the results of the _post hoc_ analysis, i.e. different lower-case letters indicating statistically significant differences at $\alpha = 0.05$. </font>
+</p>
+
+</details>
+</p>
+
+<br>
+Enter your R code for the publication-quality figure from Exercise 3 e here.
+```{r anova-exercise2, exercise = TRUE, fig.height=4, fig.cap="**Figure 1** Soil phosphorous concentration as a function of soil horizon and landscape location. Different lower-case letters indiciate statistically signifiant differences within each landscape location at <span>&#120572;</span> = 0.05."}
+```
+
+```{r anova-exercise2-solution, exercise.reveal_solution=TRUE}
+## e. Publication-quality figure
+
+locs <- function(x) { c("Alluvial", "Terrace") }  # custom facet labels
+stats <- group_by(soilp, loc, horizon) %>% summarise(max = max(p)) %>% add_column(sig = c("c", "b", "ab", "b", "ab", "a"))
+
+ggplot(data = soilp, mapping = aes(x = horizon, y = p)) + 
+  geom_boxplot() + 
+  geom_text(data = stats, aes(x = horizon, y = max, label = sig), nudge_y = 15, size = 4) +
+  labs(y = expression(paste("Soil phosphorus (mg kg"^-1, ")")), x = "Soil horizon") +
+  facet_wrap(facets = ~ loc, labeller = labeller(loc = locs)) +
+  theme_test()
+```
+
+### Exercise 4 - Understanding ANOVA tables
+
+4.1 An experiment was carried out to compare biomass yields (plant dry weight) attained under control and two different treatment conditions. Inspect the one-way ANOVA output below and calculate the missing values for the denominator degrees of freedom and the _F_-value.
+
+```{r, table1, echo=FALSE, message=FALSE}
+# summary(aov(weight ~ group, data = PlantGrowth))
+my_tbl <- tibble::tribble(
+          ~` `, ~Df, ~`Sum Sq`, ~`Mean Sq`, ~`F value`, ~`P(>\\|F\\|)`, ~` `,
+        "group", "2",  "3.766",  "1.8832", "???", "0.0159", "\\*",
+    "Residuals", "???", "10.492", "0.3886", "",      "",       "",
+  )
+#my_tbl
+#kbl(my_tbl, align = "lrrrrl", escape = F) %>% 
+ # kable_material(html_font = "Courier New", full_width = F)
+kbl(my_tbl, align = "rrrrrrl", escape = FALSE, booktabs = T) %>% 
+  kable_styling(html_font = "Courier New", bootstrap_options = "basic", full_width = F)
+#require(rhandsontable)
+#rhandsontable(my_tbl, colHeaders = c("", "Estimate", "Std.Error", "t value", "Pr(>|t|)"), rowHeaders = NULL,
+              # digits = 3, useTypes = FALSE, search = FALSE,
+              # width = NULL, height = NULL)
+```
+
+
+```{r quiz1, echo=FALSE, eval=FALSE}
+quiz(caption = "",
+question_numeric(
+  "How many denominator degrees of freedom do we have? (Round your answer to an integer.)",
+  answer(27, correct = T),
+  allow_retry = T
+),
+question_numeric(
+  "What is the _F_-value? (Report the value with three decimals.)",
+  answer(4.846, correct = T),
+  allow_retry = T
+)
+)
+```
+
+
+<details><summary><p class="btn btn-default" style="background-color:#00873E;color:white;font-size:110%;padding: 7px 15px 7px 15px;">Solution</p></summary>
+```{r, table1_solution, echo=FALSE, message=FALSE}
+# summary(aov(weight ~ group, data = PlantGrowth))
+my_tbl <- tibble::tribble(
+          ~` `, ~Df, ~`Sum Sq`, ~`Mean Sq`, ~`F value`, ~`P(>\\|F\\|)`, ~` `,
+        "group", "2",  "3.766",  "1.8832", "4.846", "0.0159", "\\*",
+    "Residuals", "27", "10.492", "0.3886", "",      "",       "",
+  )
+#my_tbl
+#kbl(my_tbl, align = "lrrrrl", escape = F) %>% 
+ # kable_material(html_font = "Courier New", full_width = F)
+kbl(my_tbl, align = "rrrrrrl", escape = FALSE, booktabs = T) %>% 
+  kable_styling(html_font = "Courier New", bootstrap_options = "basic", full_width = F)
+#require(rhandsontable)
+#rhandsontable(my_tbl, colHeaders = c("", "Estimate", "Std.Error", "t value", "Pr(>|t|)"), rowHeaders = NULL,
+              # digits = 3, useTypes = FALSE, search = FALSE,
+              # width = NULL, height = NULL)
+```
+</details>
+
+<br>
+
+4.2 In a food laboratory, the amount of sugar (grams per serving) for three varieties of ice cream from different manufacturers was measured. Calculate the missing values in the partial ANOVA table below. Given a significance level of 0.05 ($\alpha$ = 0.05), is there a significant difference in mean sugar content for the three ice cream varieties? Assume that the underlying model assumptions were not violated.
+
+```{r, table2, echo=FALSE, message=FALSE}
+# summary(aov(weight ~ group, data = PlantGrowth))
+my_tbl <- tibble::tribble(
+          ~` `, ~Df, ~`Sum Sq`, ~`Mean Sq`, ~`F value`, ~`P(>\\|F\\|)`, 
+        "Between-group variance", "2",  "37.0",  "", "", "", 
+    "Within-group variance", "23", "195.2", "", "",      "",
+  )
+#my_tbl
+ 
+kbl(my_tbl, align = "rrrrrr", escape = FALSE, booktabs = T) %>% 
+  kable_styling(html_font = "Courier New", bootstrap_options = "basic", full_width = F)
+```
+
+<details><summary><p class="btn btn-default" style="background-color:#00873E;color:white;font-size:110%;padding: 7px 15px 7px 15px;">Solution</p></summary>
+
+```{r, table2_solution, echo=FALSE, message=FALSE}
+# summary(aov(weight ~ group, data = PlantGrowth))
+my_tbl <- tibble::tribble(
+          ~` `, ~Df, ~`Sum Sq`, ~`Mean Sq`, ~`F value`, ~`P(>\\|F\\|)`, 
+        "Between-group variance", "2",  "37.0",  "18.500", "2.180", "0.136", 
+    "Within-group variance", "23", "195.2", "8.486", "",      "",
+  )
+kbl(my_tbl, align = "rrrrrr", escape = FALSE, booktabs = T) %>% 
+  kable_styling(html_font = "Courier New", bootstrap_options = "basic", full_width = F)
+```
+The _P_-value of 0.136 is greater than the significance level of 0.05, i.e. we cannot reject the null hypothesis and conclude that there is no statistically significant difference in sugar content between the tested ice cream varieties.
+</details>
+
+<br>
+
+4.3 In a scientific paper the results of a one-way analysis of variance (one-way ANOVA) are reported for a study comprising 48 observations. The model output shows 5 numerator degrees of freedom (_df_~num~). How many observations were in each group and how many denominator degrees of freedom (_df_~den~) are associated with this analysis?
+
+<details><summary><p class="btn btn-default" style="background-color:#00873E;color:white;font-size:110%;padding: 7px 15px 7px 15px;">Solution</p></summary>
+<br>
+<p>_df_~num~ = number of groups -- 1, i.e. there were six groups and given the 48 observations, there must have been **8 observations in each group**. <br>
+_df_~den~ = number of observations – number of groups, i.e. 48 - 6 groups = **42 _df_~den~**
+</p>
+</details>
+
+<br>
+
+4.4 In a chemistry experiment, the effect of two different types of catalysts on the rate of a chemical reaction was investigated. The trial comprised the catalysts platinum and palladium and a control (no catalyst). For each treatment level (control, platinum, palladium), the researchers conducted 10 trials of the chemical reaction under controlled laboratory conditions. Assume that the model assumptions of variance homogeneity and normality were not violated.
+
+<p>Use the information provided to test at $\alpha$ = 0.05 whether there is a significant difference among the levels of the catalyst treatment given a sum of squares between groups (i.e. between treatment levels) (_SS~between~_) of 221.3 and a sum of squares within groups (_SS~within~_) of 576.8.</p>
+
+```{r, echo=F, eval=F}
+# n = 30
+# dfnum = no. of groups - 1 = 3 - 1 = 2
+# dfden = n - no. of groups = 30 - 3 = 27
+# Mean squares
+221.3/2 # 110.65
+576.8/27 # 21.36296
+(221.3/2)/(576.8/27)
+pf(q = 5.179525, df1 = 2, df2 = 27, lower.tail = F)
+qf(p = 0.05, df1 = 2, df2 = 27, lower.tail = F)
+```
+
+<details><summary><p class="btn btn-default" style="background-color:#00873E;color:white;font-size:110%;padding: 7px 15px 7px 15px;">Solution</p></summary>
+<br>
+<p>The experiment comprised three treatment groups, i.e. we have 2 numerator degrees of freedom (_df_~num~) (no. of groups -- 1). There were 30 runs in total (_n_ = 30), so that gives _n_ -- no. of groups = 30 -- 3 = 27 denominator degrees of freedom (_df_~den~). With this information we can work out the respective mean squares (MS), whose ratio gives the _F_-statistic. 
+</p>
+<br>
+
+$$MS_{between} = SS_{between} - df_{num} = 221.3/2 = 110.65$$
+
+$$MS_{within} = SS_{within} - df_{den} = 576.8/27 = 21.36$$
+$$F = \frac{MS_{between}}{MS_{within}} = 110.65/21.36 = 5.180$$
+<p style="margin-top:40px;">
+So, how does this _F_-value compare to the critical _F_-value of an _F_-distribution with 2 _df_~num~ and 27 _df_~den~?
+</p>
+
+```{r}
+## Compute the critical F-value of an F-distribution with 2 numerator degrees of freedom and 27 denominator degrees of freedom. 
+qf(p = 0.05, df1 = 2, df2 = 27, lower.tail = F)
+```
+
+<p style="margin-top:20px, margin-left:40px;">
+The _F_-value of 5.180 resulting from our ANOVA model is greater than the critical _F_-value of 3.354, prompting us to reject the null hypothesis of no difference between groups (factor levels).
+</p>
+We can also simply compute the _P_-value associated with _F_~2,27~ = 5.180 and compare it to the significance level $\alpha$ = 0.05.
+
+```{r}
+## Compute the P-value associated with the F-statistic from the ANOVA model given the 2 and 27 degrees of freedom.
+pf(5.180, df1 = 2, df2 = 27, lower.tail = F)
+```
+
+<p style="margin-top:20px;">
+Our _P_-value of 0.0125 is smaller than our significance level of 0.05 indicating an overall statistically significant effect (a statistically significant difference between at least two of the predictor levels).
+</p>
+</details>
+
+### Exercise 5 - Model specification
+The figure below shows a continuous response variable ‘Cell length’ (µm) and two categorical explanatory variables ‘Vitamin C dose’ (0.5, 1, 2 mg day^-1^) and ‘Supplement’ (orange juice, ascorbic acid), describing the amount and form of the administered vitamin C (‘vitamin C dose’), respectively. Since there are only three vitamin C doses, this predictor could be regarded as a categorical variable (a factor with three levels).
+
+```{r, echo=FALSE, fig.align='center', fig.width=5, fig.height=3.25}
+data("ToothGrowth")
+se <- function(x, na.rm = FALSE)
+{
+  if(na.rm == TRUE)
+  {
+    sqrt(var(x, na.rm = T)/length(na.omit(x)))
+  }
+  else
+  {
+    sqrt(var(x)/length(x))
+  }
+}
+tg <- group_by(.data = ToothGrowth, supp, dose) %>% summarise(len_av = mean(len), pos = mean(len) + se(len), neg = mean(len) - se(len)) %>% as.data.frame %>% mutate(dose = factor(dose))
+
+striplabs <- function(x) { c("Orange juice", "Ascorbic acid") } 
+
+ggplot(data = tg, aes(x = dose, y = len_av)) +
+  geom_bar(stat = "identity", position = position_dodge2(), fill = "grey", colour = "black", width = 0.5) +
+  geom_errorbar(aes(x = dose, ymin = neg, ymax = pos), width = 0.2) +
+  facet_wrap(facets = ~supp, labeller = labeller(supp = striplabs)) +
+  labs(y = expression(paste("Cell length (", mu, "m)")), x = expression(paste("Vitamin C dose (mg day"^-1, ")"))) +
+  scale_y_continuous(limits = c(0, 30), expand = c(0, 0)) +
+  theme_test() +
+  theme(strip.text.x = element_text(size = 12))
+```
+
+a. What model would you fit to this dataset? Write down the common model name as specifically as possible as well as the model equation in R code using the variable names given above. 
+
+<p style="margin-top:20px;">
+
+<details style="margin-left:40px;margin-bottom:30px;"><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> for a model answer.</summary>
+
+<p style="margin-top:10px;">
+A two-way ANOVA model with interaction. <br>
+<span style="font-family:Courier New;">m1 <- lm(cell_length ~ vitamin_c_dose * supplement, data = ...) # aov() can also be used</span>
+</p>
+</details>
+</p>
+b. Explain what a significant interaction between ‘Vitamin C dose’ and ‘Supplement’ would mean in this scenario. 
+<p style="margin-top:20px;">
+
+<details style="margin-left:40px;margin-bottom:30px;"><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> for a model answer.</summary>
+
+<p style="margin-top:10px;">
+A ‘Vitamin C dose’ &times; ‘Supplement’ interaction means that the dose effect of vitamin C on cell length varies significantly with the type of supplement provided. Alternatively, one could say that the two supplements significantly differ in their effect on cell length growth but this effect depends on the vitamin C dose. 
+</p>
+</details>
+</p>
