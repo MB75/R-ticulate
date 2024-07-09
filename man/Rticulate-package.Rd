@@ -6,6 +6,6 @@
 \alias{Rticulate-package}
 \title{Rticulate: Companion to 'R-ticulate - A Beginner's Guide to Data Analysis for Natural Scientists'}
 \description{
-The companion package contains interactive exercises and provides all datasets used in the book ``R-ticulate - A Beginner's Guide to Data Analysis for Natural Scientists'' by Martin Bader and Sebastian Leuzinger (first edition 2024, ISBN: 978-1-119-71799-7).
+This companion package contains interactive exercises and provides all datasets used in the book ``R-ticulate - A Beginner's Guide to Data Analysis for Natural Scientists'' by Martin Bader and Sebastian Leuzinger (first edition 2024, ISBN: 978-1-119-71799-7).
 }
 \keyword{internal}

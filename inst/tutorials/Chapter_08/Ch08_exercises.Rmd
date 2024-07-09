@@ -212,15 +212,14 @@ b. Perform an appropriate test to determine if there is a significant correlatio
 c. Report your findings in a scientifically appropriate way.
 
 ```{r cor_exercise1, exercise=TRUE, fig.align='center', fig.width=5, fig.height=5}
-  
 ```
+
 ```{r cor_exercise1-solution, exercise.reveal_solution = TRUE}
 ## a. Scatter plot of the data
 plot(offspring ~ mother, data = bugs)
 
 ## b. Conduct a correlation analysis
 cor.test(bugs$mother, bugs$offspring)
-
 ```
 <br>
 <details><summary>Click <a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a> to view a model answer for reporting the results from the correlation analysis as specified in 2 c.</summary>
