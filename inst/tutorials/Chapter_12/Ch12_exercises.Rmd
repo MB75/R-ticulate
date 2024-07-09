@@ -214,6 +214,8 @@ d. At roughly what supercooled water droplet concentration is the hailstorm prob
 ## View the first few observations
 head(hail)
 ```
+
+
 ```{r hail-exercise-solution, exercise.reveal_solution = TRUE}
 ## a. Visualise the data
 ggplot(data = hail, aes(x = scwd, y = hailstorm)) +
