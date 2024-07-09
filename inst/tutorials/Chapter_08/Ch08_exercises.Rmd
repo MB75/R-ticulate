@@ -215,7 +215,8 @@ c. Report your findings in a scientifically appropriate way.
 ## View the first few observations
 head(bugs)
 ```
-```{r cor_exercise1-solution, exercise.reveal_solution = TRUE}
+
+```{r cor_exercise1-solution, exercise.reveal_solution=TRUE}
 ## a. Scatter plot of the data
 plot(offspring ~ mother, data = bugs)
 
