@@ -212,6 +212,8 @@ b. Perform an appropriate test to determine if there is a significant correlatio
 c. Report your findings in a scientifically appropriate way.
 
 ```{r cor_exercise1, exercise=TRUE, fig.align='center', fig.width=5, fig.height=5}
+## View the first few observations
+head(bugs)
 ```
 ```{r cor_exercise1-solution, exercise.reveal_solution = TRUE}
 ## a. Scatter plot of the data
