@@ -104,7 +104,7 @@ question("The Chi-squared test operates on the basis of",
 question("What is the null hypothesis of a Chi-squared test?",
          answer("There is no dependency between the categorical variables (i.e. they are independent).", correct = T),
          answer("The two variables in question are not significantly correlated."),
-         answer("There is dependency between the categorical variables (i.e. they are dependent)"),
+         answer("There is dependency between the categorical variables (i.e. they are dependent)."),
          answer("The means of the two variables are not significantly different."),
          answer("None of the above."),
          allow_retry = T

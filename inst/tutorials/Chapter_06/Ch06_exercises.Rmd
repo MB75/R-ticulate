@@ -139,7 +139,7 @@ question("To quickly visualise all possible bivariate relationships between mult
         answer("`pairs` (base R) or `ggpairs` (_ggplot2_ framework).", correct = T),
         answer("`layout` (base R) or `facet_wrap` (_ggplot2_ framework)."),
         answer("`coplot` (base R) or `facet_wrap` (_ggplot2_ framework)."),
-        answer("`boxplot` (base R) or `geom_boxplot` (_ggplot2_ framework)"),
+        answer("`boxplot` (base R) or `geom_boxplot` (_ggplot2_ framework)."),
         answer("None of the above."),
   allow_retry = T
 ),

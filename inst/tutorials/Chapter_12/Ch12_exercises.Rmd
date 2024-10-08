@@ -166,7 +166,7 @@ question("Which of the following methods can be used to detect heteroscedasticit
         answer("Shapiro-Wilk test."),
         answer("Qantile-quantile plot."),
         answer("Variance inflation factor (VIF)."),
-        answer("Histogram"),
+        answer("Histogram."),
         answer("None of the above.", correct = T),
   allow_retry = T
 ),

@@ -90,8 +90,8 @@ quiz(caption = "",
 question("A common problem of hypothesis tests is that a real effect (such as a difference between group means) may not be detected. This issue is most likely to occur when",
   answer("the effect is small and the sample size is large."),
   answer("the effect is large and the sample size is large."),
-  answer("the effect is small and the sample size is small", correct = T),
-  answer("the effect is large and the sample size is small"),
+  answer("the effect is small and the sample size is small.", correct = T),
+  answer("the effect is large and the sample size is small."),
   answer("None of the above."),
   allow_retry = T
 ),
@@ -99,7 +99,7 @@ question("In hypothesis tests such as the _t_-test, a type II error represents a
   answer("the null hypothesis is not rejected when it is true."),
   answer("the null hypothesis is rejected when the alternative hypothesis is true."),
   answer("the null hypothesis is rejected when the null hypothesis is true."),
-  answer("the null hypothesis is not rejected when the alternative hypothesis is true", correct = T),
+  answer("the null hypothesis is not rejected when the alternative hypothesis is true.", correct = T),
   answer("None of the above."),
   allow_retry = T
 ),
@@ -156,7 +156,7 @@ question(c("Which of the tests below is an alternative to the two-sample _t_-tes
     answer("Bartlett's test."),
     answer("Wilcoxon rank sum test (Mann-Whitney _U_-test).", correct = T),
     answer("_F_-test."),
-    answer("Two-sample Komogorov-Smirnov test."),
+    answer("Two-sample Kolmogorov-Smirnov test."),
     allow_retry = T
   )
 )

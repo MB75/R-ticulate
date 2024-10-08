@@ -149,7 +149,7 @@ quiz(caption = "",
         answer("Point-biserial correlation coefficient."),
         answer("Kendall's $\\tau$ correlation coefficient."),
         answer("Pearson's product-moment correlation coefficient.", correct = T),
-        answer("Spearman's rank correlation coefficient (Spearman's $\\rho$)"),
+        answer("Spearman's rank correlation coefficient (Spearman's $\\rho$)."),
         answer("None of the above."),
         allow_retry = T
       ),
