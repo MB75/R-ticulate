@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="author" content="Martin Bader and Sebastian Leuzinger" />
+
+
+<meta name="progressive" content="false" />
+<meta name="allow-skip" content="false" />
+<meta name="learnr-version-prerender" content="0.11.5" />
+
+<title>R-ticulate Exercises</title>
+
+<!-- header-includes START -->
+<!-- HEAD_CONTENT -->
+<!-- header-includes END -->
+<!-- HEAD_CONTENT -->
+
+<!-- highlightjs -->
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+<!-- taken from https://github.com/rstudio/rmarkdown/blob/de8a9c38618903627ca509f5401d50a0876079f7/inst/rmd/h/default.html#L293-L343 -->
+<!-- tabsets -->
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+<!-- end tabsets -->
+
+
+</head>
+
+<body>
+<a class='sr-only sr-only-focusable visually-hidden-focusable' href='#learnr-tutorial-content'>Skip to Tutorial Content</a>
+
+
+
+<div class="pageContent band">
+<main class="bandContent page">
+
+<article class="topics" id="learnr-tutorial-content">
+
+<p><br></p>
+<div
+id="section-chapter-10---one-or-more-categorical-predictors-analysis-of-variance"
+class="section level2">
+<h2>Chapter 10 - One or More Categorical Predictors – Analysis of
+Variance</h2>
+<div id="section-exercise-1---multiple-choice-quiz"
+class="section level3">
+<h3>Exercise 1 - Multiple-choice quiz</h3>
+<p>Please note that there is only one correct (or most correct) answer
+to each question.</p>
+<p style="margin-top:-30px;">
+</p>
+<div class="panel-heading tutorial-quiz-title"></div>
+<div class="panel panel-default tutorial-question-container">
+<div data-label="anova_quiz-1" class="tutorial-question panel-body">
+<div id="anova_quiz-1-answer_container" class="shiny-html-output"></div>
+<div id="anova_quiz-1-message_container" class="shiny-html-output"></div>
+<div id="anova_quiz-1-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+<div class="panel panel-default tutorial-question-container">
+<div data-label="anova_quiz-2" class="tutorial-question panel-body">
+<div id="anova_quiz-2-answer_container" class="shiny-html-output"></div>
+<div id="anova_quiz-2-message_container" class="shiny-html-output"></div>
+<div id="anova_quiz-2-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+<div class="panel panel-default tutorial-question-container">
+<div data-label="anova_quiz-3" class="tutorial-question panel-body">
+<div id="anova_quiz-3-answer_container" class="shiny-html-output"></div>
+<div id="anova_quiz-3-message_container" class="shiny-html-output"></div>
+<div id="anova_quiz-3-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+<div class="panel panel-default tutorial-question-container">
+<div data-label="anova_quiz-4" class="tutorial-question panel-body">
+<div id="anova_quiz-4-answer_container" class="shiny-html-output"></div>
+<div id="anova_quiz-4-message_container" class="shiny-html-output"></div>
+<div id="anova_quiz-4-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+<div class="panel panel-default tutorial-question-container">
+<div data-label="anova_quiz-5" class="tutorial-question panel-body">
+<div id="anova_quiz-5-answer_container" class="shiny-html-output"></div>
+<div id="anova_quiz-5-message_container" class="shiny-html-output"></div>
+<div id="anova_quiz-5-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+<div class="panel panel-default tutorial-question-container">
+<div data-label="anova_quiz-6" class="tutorial-question panel-body">
+<div id="anova_quiz-6-answer_container" class="shiny-html-output"></div>
+<div id="anova_quiz-6-message_container" class="shiny-html-output"></div>
+<div id="anova_quiz-6-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+<div class="panel panel-default tutorial-question-container">
+<div data-label="anova_quiz-7" class="tutorial-question panel-body">
+<div id="anova_quiz-7-answer_container" class="shiny-html-output"></div>
+<div id="anova_quiz-7-message_container" class="shiny-html-output"></div>
+<div id="anova_quiz-7-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+<div class="panel panel-default tutorial-question-container">
+<div data-label="anova_quiz-8" class="tutorial-question panel-body">
+<div id="anova_quiz-8-answer_container" class="shiny-html-output"></div>
+<div id="anova_quiz-8-message_container" class="shiny-html-output"></div>
+<div id="anova_quiz-8-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+<div class="panel panel-default tutorial-question-container">
+<div data-label="anova_quiz-9" class="tutorial-question panel-body">
+<div id="anova_quiz-9-answer_container" class="shiny-html-output"></div>
+<div id="anova_quiz-9-message_container" class="shiny-html-output"></div>
+<div id="anova_quiz-9-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+<div class="panel panel-default tutorial-question-container">
+<div data-label="anova_quiz-10" class="tutorial-question panel-body">
+<div id="anova_quiz-10-answer_container" class="shiny-html-output"></div>
+<div id="anova_quiz-10-message_container" class="shiny-html-output"></div>
+<div id="anova_quiz-10-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+<div class="panel panel-default tutorial-question-container">
+<div data-label="anova_quiz-11" class="tutorial-question panel-body">
+<div id="anova_quiz-11-answer_container" class="shiny-html-output"></div>
+<div id="anova_quiz-11-message_container" class="shiny-html-output"></div>
+<div id="anova_quiz-11-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+<div class="panel panel-default tutorial-question-container">
+<div data-label="anova_quiz-12" class="tutorial-question panel-body">
+<div id="anova_quiz-12-answer_container" class="shiny-html-output"></div>
+<div id="anova_quiz-12-message_container" class="shiny-html-output"></div>
+<div id="anova_quiz-12-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+<p>The model code related to the exercises below relies on the following
+R packages (which are autoloaded behind the scenes in this
+tutorial):</p>
+<ul>
+<li><em>ggplot2</em></li>
+<li><em>dplyr</em></li>
+<li><em>emmeans</em></li>
+<li><em>multcomp</em></li>
+<li><em>multcompView</em></li>
+</ul>
+</div>
+<div
+id="section-exercise-2---one-way-analysis-of-variance-one-way-anova"
+class="section level3">
+<h3>Exercise 2 - One-way analysis of variance (one-way ANOVA)</h3>
+<p>A physics laboratory conducted an experiment to compare the
+electrical conductivity of five different copper alloys at 20 °C
+temperature. The data is compiled in the pre-loaded <code>copper</code>
+dataset, which is ready for use in the R code field below. The ‘alloy’
+variable contains the five types of alloy (A, B, C, D, E). The ‘cond’
+variable indicates the electrical conductivity (given in 10<sup>7</sup>
+Siemens per meter, S m<sup>-1</sup>) and represents the continuous
+response variable. For each alloy variety, 20 independent samples were
+tested.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Create an exploratory plot of the data.</p></li>
+<li><p>Use an analysis of variance (ANOVA) approach to compare the
+electrical conductivity across the 5 different copper alloys.</p></li>
+<li><p>Use model diagnostic plots to check the underlying assumptions of
+variance homogeneity and normality and report your findings</p></li>
+<li><p>If the model assumptions are met and the model summary shows an
+overall statistically significant effect, then follow up with a <em>post
+hoc</em> analysis and report which alloy varieties differ from each
+other given a significance level of <span class="math inline">\(\alpha =
+0.05\)</span>.</p></li>
+<li><p>Produce a publication-quality figure of the data.</p></li>
+<li><p>Report the results of the statisticaly analysis in a
+scientifically appropriate way.</p></li>
+</ol>
+<p style="margin-top:20px">
+</p>
+<!-- <br>
+Enter your R code for exercise 2 a-e here.
+-->
+<div class="tutorial-exercise" data-label="one-way_anova_exercise"
+data-completion="1" data-diagnostics="1" data-startover="1"
+data-lines="0" data-pipe="|&gt;">
+<pre class="text"><code>## Getting started with a few sanity checks
+
+## Display the top five observations
+head(copper)
+
+## Check data structure (&#39;alloy&#39; should be a factor and &#39;cond&#39; a numeric variable)
+str(copper)
+
+## Check data summary
+summary(copper)</code></pre>
+<script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":false,"caption":"<span data-i18n=\"text.enginecap\" data-i18n-opts=\"{&quot;engine&quot;:&quot;R&quot;}\">R Code<\/span>"}</script>
+</div>
+<div class="tutorial-exercise-support"
+data-label="one-way_anova_exercise-solution" data-completion="1"
+data-diagnostics="1" data-startover="1" data-lines="0"
+data-pipe="|&gt;">
+<pre class="text"><code>## a. Exploratory plot
+# Traditional graphics
+boxplot(cond ~ alloy, data = copper) 
+
+# ggplot2
+ggplot(data = copper, mapping = aes(x = alloy, y = cond)) +
+  geom_boxplot()
+
+## b. Perform a one-way ANOVA
+m1 &lt;- aov(cond ~ alloy, data = copper)
+summary(m1)
+
+## Same as above using the lm function
+# m1 &lt;- lm(cond ~ alloy, data = copper)
+# anova(m1) # same as summary.aov()
+
+## c. Diagnostic plots
+par(mfrow = c(2, 2))
+plot(m1)
+
+## d. Post hoc analysis (given the overall significance of the alloy effect of P = 0.0114)
+TukeyHSD(m1) # works only for function aov()
+
+# More flexible and comprehensive approach using the emmeans package
+ems &lt;- emmeans(m1, specs = &quot;alloy&quot;)
+pairs(ems) # we suggest to use the additional argument adjust = &quot;fdr&quot;, see ?p.adjust for more information
+cld(ems, Letters = letters) # by default the lowest mean is assigned an &#39;a&#39;
+
+## e. Publication-quality figure incl. statistical annotation showing the results of the post hoc comparison
+posthoc &lt;- cld(ems, Letters = letters)
+
+## Sort dataset in ascending fashion so that alloy A comes first and E last
+stats &lt;- arrange(.data = posthoc, alloy)
+
+## Remove white space at the start and end of the significance letters to ensure clean alignment in the plot
+stats &lt;- mutate(.data = stats, sig = str_trim(.group))
+
+## Get maximum cond values to guide the placement of the stats annotations
+m &lt;- pull(group_by(copper, alloy) %&gt;% summarise(cond = max(cond)))
+stats &lt;- mutate(.data = stats, cond = m)
+
+## We could have done this all in one go like this:
+stats &lt;- arrange(.data = posthoc, alloy) %&gt;% 
+  mutate(sig = str_trim(.group), cond = pull(group_by(copper, alloy) %&gt;% 
+                                               summarise(cond = max(cond))))
+
+ggplot(data = copper, mapping = aes(x = alloy, y = cond)) +
+  geom_boxplot(fill = &quot;grey&quot;) +
+  geom_text(data = stats, aes(x = alloy, y = cond, label = sig), nudge_y = 0.5) +
+  labs(x = &quot;Alloy variety&quot;, y = expression(paste(&quot;Electrical conductivity (\u00D7 10&quot;^7, &quot; S m&quot;^-1, &quot;)&quot;))) +
+  theme_test()
+
+## Compute the percentage difference in electraical conductance between alloy B (lowest conductance) and the other alloys for reporting.
+group_by(copper, alloy) %&gt;% summarise(cond = mean(cond)) %&gt;% mutate(change = (1 - cond[2]/cond)*100)</code></pre>
+</div>
+<p style="margin-top:40px">
+<details>
+<summary>
+Click
+<a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a>
+for an example of how to report the statistical findings as specified in
+Exercise 2 f.
+</summary>
+<p style="margin-top:10px">
+<p>The ANOVA results showed a statistically significant alloy effect
+(<em>F</em><sub>4,95</sub> = 3.44, <em>P</em> = 0.011). A <em>post
+hoc</em> analysis revealed that the electrical conductivity of alloy B
+was significantly lower than that of A, C, and E by more than 20 %
+(Figure X<sup>†</sup>). The electrical conductivity of alloy D did not
+differ significantly from any of the other alloys (Figure X).</p>
+<font size="2"><sup>†</sup>Refers to the publication-quality figure
+created as part of this exercise. The statistical annotation in this
+figure reflects the results of the <em>post hoc</em> analysis,
+i.e. different lower-case letters indicating statistically significant
+differences at <span class="math inline">\(\alpha = 0.05\)</span>.
+</font>
+</p>
+</details>
+</p>
+</div>
+<div
+id="section-exercise-3---two-way-analysis-of-variance-two-way-anova"
+class="section level3">
+<h3>Exercise 3 - Two-way analysis of variance (two-way ANOVA)</h3>
+<p>The pre-loaded dataset <code>soilp</code> contains soil phosphorus
+concentrations (mg kg<sup>-1</sup>) derived from two different soil
+types: an alluvial soil (soil in proximity to a river experiencing
+regular flooding and thus nutrient input) and soil from an upland
+terrace (no soil nutrient replenishment through flooding). Soil samples
+were taken from the A-, B- and C-horizon. In statistical terms we have a
+continuous response variable (soil phosphorous concentration) and two
+categorical predictors (soil type given as variable ‘loc’ and soil
+horizon given as variable ‘horizon’).</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Create an appropriate exploratory plot of the data.</p></li>
+<li><p>Fit a two-way ANOVA model to the soil phosphorous data using the
+explanatory variables ‘loc’ and ‘horizon’ including their interaction
+and print the model summary.</p></li>
+<li><p>Inspect the model diagnostic plots and comment on whether the
+variance homogeneity and the normality assumption are met.</p></li>
+<li><p>If there is a significant interaction term, follow up with a
+<em>post hoc</em> comparison, i.e. slice<sup>†</sup> the interaction
+using the functions in the <code>emmeans</code> package.</p></li>
+<li><p>Report the required metrics related to the interaction term
+(regardless of whether it is statistically significant) as you would in
+a scientific paper, thesis or report and produce a publication-quality
+figure with lower-case letters indicating the results of the <em>post
+hoc</em> test.</p></li>
+</ol>
+<p><font size="2"><sup>†</sup>Slicing means keeping one level of a
+categorical predictor constant and comparing the levels of another
+categorical predictor therein.</font></p>
+<p style="margin-top:15px">
+</p>
+<div class="tutorial-exercise" data-label="anova-exercise1"
+data-completion="1" data-diagnostics="1" data-startover="1"
+data-lines="0" data-pipe="|&gt;">
+<pre class="text"><code>## Check structure and data summary
+head(soilp, n = 3)
+
+str(soilp)
+
+summary(soilp)</code></pre>
+<script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":false,"caption":"<span data-i18n=\"text.enginecap\" data-i18n-opts=\"{&quot;engine&quot;:&quot;R&quot;}\">R Code<\/span>"}</script>
+</div>
+<div class="tutorial-exercise-support"
+data-label="anova-exercise1-solution" data-completion="1"
+data-diagnostics="1" data-startover="1" data-lines="0"
+data-pipe="|&gt;">
+<pre class="text"><code>## a. Graphical data exploration
+ggplot(data = soilp, mapping = aes(x = horizon, y = p)) + geom_boxplot() + facet_wrap(facets = ~ loc)
+
+## b. Fit a two-way ANOVA model with interaction
+m1 &lt;- lm(p ~ loc * horizon, data = soilp)
+
+## Check model results
+summary(m1) # Does not give us an overall P-value of the interaction term.
+
+anova(m1) # Valid for the interaction term, but as the sequence of predictors in the model formula matter, their P-values change when their order changes in the model.  
+
+drop1(m1, test = &quot;F&quot;) # This likelihood ratio test approach overcomes the &#39;sequence of predictors issue&#39; and should routinely be used.
+
+## c. Inspect model diagnostic plots
+par(mfrow = c(2, 2))
+plot(m1)
+
+# The plot of the residuals vs. fitted values indicates homoscedasticity and the Q-Q plot shows only minor deviations from normality, which we do not need to worry about. No influential observations are flagged.
+
+## d. Post hoc analysis. We can slice the interaction in two ways: i) pairwise comparisons of the horizons with a given soil type or ii) compare the two soil types within each horizon. In cases where it makes sense like in this example, we can also ask for all possible pairwise comparisons.
+ems1 &lt;- emmeans(object = m1, specs = &quot;horizon&quot;, by = &quot;loc&quot;) # compare horizons within soil type
+ems2 &lt;- emmeans(object = m1, specs = &quot;loc&quot;, by = &quot;horizon&quot;) # compare soil types within horizon
+ems3 &lt;- emmeans(object = m1, specs = ~ loc * horizon) # get all possible pairwise comparison
+ems1
+ems2
+ems3
+pairs(ems3, adjust = &quot;fdr&quot;) # fdr = false discovery rate method (more powerful than other multiplicity adjustments such as the bonferroni method)
+
+## Get significance letters for statistical annotation of the figure
+cld(ems3, Letters = letters, adjust = &quot;fdr&quot;)
+
+## e. Publication-quality figure
+locs &lt;- function(x) { c(&quot;Alluvial&quot;, &quot;Terrace&quot;) }  # custom facet labels
+stats &lt;- group_by(soilp, loc, horizon) %&gt;% summarise(max = max(p)) %&gt;% add_column(sig = c(&quot;c&quot;, &quot;b&quot;, &quot;ab&quot;, &quot;b&quot;, &quot;ab&quot;, &quot;a&quot;))
+
+ggplot(data = soilp, mapping = aes(x = horizon, y = p)) + 
+  geom_boxplot() + 
+  geom_text(data = stats, aes(x = horizon, y = max, label = sig), nudge_y = 15, size = 4) +
+  labs(y = expression(paste(&quot;Soil phosphorus (mg kg&quot;^-1, &quot;)&quot;)), x = &quot;Soil horizon&quot;) +
+  facet_wrap(facets = ~ loc, labeller = labeller(loc = locs)) +
+  theme_test()</code></pre>
+</div>
+<!-- 
+<details><summary>Click <span style="color:blue"> here </span> for an example how to report the statistical findings as specified in exercise 1 e.</summary>
+-->
+<p style="margin-top:40px">
+<details>
+<summary>
+Click
+<a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a>
+for an example how to report the statistical findings as specified in
+Exercise 3 e.
+</summary>
+<p style="margin-top:10px">
+<p>We found a statistically significant soil horizon × location
+interaction (<em>F</em><sub>2,48</sub> = 4.64, <em>P</em> = 0.014). The
+interaction was mainly driven by the very high phosphorous concentration
+in the A-horizon of the alluvial soil, which was significantly greater
+than in all remaining horizons, regardless of soil type (Figure
+X<sup>†</sup>). The lowest phosphorous concentration was seen in the
+C-horizon of the terrace soil, which was significantly lower than in all
+other horizons apart from the C-horizon in the alluvial soil and the
+B-horizon in the terrace soil (Figure X).</p>
+<font size="2"><sup>†</sup>Refers to the publication-quality figure
+created as part of this exercise. The statistical annotation in this
+figure reflects the results of the <em>post hoc</em> analysis,
+i.e. different lower-case letters indicating statistically significant
+differences at <span class="math inline">\(\alpha = 0.05\)</span>.
+</font>
+</p>
+</details>
+</p>
+<br> Enter your R code for the publication-quality figure from Exercise
+3 e here.
+<div class="tutorial-exercise" data-label="anova-exercise2"
+data-completion="1" data-diagnostics="1" data-startover="1"
+data-lines="0" data-pipe="|&gt;">
+<script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":false,"caption":"<span data-i18n=\"text.enginecap\" data-i18n-opts=\"{&quot;engine&quot;:&quot;R&quot;}\">R Code<\/span>"}</script>
+</div>
+<div class="tutorial-exercise-support"
+data-label="anova-exercise2-solution" data-completion="1"
+data-diagnostics="1" data-startover="1" data-lines="0"
+data-pipe="|&gt;">
+<pre class="text"><code>## e. Publication-quality figure
+
+locs &lt;- function(x) { c(&quot;Alluvial&quot;, &quot;Terrace&quot;) }  # custom facet labels
+stats &lt;- group_by(soilp, loc, horizon) %&gt;% summarise(max = max(p)) %&gt;% add_column(sig = c(&quot;c&quot;, &quot;b&quot;, &quot;ab&quot;, &quot;b&quot;, &quot;ab&quot;, &quot;a&quot;))
+
+ggplot(data = soilp, mapping = aes(x = horizon, y = p)) + 
+  geom_boxplot() + 
+  geom_text(data = stats, aes(x = horizon, y = max, label = sig), nudge_y = 15, size = 4) +
+  labs(y = expression(paste(&quot;Soil phosphorus (mg kg&quot;^-1, &quot;)&quot;)), x = &quot;Soil horizon&quot;) +
+  facet_wrap(facets = ~ loc, labeller = labeller(loc = locs)) +
+  theme_test()</code></pre>
+</div>
+</div>
+<div id="section-exercise-4---understanding-anova-tables"
+class="section level3">
+<h3>Exercise 4 - Understanding ANOVA tables</h3>
+<p>4.1 An experiment was carried out to compare biomass yields (plant
+dry weight) attained under control and two different treatment
+conditions. Inspect the one-way ANOVA output below and calculate the
+missing values for the denominator degrees of freedom and the
+<em>F</em>-value.</p>
+<table class="table" style="font-family: Courier New; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+</th>
+<th style="text-align:right;">
+Df
+</th>
+<th style="text-align:right;">
+Sum Sq
+</th>
+<th style="text-align:right;">
+Mean Sq
+</th>
+<th style="text-align:right;">
+F value
+</th>
+<th style="text-align:right;">
+P(&gt;|F|)
+</th>
+<th style="text-align:left;">
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+group
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3.766
+</td>
+<td style="text-align:right;">
+1.8832
+</td>
+<td style="text-align:right;">
+???
+</td>
+<td style="text-align:right;">
+0.0159
+</td>
+<td style="text-align:left;">
+*
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+Residuals
+</td>
+<td style="text-align:right;">
+???
+</td>
+<td style="text-align:right;">
+10.492
+</td>
+<td style="text-align:right;">
+0.3886
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+</tbody>
+</table>
+<details>
+<summary>
+<p class="btn btn-default" style="background-color:#00873E;color:white;font-size:110%;padding: 7px 15px 7px 15px;">
+Solution
+</p>
+</summary>
+<table class="table" style="font-family: Courier New; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+</th>
+<th style="text-align:right;">
+Df
+</th>
+<th style="text-align:right;">
+Sum Sq
+</th>
+<th style="text-align:right;">
+Mean Sq
+</th>
+<th style="text-align:right;">
+F value
+</th>
+<th style="text-align:right;">
+P(&gt;|F|)
+</th>
+<th style="text-align:left;">
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+group
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3.766
+</td>
+<td style="text-align:right;">
+1.8832
+</td>
+<td style="text-align:right;">
+4.846
+</td>
+<td style="text-align:right;">
+0.0159
+</td>
+<td style="text-align:left;">
+*
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+Residuals
+</td>
+<td style="text-align:right;">
+27
+</td>
+<td style="text-align:right;">
+10.492
+</td>
+<td style="text-align:right;">
+0.3886
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+</tbody>
+</table>
+</details>
+<p><br></p>
+<p>4.2 In a food laboratory, the amount of sugar (grams per serving) for
+three varieties of ice cream from different manufacturers was measured.
+Calculate the missing values in the partial ANOVA table below. Given a
+significance level of 0.05 (<span class="math inline">\(\alpha\)</span>
+= 0.05), is there a significant difference in mean sugar content for the
+three ice cream varieties? Assume that the underlying model assumptions
+were not violated.</p>
+<table class="table" style="font-family: Courier New; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+</th>
+<th style="text-align:right;">
+Df
+</th>
+<th style="text-align:right;">
+Sum Sq
+</th>
+<th style="text-align:right;">
+Mean Sq
+</th>
+<th style="text-align:right;">
+F value
+</th>
+<th style="text-align:right;">
+P(&gt;|F|)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+Between-group variance
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+37.0
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+Within-group variance
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+195.2
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+</tr>
+</tbody>
+</table>
+<details>
+<summary>
+<p class="btn btn-default" style="background-color:#00873E;color:white;font-size:110%;padding: 7px 15px 7px 15px;">
+Solution
+</p>
+</summary>
+<table class="table" style="font-family: Courier New; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+</th>
+<th style="text-align:right;">
+Df
+</th>
+<th style="text-align:right;">
+Sum Sq
+</th>
+<th style="text-align:right;">
+Mean Sq
+</th>
+<th style="text-align:right;">
+F value
+</th>
+<th style="text-align:right;">
+P(&gt;|F|)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+Between-group variance
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+37.0
+</td>
+<td style="text-align:right;">
+18.500
+</td>
+<td style="text-align:right;">
+2.180
+</td>
+<td style="text-align:right;">
+0.136
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+Within-group variance
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+195.2
+</td>
+<td style="text-align:right;">
+8.486
+</td>
+<td style="text-align:right;">
+</td>
+<td style="text-align:right;">
+</td>
+</tr>
+</tbody>
+</table>
+The <em>P</em>-value of 0.136 is greater than the significance level of
+0.05, i.e. we cannot reject the null hypothesis and conclude that there
+is no statistically significant difference in sugar content between the
+tested ice cream varieties.
+</details>
+<p><br></p>
+<p>4.3 In a scientific paper the results of a one-way analysis of
+variance (one-way ANOVA) are reported for a study comprising 48
+observations. The model output shows 5 numerator degrees of freedom
+(<em>df</em><sub>num</sub>). How many observations were in each group
+and how many denominator degrees of freedom (<em>df</em><sub>den</sub>)
+are associated with this analysis?</p>
+<details>
+<summary>
+<p class="btn btn-default" style="background-color:#00873E;color:white;font-size:110%;padding: 7px 15px 7px 15px;">
+Solution
+</p>
+</summary>
+<br>
+<p>
+<em>df</em><sub>num</sub> = number of groups – 1, i.e. there were six
+groups and given the 48 observations, there must have been <strong>8
+observations in each group</strong>. <br> <em>df</em><sub>den</sub> =
+number of observations – number of groups, i.e. 48 - 6 groups =
+<strong>42 <em>df</em><sub>den</sub></strong>
+</p>
+</details>
+<p><br></p>
+<p>4.4 In a chemistry experiment, the effect of two different types of
+catalysts on the rate of a chemical reaction was investigated. The trial
+comprised the catalysts platinum and palladium and a control (no
+catalyst). For each treatment level (control, platinum, palladium), the
+researchers conducted 10 trials of the chemical reaction under
+controlled laboratory conditions. Assume that the model assumptions of
+variance homogeneity and normality were not violated.</p>
+<p>
+Use the information provided to test at <span
+class="math inline">\(\alpha\)</span> = 0.05 whether there is a
+significant difference among the levels of the catalyst treatment given
+a sum of squares between groups (i.e. between treatment levels)
+(<em>SS<sub>between</sub></em>) of 221.3 and a sum of squares within
+groups (<em>SS<sub>within</sub></em>) of 576.8.
+</p>
+<details>
+<summary>
+<p class="btn btn-default" style="background-color:#00873E;color:white;font-size:110%;padding: 7px 15px 7px 15px;">
+Solution
+</p>
+</summary>
+<br>
+<p>
+The experiment comprised three treatment groups, i.e. we have 2
+numerator degrees of freedom (<em>df</em><sub>num</sub>) (no. of groups
+– 1). There were 30 runs in total (<em>n</em> = 30), so that gives
+<em>n</em> – no. of groups = 30 – 3 = 27 denominator degrees of freedom
+(<em>df</em><sub>den</sub>). With this information we can work out the
+respective mean squares (MS), whose ratio gives the
+<em>F</em>-statistic.
+</p>
+<p><br></p>
+<p><span class="math display">\[MS_{between} = SS_{between} - df_{num} =
+221.3/2 = 110.65\]</span></p>
+<span class="math display">\[MS_{within} = SS_{within} - df_{den} =
+576.8/27 = 21.36\]</span> <span class="math display">\[F =
+\frac{MS_{between}}{MS_{within}} = 110.65/21.36 = 5.180\]</span>
+<p style="margin-top:40px;">
+So, how does this <em>F</em>-value compare to the critical
+<em>F</em>-value of an <em>F</em>-distribution with 2
+<em>df</em><sub>num</sub> and 27 <em>df</em><sub>den</sub>?
+</p>
+<pre class="r"><code>## Compute the critical F-value of an F-distribution with 2 numerator degrees of freedom and 27 denominator degrees of freedom. 
+qf(p = 0.05, df1 = 2, df2 = 27, lower.tail = F)</code></pre>
+<pre><code>## [1] 3.354131</code></pre>
+<p style="margin-top:20px, margin-left:40px;">
+The <em>F</em>-value of 5.180 resulting from our ANOVA model is greater
+than the critical <em>F</em>-value of 3.354, prompting us to reject the
+null hypothesis of no difference between groups (factor levels).
+</p>
+<p>We can also simply compute the <em>P</em>-value associated with
+<em>F</em><sub>2,27</sub> = 5.180 and compare it to the significance
+level <span class="math inline">\(\alpha\)</span> = 0.05.</p>
+<pre class="r"><code>## Compute the P-value associated with the F-statistic from the ANOVA model given the 2 and 27 degrees of freedom.
+pf(5.180, df1 = 2, df2 = 27, lower.tail = F)</code></pre>
+<pre><code>## [1] 0.01247148</code></pre>
+<p style="margin-top:20px;">
+Our <em>P</em>-value of 0.0125 is smaller than our significance level of
+0.05 indicating an overall statistically significant effect (a
+statistically significant difference between at least two of the
+predictor levels).
+</p>
+</details>
+</div>
+<div id="section-exercise-5---model-specification"
+class="section level3">
+<h3>Exercise 5 - Model specification</h3>
+<p>The figure below shows a continuous response variable ‘Cell length’
+(µm) and two categorical explanatory variables ‘Vitamin C dose’ (0.5, 1,
+2 mg day<sup>-1</sup>) and ‘Supplement’ (orange juice, ascorbic acid),
+describing the amount and form of the administered vitamin C (‘vitamin C
+dose’), respectively. Since there are only three vitamin C doses, this
+predictor could be regarded as a categorical variable (a factor with
+three levels).</p>
+<p><img src="Ch10_exercises_files/figure-html/unnamed-chunk-4-1.png" width="480" style="display: block; margin: auto;" /></p>
+<ol style="list-style-type: lower-alpha">
+<li>What model would you fit to this dataset? Write down the common
+model name as specifically as possible as well as the model equation in
+R code using the variable names given above.</li>
+</ol>
+<p style="margin-top:20px;">
+<details style="margin-left:40px;margin-bottom:30px;">
+<summary>
+Click
+<a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a>
+for a model answer.
+</summary>
+<p style="margin-top:10px;">
+A two-way ANOVA model with interaction. <br> <span
+style="font-family:Courier New;">m1 &lt;- lm(cell_length ~
+vitamin_c_dose * supplement, data = …) # aov() can also be used</span>
+</p>
+</details>
+</p>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Explain what a significant interaction between ‘Vitamin C dose’ and
+‘Supplement’ would mean in this scenario.
+<p style="margin-top:20px;"></li>
+</ol>
+<details style="margin-left:40px;margin-bottom:30px;">
+<summary>
+Click
+<a class="hover" text-decoration="underline" style="color:blue;cursor:pointer">here</a>
+for a model answer.
+</summary>
+<p style="margin-top:10px;">
+A ‘Vitamin C dose’ × ‘Supplement’ interaction means that the dose effect
+of vitamin C on cell length varies significantly with the type of
+supplement provided. Alternatively, one could say that the two
+supplements significantly differ in their effect on cell length growth
+but this effect depends on the vitamin C dose.
+</p>
+</details>
+</p>
+<p>
+<script type="application/shiny-prerendered" data-context="server-start">
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+## List of packages required for this tutorial
+#   pkgs <- c("learnr", "kableExtra", "dplyr", "ggplot2", "ggpubr", "cowplot", "emmeans", "multcomp", "multcompView")
+# 
+# ## Check whether the specified package is available
+#   inst.pack <- rownames(installed.packages()) # list of installed packages
+#   if (length(setdiff(x = pkgs, y = inst.pack)) > 0) { # setdiff() returns the elements of x that don't occur in y
+#     install.packages(setdiff(pkgs, inst.pack), repos = "https://cloud.r-project.org", dependencies = T)  
+#   }
+  
+## Load required packages  
+library(learnr)
+library(tibble)
+library(dplyr)
+library(stringr)
+library(ggplot2)
+library(emmeans)
+library(multcomp)
+library(multcompView)
+library(kableExtra)
+# soilp <- read.csv("soil.csv")
+# copper <- read.csv("copper.csv")
+soilp <- structure(list(loc = factor(c("alluvial", "alluvial", "alluvial", "alluvial", 
+                               "alluvial", "alluvial", "alluvial", "alluvial", "alluvial", "alluvial", 
+                               "alluvial", "alluvial", "alluvial", "alluvial", "alluvial", "alluvial", 
+                               "alluvial", "alluvial", "alluvial", "alluvial", "alluvial", "alluvial", 
+                               "alluvial", "alluvial", "alluvial", "alluvial", "alluvial", "terrace", 
+                               "terrace", "terrace", "terrace", "terrace", "terrace", "terrace", 
+                               "terrace", "terrace", "terrace", "terrace", "terrace", "terrace", 
+                               "terrace", "terrace", "terrace", "terrace", "terrace", "terrace", 
+                               "terrace", "terrace", "terrace", "terrace", "terrace", "terrace", 
+                               "terrace", "terrace")), 
+               horizon = factor(c("A", "A", "A", "A", "A", "A", "A", "A", "A", 
+                                  "B", "B", "B", "B", "B", "B", "B", "B", "B", 
+                                  "C", "C", "C", "C", "C", "C", "C", "C", "C", 
+                                  "A", "A", "A", "A", "A", "A", "A", "A", "A", 
+                                  "B", "B", "B", "B", "B", "B", "B", "B", "B", 
+                                  "C", "C", "C", "C", "C", "C", "C", "C", "C")), 
+               p = c(345.45, 220.64, 224.98, 246.72, 286.6, 283.31, 198.35, 262.94, 
+                     275.38, 155.4, 169.14, 198.07, 195.68, 202.4, 121.96, 236.55, 
+                     115.08, 136.67, 112.78, 227.72, 107.54, 169.59, 129.09, 144.26, 
+                     164.81, 90.23, 160.93, 99.39, 146.31, 115.44, 202.21, 131.53, 
+                     186.65, 147.89, 171.08, 193.95, 107.68, 111.15, 134.49, 84.05, 
+                     157.28, 240.92, 203.09, 122.29, 185.65, 105.05, 141.71, 126.75, 
+                     46.23, 36.72, 80.57, 179.77, 132.66, 85.89), 
+               depth.cm = factor(c("0-10", "0-10", "0-10", "0-10", "0-10", "0-10", "0-10", "0-10", "0-10", 
+                                   "10-20", "10-20", "10-20", "10-20", "10-20", "10-20", "10-20", "10-20", "10-20", 
+                                   "20-30", "20-30", "20-30", "20-30", "20-30", "20-30", "20-30", "20-30", "20-30", 
+                                   "0-10", "0-10", "0-10", "0-10", "0-10", "0-10", "0-10", "0-10", "0-10", 
+                                   "10-20", "10-20", "10-20", "10-20", "10-20", "10-20", "10-20", "10-20", "10-20", 
+                                   "20-30", "20-30", "20-30", "20-30", "20-30", "20-30", "20-30", "20-30", "20-30"))), 
+          class = "data.frame", row.names = c(NA, -54L))
+
+set.seed(10)
+copper <- data.frame(
+  alloy = factor(rep(c("A", "B", "C", "D", "E"), each = 20)), # Predictor with 5 levels
+  cond = round(rnorm(100, mean = 5.8, sd = 1.5), digits = 2) # Response variable (normally distributed)
+)
+copper <- group_by(.data = copper, alloy) %>% mutate(cond = round(cond + rnorm(n = n(), mean = 0, sd = 0.5), digits = 2)) %>% as.data.frame()
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::register_http_handlers(session, metadata = NULL)
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::prepare_tutorial_state(session)
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::i18n_observe_tutorial_language(input, session)
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+session$onSessionEnded(function() {
+        learnr:::event_trigger(session, "session_stop")
+      })
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "anova_quiz-1", 
+    question = structure("Which of the following statements about ANOVA is <em>not<\u002fem> true?", html = TRUE, class = c("html", 
+    "character")), answers = list(structure(list(id = "lnr_ans_e34e640", 
+        option = "While ANOVA is commonly used to compare the means of three or more groups, it can also be used to compare the mean of two groups.", 
+        value = "While ANOVA is commonly used to compare the means of three or more groups, it can also be used to compare the mean of two groups.", 
+        label = structure("While ANOVA is commonly used to compare the means of three or more groups, it can also be used to compare the mean of two groups.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_eaf3747", 
+        option = "ANOVA is a non-parametric (distribution-free) test, i.e. it does not assume normally distributed errors.", 
+        value = "ANOVA is a non-parametric (distribution-free) test, i.e. it does not assume normally distributed errors.", 
+        label = structure("ANOVA is a non-parametric (distribution-free) test, i.e. it does not assume normally distributed errors.", html = TRUE, class = c("html", 
+        "character")), correct = TRUE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_23cfc86", 
+        option = "ANOVA models rely on the _F_-statistic to determine if differences between group means are statistically significant.", 
+        value = "ANOVA models rely on the _F_-statistic to determine if differences between group means are statistically significant.", 
+        label = structure("ANOVA models rely on the <em>F<\u002fem>-statistic to determine if differences between group means are statistically significant.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_972f7e2", 
+        option = "ANOVA assumes approximately equal variances in each group.", 
+        value = "ANOVA assumes approximately equal variances in each group.", 
+        label = structure("ANOVA assumes approximately equal variances in each group.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_e57f577", 
+        option = "ANOVA is sensitive to outliers.", value = "ANOVA is sensitive to outliers.", 
+        label = structure("ANOVA is sensitive to outliers.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer"))), button_labels = list(submit = structure("<span data-i18n=\"button.questionsubmit\">Submit Answer<\u002fspan>", html = TRUE, class = c("html", 
+    "character")), try_again = structure("<span data-i18n=\"button.questiontryagain\">Try Again<\u002fspan>", html = TRUE, class = c("html", 
+    "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", 
+    "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), message = NULL, post_message = NULL), ids = list(
+        answer = "anova_quiz-1-answer", question = "anova_quiz-1"), 
+    loading = NULL, random_answer_order = FALSE, allow_retry = TRUE, 
+    seed = 1905266416.11279, options = list()), class = c("learnr_radio", 
+"tutorial_question")), session = session)
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "anova_quiz-2", 
+    question = structure("We use an ANOVA model when we have", html = TRUE, class = c("html", 
+    "character")), answers = list(structure(list(id = "lnr_ans_5ef9644", 
+        option = "a discrete response variable (e.g. counts) and one or more continuous predictors.", 
+        value = "a discrete response variable (e.g. counts) and one or more continuous predictors.", 
+        label = structure("a discrete response variable (e.g. counts) and one or more continuous predictors.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_ea1afdf", 
+        option = "a continuous response variable and one or more continuous predictors.", 
+        value = "a continuous response variable and one or more continuous predictors.", 
+        label = structure("a continuous response variable and one or more continuous predictors.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_ed699a2", 
+        option = "a discrete response variable (e.g. counts) and one or more categorical predictors.", 
+        value = "a discrete response variable (e.g. counts) and one or more categorical predictors.", 
+        label = structure("a discrete response variable (e.g. counts) and one or more categorical predictors.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_e87dc5f", 
+        option = "a continuous response variable and one or more categorical predictors.", 
+        value = "a continuous response variable and one or more categorical predictors.", 
+        label = structure("a continuous response variable and one or more categorical predictors.", html = TRUE, class = c("html", 
+        "character")), correct = TRUE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_a59ddfd", 
+        option = "any kind of response variable and a mix of continuous and categorical predictors.", 
+        value = "any kind of response variable and a mix of continuous and categorical predictors.", 
+        label = structure("any kind of response variable and a mix of continuous and categorical predictors.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer"))), button_labels = list(submit = structure("<span data-i18n=\"button.questionsubmit\">Submit Answer<\u002fspan>", html = TRUE, class = c("html", 
+    "character")), try_again = structure("<span data-i18n=\"button.questiontryagain\">Try Again<\u002fspan>", html = TRUE, class = c("html", 
+    "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", 
+    "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), message = NULL, post_message = NULL), ids = list(
+        answer = "anova_quiz-2-answer", question = "anova_quiz-2"), 
+    loading = NULL, random_answer_order = FALSE, allow_retry = TRUE, 
+    seed = 1403672729.84636, options = list()), class = c("learnr_radio", 
+"tutorial_question")), session = session)
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "anova_quiz-3", 
+    question = structure("In a one-way ANOVA, the alternative hypothesis states that", html = TRUE, class = c("html", 
+    "character")), answers = list(structure(list(id = "lnr_ans_a63b4f5", 
+        option = "All group means are equal.", value = "All group means are equal.", 
+        label = structure("All group means are equal.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_89712df", 
+        option = "All groups show approximately the same variance.", 
+        value = "All groups show approximately the same variance.", 
+        label = structure("All groups show approximately the same variance.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_78b4835", 
+        option = "At least one group mean is significantly different from the others.", 
+        value = "At least one group mean is significantly different from the others.", 
+        label = structure("At least one group mean is significantly different from the others.", html = TRUE, class = c("html", 
+        "character")), correct = TRUE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_61a19c0", 
+        option = "The residuals are normally distributed.", value = "The residuals are normally distributed.", 
+        label = structure("The residuals are normally distributed.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_4a673c8", 
+        option = "The group means differ from their median.", 
+        value = "The group means differ from their median.", 
+        label = structure("The group means differ from their median.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer"))), button_labels = list(submit = structure("<span data-i18n=\"button.questionsubmit\">Submit Answer<\u002fspan>", html = TRUE, class = c("html", 
+    "character")), try_again = structure("<span data-i18n=\"button.questiontryagain\">Try Again<\u002fspan>", html = TRUE, class = c("html", 
+    "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", 
+    "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), message = NULL, post_message = NULL), ids = list(
+        answer = "anova_quiz-3-answer", question = "anova_quiz-3"), 
+    loading = NULL, random_answer_order = FALSE, allow_retry = TRUE, 
+    seed = 1257316543.41452, options = list()), class = c("learnr_radio", 
+"tutorial_question")), session = session)
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "anova_quiz-4", 
+    question = structure("A dataset with a continuous response variable contains three categorical predictor variables each with four levels (i.e. four groups in each). The most likely analysis approach for this type of data\nwould be:", html = TRUE, class = c("html", 
+    "character")), answers = list(structure(list(id = "lnr_ans_27d253f", 
+        option = "a multiple linear regression model.", value = "a multiple linear regression model.", 
+        label = structure("a multiple linear regression model.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_fb245d8", 
+        option = "a three-way analysis of variance.", value = "a three-way analysis of variance.", 
+        label = structure("a three-way analysis of variance.", html = TRUE, class = c("html", 
+        "character")), correct = TRUE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_9a8a080", 
+        option = "a four-way analysis of variance.", value = "a four-way analysis of variance.", 
+        label = structure("a four-way analysis of variance.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_d627c25", 
+        option = "a twelve-way analysis of variance.", value = "a twelve-way analysis of variance.", 
+        label = structure("a twelve-way analysis of variance.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_8c2f894", 
+        option = "an analysis of covariance.", value = "an analysis of covariance.", 
+        label = structure("an analysis of covariance.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer"))), button_labels = list(submit = structure("<span data-i18n=\"button.questionsubmit\">Submit Answer<\u002fspan>", html = TRUE, class = c("html", 
+    "character")), try_again = structure("<span data-i18n=\"button.questiontryagain\">Try Again<\u002fspan>", html = TRUE, class = c("html", 
+    "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", 
+    "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), message = NULL, post_message = NULL), ids = list(
+        answer = "anova_quiz-4-answer", question = "anova_quiz-4"), 
+    loading = NULL, random_answer_order = FALSE, allow_retry = TRUE, 
+    seed = 868801900.595433, options = list()), class = c("learnr_radio", 
+"tutorial_question")), session = session)
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "anova_quiz-5", 
+    question = structure("If the between-group variance increases while the within-group variance remains the same, then", html = TRUE, class = c("html", 
+    "character")), answers = list(structure(list(id = "lnr_ans_eec636d", 
+        option = "the value of the _F_-statistic becomes greater.", 
+        value = "the value of the _F_-statistic becomes greater.", 
+        label = structure("the value of the <em>F<\u002fem>-statistic becomes greater.", html = TRUE, class = c("html", 
+        "character")), correct = TRUE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_befda6d", 
+        option = "the value of the _F_-statistic becomes smaller.", 
+        value = "the value of the _F_-statistic becomes smaller.", 
+        label = structure("the value of the <em>F<\u002fem>-statistic becomes smaller.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_a0dc222", 
+        option = "the sample distribution becomes non-normal.", 
+        value = "the sample distribution becomes non-normal.", 
+        label = structure("the sample distribution becomes non-normal.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_236eb32", 
+        option = "the variance homogeneity assumption becomes violated.", 
+        value = "the variance homogeneity assumption becomes violated.", 
+        label = structure("the variance homogeneity assumption becomes violated.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_5d1495", 
+        option = "None of the above.", value = "None of the above.", 
+        label = structure("None of the above.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer"))), button_labels = list(submit = structure("<span data-i18n=\"button.questionsubmit\">Submit Answer<\u002fspan>", html = TRUE, class = c("html", 
+    "character")), try_again = structure("<span data-i18n=\"button.questiontryagain\">Try Again<\u002fspan>", html = TRUE, class = c("html", 
+    "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", 
+    "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), message = NULL, post_message = NULL), ids = list(
+        answer = "anova_quiz-5-answer", question = "anova_quiz-5"), 
+    loading = NULL, random_answer_order = FALSE, allow_retry = TRUE, 
+    seed = 1881449086.62388, options = list()), class = c("learnr_radio", 
+"tutorial_question")), session = session)
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "anova_quiz-6", 
+    question = structure("Which of the diagnostic plots for ANOVA models allows the evaluation of the variance homogeneity (homoscedasticity) assumption?", html = TRUE, class = c("html", 
+    "character")), answers = list(structure(list(id = "lnr_ans_46116f1", 
+        option = "The plot of the residuals vs. fitted values.", 
+        value = "The plot of the residuals vs. fitted values.", 
+        label = structure("The plot of the residuals vs. fitted values.", html = TRUE, class = c("html", 
+        "character")), correct = TRUE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_e60b752", 
+        option = "The quantile-quantile plot.", value = "The quantile-quantile plot.", 
+        label = structure("The quantile-quantile plot.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_4e43f2d", 
+        option = "The Cook’s distance plot.", value = "The Cook’s distance plot.", 
+        label = structure("The Cook’s distance plot.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_8cc59ee", 
+        option = "The residual-leverage plot.", value = "The residual-leverage plot.", 
+        label = structure("The residual-leverage plot.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_c746106", 
+        option = "None of the above.", value = "None of the above.", 
+        label = structure("None of the above.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer"))), button_labels = list(submit = structure("<span data-i18n=\"button.questionsubmit\">Submit Answer<\u002fspan>", html = TRUE, class = c("html", 
+    "character")), try_again = structure("<span data-i18n=\"button.questiontryagain\">Try Again<\u002fspan>", html = TRUE, class = c("html", 
+    "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", 
+    "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), message = NULL, post_message = NULL), ids = list(
+        answer = "anova_quiz-6-answer", question = "anova_quiz-6"), 
+    loading = NULL, random_answer_order = FALSE, allow_retry = TRUE, 
+    seed = 1665328842.72452, options = list()), class = c("learnr_radio", 
+"tutorial_question")), session = session)
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "anova_quiz-7", 
+    question = structure("In a one-way ANOVA with 4 groups and a total sample size of 52, the resulting <em>F<\u002fem>-statistic is 3.13. The corresponding <em>P<\u002fem>-value", html = TRUE, class = c("html", 
+    "character")), answers = list(structure(list(id = "lnr_ans_fe8ed9f", 
+        option = "is exactly 0.05.", value = "is exactly 0.05.", 
+        label = structure("is exactly 0.05.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_d4b972f", 
+        option = "is less than 0.05.", value = "is less than 0.05.", 
+        label = structure("is less than 0.05.", html = TRUE, class = c("html", 
+        "character")), correct = TRUE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_9587f49", 
+        option = "is greater than 0.05.", value = "is greater than 0.05.", 
+        label = structure("is greater than 0.05.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_9dc16f0", 
+        option = "is out of bounds.", value = "is out of bounds.", 
+        label = structure("is out of bounds.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_3501ab", 
+        option = "cannot be determined with the information provided.", 
+        value = "cannot be determined with the information provided.", 
+        label = structure("cannot be determined with the information provided.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer"))), button_labels = list(submit = structure("<span data-i18n=\"button.questionsubmit\">Submit Answer<\u002fspan>", html = TRUE, class = c("html", 
+    "character")), try_again = structure("<span data-i18n=\"button.questiontryagain\">Try Again<\u002fspan>", html = TRUE, class = c("html", 
+    "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", 
+    "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), message = NULL, post_message = NULL), ids = list(
+        answer = "anova_quiz-7-answer", question = "anova_quiz-7"), 
+    loading = NULL, random_answer_order = FALSE, allow_retry = TRUE, 
+    seed = 1678838416.71823, options = list()), class = c("learnr_radio", 
+"tutorial_question")), session = session)
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "anova_quiz-8", 
+    question = structure("What is the main purpose of a <em>post hoc<\u002fem> test following an ANOVA?", html = TRUE, class = c("html", 
+    "character")), answers = list(structure(list(id = "lnr_ans_5d862ab", 
+        option = "To determine if there are differences between groups without any prior hypotheses.", 
+        value = "To determine if there are differences between groups without any prior hypotheses.", 
+        label = structure("To determine if there are differences between groups without any prior hypotheses.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_89cd4d9", 
+        option = "To confirm that the model assumptions are met.", 
+        value = "To confirm that the model assumptions are met.", 
+        label = structure("To confirm that the model assumptions are met.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_e444559", 
+        option = "To identify which specific group means are significantly different from each other after finding a significant ANOVA result.", 
+        value = "To identify which specific group means are significantly different from each other after finding a significant ANOVA result.", 
+        label = structure("To identify which specific group means are significantly different from each other after finding a significant ANOVA result.", html = TRUE, class = c("html", 
+        "character")), correct = TRUE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_52bcaca", 
+        option = "To estimate the effect size of each treatment group.", 
+        value = "To estimate the effect size of each treatment group.", 
+        label = structure("To estimate the effect size of each treatment group.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_f283a7b", 
+        option = "None of the above.", value = "None of the above.", 
+        label = structure("None of the above.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer"))), button_labels = list(submit = structure("<span data-i18n=\"button.questionsubmit\">Submit Answer<\u002fspan>", html = TRUE, class = c("html", 
+    "character")), try_again = structure("<span data-i18n=\"button.questiontryagain\">Try Again<\u002fspan>", html = TRUE, class = c("html", 
+    "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", 
+    "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), message = NULL, post_message = NULL), ids = list(
+        answer = "anova_quiz-8-answer", question = "anova_quiz-8"), 
+    loading = NULL, random_answer_order = FALSE, allow_retry = TRUE, 
+    seed = 1993766420.57158, options = list()), class = c("learnr_radio", 
+"tutorial_question")), session = session)
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "anova_quiz-9", 
+    question = structure("Why is a multiplicity adjustment (<em>P<\u002fem>-value adjustment) necessary in <em>post hoc<\u002fem> tests?", html = TRUE, class = c("html", 
+    "character")), answers = list(structure(list(id = "lnr_ans_aa6f85f", 
+        option = "To reduce the sample size required for the analysis.", 
+        value = "To reduce the sample size required for the analysis.", 
+        label = structure("To reduce the sample size required for the analysis.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_95edca", 
+        option = "To ensure the independence of tests.", value = "To ensure the independence of tests.", 
+        label = structure("To ensure the independence of tests.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_dcf8178", 
+        option = "To increase the power of each individual test by reducing the type II error probability (reduce the risk of false negatives).", 
+        value = "To increase the power of each individual test by reducing the type II error probability (reduce the risk of false negatives).", 
+        label = structure("To increase the power of each individual test by reducing the type II error probability (reduce the risk of false negatives).", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_14afd58", 
+        option = "To control the overall Type I error rate when performing multiple comparisons (reducing the risk of false positives).", 
+        value = "To control the overall Type I error rate when performing multiple comparisons (reducing the risk of false positives).", 
+        label = structure("To control the overall Type I error rate when performing multiple comparisons (reducing the risk of false positives).", html = TRUE, class = c("html", 
+        "character")), correct = TRUE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_1be901e", 
+        option = "None of the above.", value = "None of the above.", 
+        label = structure("None of the above.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer"))), button_labels = list(submit = structure("<span data-i18n=\"button.questionsubmit\">Submit Answer<\u002fspan>", html = TRUE, class = c("html", 
+    "character")), try_again = structure("<span data-i18n=\"button.questiontryagain\">Try Again<\u002fspan>", html = TRUE, class = c("html", 
+    "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", 
+    "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), message = NULL, post_message = NULL), ids = list(
+        answer = "anova_quiz-9-answer", question = "anova_quiz-9"), 
+    loading = NULL, random_answer_order = FALSE, allow_retry = TRUE, 
+    seed = 767301828.642697, options = list()), class = c("learnr_radio", 
+"tutorial_question")), session = session)
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "anova_quiz-10", 
+    question = structure("<p>A significant outcome of a one-way ANOVA model comparing the means of six groups (i.e. a categorical explanatory variable with six levels) prompts us to perform a <em>post hoc<\u002fem> analysis to determine where the differences lie. How many pairwise comparisons are there?<\u002fp>\n<p style='font-size:12px;font-weight:normal;margin-top:-5px;line-height:1.1;'>(Hint: The <span style='font-family:Courier New;'>combn<\u002fspan> function returns a matrix showing all combinations of elements in a set, each with a certain number of selected elements (e.g. pairwise combinations) and the <span style='font-family:Courier New;'>choose<\u002fspan> function simply gives the number of combinations for a specified number of elements taken from a set at a time. See the respective help files.)<\u002fp>\n", html = TRUE, class = c("html", 
+    "character")), answers = list(structure(list(id = "lnr_ans_1e507f2", 
+        option = "6", value = "6", label = structure("6", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_8d1dc52", 
+        option = "12", value = "12", label = structure("12", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_78b2f45", 
+        option = "15", value = "15", label = structure("15", html = TRUE, class = c("html", 
+        "character")), correct = TRUE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_7dc0f51", 
+        option = "20", value = "20", label = structure("20", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_4c7968f", 
+        option = "None of the above.", value = "None of the above.", 
+        label = structure("None of the above.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer"))), button_labels = list(submit = structure("<span data-i18n=\"button.questionsubmit\">Submit Answer<\u002fspan>", html = TRUE, class = c("html", 
+    "character")), try_again = structure("<span data-i18n=\"button.questiontryagain\">Try Again<\u002fspan>", html = TRUE, class = c("html", 
+    "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", 
+    "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), message = NULL, post_message = NULL), ids = list(
+        answer = "anova_quiz-10-answer", question = "anova_quiz-10"), 
+    loading = NULL, random_answer_order = FALSE, allow_retry = TRUE, 
+    seed = 1107432577.48431, options = list()), class = c("learnr_radio", 
+"tutorial_question")), session = session)
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "anova_quiz-11", 
+    question = structure("In a two-way ANOVA, the term ‘main effect’ refers to", html = TRUE, class = c("html", 
+    "character")), answers = list(structure(list(id = "lnr_ans_a255d9d", 
+        option = "the overall effect of the response variable on each predictor variable.", 
+        value = "the overall effect of the response variable on each predictor variable.", 
+        label = structure("the overall effect of the response variable on each predictor variable.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_86be284", 
+        option = "the interaction between the two predictors, i.e. their interactive effect on the response variable.", 
+        value = "the interaction between the two predictors, i.e. their interactive effect on the response variable.", 
+        label = structure("the interaction between the two predictors, i.e. their interactive effect on the response variable.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_46393b8", 
+        option = "the interaction between the response variable and the predictors.", 
+        value = "the interaction between the response variable and the predictors.", 
+        label = structure("the interaction between the response variable and the predictors.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_2e771e3", 
+        option = "The overall effect of each predictor on the response variable (while ignoring the effect of the other predictor).", 
+        value = "The overall effect of each predictor on the response variable (while ignoring the effect of the other predictor).", 
+        label = structure("The overall effect of each predictor on the response variable (while ignoring the effect of the other predictor).", html = TRUE, class = c("html", 
+        "character")), correct = TRUE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_68cc2c", 
+        option = "None of the above.", value = "None of the above.", 
+        label = structure("None of the above.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer"))), button_labels = list(submit = structure("<span data-i18n=\"button.questionsubmit\">Submit Answer<\u002fspan>", html = TRUE, class = c("html", 
+    "character")), try_again = structure("<span data-i18n=\"button.questiontryagain\">Try Again<\u002fspan>", html = TRUE, class = c("html", 
+    "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", 
+    "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), message = NULL, post_message = NULL), ids = list(
+        answer = "anova_quiz-11-answer", question = "anova_quiz-11"), 
+    loading = NULL, random_answer_order = FALSE, allow_retry = TRUE, 
+    seed = 1387266673.854, options = list()), class = c("learnr_radio", 
+"tutorial_question")), session = session)
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "anova_quiz-12", 
+    question = structure("In a two-way ANOVA, a significant interaction means that", html = TRUE, class = c("html", 
+    "character")), answers = list(structure(list(id = "lnr_ans_285e49b", 
+        option = "both predictors have significant main effects.", 
+        value = "both predictors have significant main effects.", 
+        label = structure("both predictors have significant main effects.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_2bae26e", 
+        option = "the effect of one predictor on the response variable is dependent on the other predictor.", 
+        value = "the effect of one predictor on the response variable is dependent on the other predictor.", 
+        label = structure("the effect of one predictor on the response variable is dependent on the other predictor.", html = TRUE, class = c("html", 
+        "character")), correct = TRUE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_bad0a54", 
+        option = "the effects of the two predictors cancel each other out.", 
+        value = "the effects of the two predictors cancel each other out.", 
+        label = structure("the effects of the two predictors cancel each other out.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_5e5f8ae", 
+        option = "the predictors have different effect sizes.", 
+        value = "the predictors have different effect sizes.", 
+        label = structure("the predictors have different effect sizes.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_e923ce1", 
+        option = "None of the above.", value = "None of the above.", 
+        label = structure("None of the above.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer"))), button_labels = list(submit = structure("<span data-i18n=\"button.questionsubmit\">Submit Answer<\u002fspan>", html = TRUE, class = c("html", 
+    "character")), try_again = structure("<span data-i18n=\"button.questiontryagain\">Try Again<\u002fspan>", html = TRUE, class = c("html", 
+    "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", 
+    "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), message = NULL, post_message = NULL), ids = list(
+        answer = "anova_quiz-12-answer", question = "anova_quiz-12"), 
+    loading = NULL, random_answer_order = FALSE, allow_retry = TRUE, 
+    seed = 403030280.312324, options = list()), class = c("learnr_radio", 
+"tutorial_question")), session = session)
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-one-way_anova_exercise-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-one-way_anova_exercise-code-editor`)), session)
+output$`tutorial-exercise-one-way_anova_exercise-output` <- renderUI({
+  `tutorial-exercise-one-way_anova_exercise-result`()
+})
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::store_exercise_cache(structure(list(label = "one-way_anova_exercise", global_setup = structure(c("knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)", 
+"## List of packages required for this tutorial", "#   pkgs <- c(\"learnr\", \"kableExtra\", \"dplyr\", \"ggplot2\", \"ggpubr\", \"cowplot\", \"emmeans\", \"multcomp\", \"multcompView\")", 
+"# ", "# ## Check whether the specified package is available", 
+"#   inst.pack <- rownames(installed.packages()) # list of installed packages", 
+"#   if (length(setdiff(x = pkgs, y = inst.pack)) > 0) { # setdiff() returns the elements of x that don't occur in y", 
+"#     install.packages(setdiff(pkgs, inst.pack), repos = \"https://cloud.r-project.org\", dependencies = T)  ", 
+"#   }", "  ", "## Load required packages  ", "library(learnr)", 
+"library(tibble)", "library(dplyr)", "library(stringr)", "library(ggplot2)", 
+"library(emmeans)", "library(multcomp)", "library(multcompView)", 
+"library(kableExtra)", "# soilp <- read.csv(\"soil.csv\")", "# copper <- read.csv(\"copper.csv\")", 
+"soilp <- structure(list(loc = factor(c(\"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", ", 
+"                               \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", ", 
+"                               \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", ", 
+"                               \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", ", 
+"                               \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"terrace\", ", 
+"                               \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", ", 
+"                               \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", ", 
+"                               \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", ", 
+"                               \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", ", 
+"                               \"terrace\", \"terrace\")), ", 
+"               horizon = factor(c(\"A\", \"A\", \"A\", \"A\", \"A\", \"A\", \"A\", \"A\", \"A\", ", 
+"                                  \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", ", 
+"                                  \"C\", \"C\", \"C\", \"C\", \"C\", \"C\", \"C\", \"C\", \"C\", ", 
+"                                  \"A\", \"A\", \"A\", \"A\", \"A\", \"A\", \"A\", \"A\", \"A\", ", 
+"                                  \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", ", 
+"                                  \"C\", \"C\", \"C\", \"C\", \"C\", \"C\", \"C\", \"C\", \"C\")), ", 
+"               p = c(345.45, 220.64, 224.98, 246.72, 286.6, 283.31, 198.35, 262.94, ", 
+"                     275.38, 155.4, 169.14, 198.07, 195.68, 202.4, 121.96, 236.55, ", 
+"                     115.08, 136.67, 112.78, 227.72, 107.54, 169.59, 129.09, 144.26, ", 
+"                     164.81, 90.23, 160.93, 99.39, 146.31, 115.44, 202.21, 131.53, ", 
+"                     186.65, 147.89, 171.08, 193.95, 107.68, 111.15, 134.49, 84.05, ", 
+"                     157.28, 240.92, 203.09, 122.29, 185.65, 105.05, 141.71, 126.75, ", 
+"                     46.23, 36.72, 80.57, 179.77, 132.66, 85.89), ", 
+"               depth.cm = factor(c(\"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", ", 
+"                                   \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", ", 
+"                                   \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", ", 
+"                                   \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", ", 
+"                                   \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", ", 
+"                                   \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\"))), ", 
+"          class = \"data.frame\", row.names = c(NA, -54L))", 
+"", "set.seed(10)", "copper <- data.frame(", "  alloy = factor(rep(c(\"A\", \"B\", \"C\", \"D\", \"E\"), each = 20)), # Predictor with 5 levels", 
+"  cond = round(rnorm(100, mean = 5.8, sd = 1.5), digits = 2) # Response variable (normally distributed)", 
+")", "copper <- group_by(.data = copper, alloy) %>% mutate(cond = round(cond + rnorm(n = n(), mean = 0, sd = 0.5), digits = 2)) %>% as.data.frame()"
+), chunk_opts = list(label = "setup", include = FALSE)), setup = NULL, 
+    chunks = list(list(label = "one-way_anova_exercise", code = "## Getting started with a few sanity checks\n\n## Display the top five observations\nhead(copper)\n\n## Check data structure ('alloy' should be a factor and 'cond' a numeric variable)\nstr(copper)\n\n## Check data summary\nsummary(copper)", 
+        opts = list(label = "\"one-way_anova_exercise\"", exercise = "TRUE", 
+            fig.align = "\"center\"", fig.width = "5", fig.height = "5"), 
+        engine = "r")), code_check = NULL, error_check = NULL, 
+    check = NULL, solution = structure(c("## a. Exploratory plot", 
+    "# Traditional graphics", "boxplot(cond ~ alloy, data = copper) ", 
+    "", "# ggplot2", "ggplot(data = copper, mapping = aes(x = alloy, y = cond)) +", 
+    "  geom_boxplot()", "", "## b. Perform a one-way ANOVA", 
+    "m1 <- aov(cond ~ alloy, data = copper)", "summary(m1)", 
+    "", "## Same as above using the lm function", "# m1 <- lm(cond ~ alloy, data = copper)", 
+    "# anova(m1) # same as summary.aov()", "", "## c. Diagnostic plots", 
+    "par(mfrow = c(2, 2))", "plot(m1)", "", "## d. Post hoc analysis (given the overall significance of the alloy effect of P = 0.0114)", 
+    "TukeyHSD(m1) # works only for function aov()", "", "# More flexible and comprehensive approach using the emmeans package", 
+    "ems <- emmeans(m1, specs = \"alloy\")", "pairs(ems) # we suggest to use the additional argument adjust = \"fdr\", see ?p.adjust for more information", 
+    "cld(ems, Letters = letters) # by default the lowest mean is assigned an 'a'", 
+    "", "## e. Publication-quality figure incl. statistical annotation showing the results of the post hoc comparison", 
+    "posthoc <- cld(ems, Letters = letters)", "", "## Sort dataset in ascending fashion so that alloy A comes first and E last", 
+    "stats <- arrange(.data = posthoc, alloy)", "", "## Remove white space at the start and end of the significance letters to ensure clean alignment in the plot", 
+    "stats <- mutate(.data = stats, sig = str_trim(.group))", 
+    "", "## Get maximum cond values to guide the placement of the stats annotations", 
+    "m <- pull(group_by(copper, alloy) %>% summarise(cond = max(cond)))", 
+    "stats <- mutate(.data = stats, cond = m)", "", "## We could have done this all in one go like this:", 
+    "stats <- arrange(.data = posthoc, alloy) %>% ", "  mutate(sig = str_trim(.group), cond = pull(group_by(copper, alloy) %>% ", 
+    "                                               summarise(cond = max(cond))))", 
+    "", "ggplot(data = copper, mapping = aes(x = alloy, y = cond)) +", 
+    "  geom_boxplot(fill = \"grey\") +", "  geom_text(data = stats, aes(x = alloy, y = cond, label = sig), nudge_y = 0.5) +", 
+    "  labs(x = \"Alloy variety\", y = expression(paste(\"Electrical conductivity (\\u00D7 10\"^7, \" S m\"^-1, \")\"))) +", 
+    "  theme_test()", "", "## Compute the percentage difference in electraical conductance between alloy B (lowest conductance) and the other alloys for reporting.", 
+    "group_by(copper, alloy) %>% summarise(cond = mean(cond)) %>% mutate(change = (1 - cond[2]/cond)*100)"
+    ), chunk_opts = list(label = "one-way_anova_exercise-solution", 
+        exercise.reveal_solution = TRUE, fig.align = "center", 
+        fig.width = 5, fig.height = 5)), tests = NULL, options = list(
+        eval = FALSE, echo = TRUE, results = "markup", tidy = FALSE, 
+        tidy.opts = NULL, collapse = FALSE, prompt = FALSE, comment = NA, 
+        highlight = FALSE, size = "normalsize", background = "#F7F7F7", 
+        strip.white = TRUE, cache = 0, cache.path = "Ch10_exercises_cache/html/", 
+        cache.vars = NULL, cache.lazy = TRUE, dependson = NULL, 
+        autodep = FALSE, cache.rebuild = FALSE, fig.keep = "high", 
+        fig.show = "asis", fig.align = "center", fig.path = "Ch10_exercises_files/figure-html/", 
+        dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
+        fig.width = 5, fig.height = 5, fig.env = "figure", fig.cap = NULL, 
+        fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, 
+        fig.pos = "", out.width = 480, out.height = NULL, out.extra = NULL, 
+        fig.retina = 2, external = TRUE, sanitize = FALSE, interval = 1, 
+        aniopts = "controls,loop", warning = FALSE, error = FALSE, 
+        message = FALSE, render = NULL, ref.label = NULL, child = NULL, 
+        engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
+        max.print = 1000, label = "one-way_anova_exercise", exercise = TRUE, 
+        code = c("## Getting started with a few sanity checks", 
+        "", "## Display the top five observations", "head(copper)", 
+        "", "## Check data structure ('alloy' should be a factor and 'cond' a numeric variable)", 
+        "str(copper)", "", "## Check data summary", "summary(copper)"
+        ), out.width.px = 480, out.height.px = 480, params.src = "one-way_anova_exercise, exercise = TRUE, fig.align='center', fig.width=5, fig.height=5", 
+        fig.num = 0, exercise.df_print = "paged", exercise.checker = "NULL"), 
+    engine = "r", version = "4"), class = c("r", "tutorial_exercise"
+)))
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-anova-exercise1-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-anova-exercise1-code-editor`)), session)
+output$`tutorial-exercise-anova-exercise1-output` <- renderUI({
+  `tutorial-exercise-anova-exercise1-result`()
+})
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::store_exercise_cache(structure(list(label = "anova-exercise1", global_setup = structure(c("knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)", 
+"## List of packages required for this tutorial", "#   pkgs <- c(\"learnr\", \"kableExtra\", \"dplyr\", \"ggplot2\", \"ggpubr\", \"cowplot\", \"emmeans\", \"multcomp\", \"multcompView\")", 
+"# ", "# ## Check whether the specified package is available", 
+"#   inst.pack <- rownames(installed.packages()) # list of installed packages", 
+"#   if (length(setdiff(x = pkgs, y = inst.pack)) > 0) { # setdiff() returns the elements of x that don't occur in y", 
+"#     install.packages(setdiff(pkgs, inst.pack), repos = \"https://cloud.r-project.org\", dependencies = T)  ", 
+"#   }", "  ", "## Load required packages  ", "library(learnr)", 
+"library(tibble)", "library(dplyr)", "library(stringr)", "library(ggplot2)", 
+"library(emmeans)", "library(multcomp)", "library(multcompView)", 
+"library(kableExtra)", "# soilp <- read.csv(\"soil.csv\")", "# copper <- read.csv(\"copper.csv\")", 
+"soilp <- structure(list(loc = factor(c(\"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", ", 
+"                               \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", ", 
+"                               \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", ", 
+"                               \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", ", 
+"                               \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"terrace\", ", 
+"                               \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", ", 
+"                               \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", ", 
+"                               \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", ", 
+"                               \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", ", 
+"                               \"terrace\", \"terrace\")), ", 
+"               horizon = factor(c(\"A\", \"A\", \"A\", \"A\", \"A\", \"A\", \"A\", \"A\", \"A\", ", 
+"                                  \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", ", 
+"                                  \"C\", \"C\", \"C\", \"C\", \"C\", \"C\", \"C\", \"C\", \"C\", ", 
+"                                  \"A\", \"A\", \"A\", \"A\", \"A\", \"A\", \"A\", \"A\", \"A\", ", 
+"                                  \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", ", 
+"                                  \"C\", \"C\", \"C\", \"C\", \"C\", \"C\", \"C\", \"C\", \"C\")), ", 
+"               p = c(345.45, 220.64, 224.98, 246.72, 286.6, 283.31, 198.35, 262.94, ", 
+"                     275.38, 155.4, 169.14, 198.07, 195.68, 202.4, 121.96, 236.55, ", 
+"                     115.08, 136.67, 112.78, 227.72, 107.54, 169.59, 129.09, 144.26, ", 
+"                     164.81, 90.23, 160.93, 99.39, 146.31, 115.44, 202.21, 131.53, ", 
+"                     186.65, 147.89, 171.08, 193.95, 107.68, 111.15, 134.49, 84.05, ", 
+"                     157.28, 240.92, 203.09, 122.29, 185.65, 105.05, 141.71, 126.75, ", 
+"                     46.23, 36.72, 80.57, 179.77, 132.66, 85.89), ", 
+"               depth.cm = factor(c(\"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", ", 
+"                                   \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", ", 
+"                                   \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", ", 
+"                                   \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", ", 
+"                                   \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", ", 
+"                                   \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\"))), ", 
+"          class = \"data.frame\", row.names = c(NA, -54L))", 
+"", "set.seed(10)", "copper <- data.frame(", "  alloy = factor(rep(c(\"A\", \"B\", \"C\", \"D\", \"E\"), each = 20)), # Predictor with 5 levels", 
+"  cond = round(rnorm(100, mean = 5.8, sd = 1.5), digits = 2) # Response variable (normally distributed)", 
+")", "copper <- group_by(.data = copper, alloy) %>% mutate(cond = round(cond + rnorm(n = n(), mean = 0, sd = 0.5), digits = 2)) %>% as.data.frame()"
+), chunk_opts = list(label = "setup", include = FALSE)), setup = NULL, 
+    chunks = list(list(label = "anova-exercise1", code = "## Check structure and data summary\nhead(soilp, n = 3)\n\nstr(soilp)\n\nsummary(soilp)", 
+        opts = list(label = "\"anova-exercise1\"", exercise = "TRUE", 
+            fig.height = "5.5", fig.width = "6"), engine = "r")), 
+    code_check = NULL, error_check = NULL, check = NULL, solution = structure(c("## a. Graphical data exploration", 
+    "ggplot(data = soilp, mapping = aes(x = horizon, y = p)) + geom_boxplot() + facet_wrap(facets = ~ loc)", 
+    "", "## b. Fit a two-way ANOVA model with interaction", "m1 <- lm(p ~ loc * horizon, data = soilp)", 
+    "", "## Check model results", "summary(m1) # Does not give us an overall P-value of the interaction term.", 
+    "", "anova(m1) # Valid for the interaction term, but as the sequence of predictors in the model formula matter, their P-values change when their order changes in the model.  ", 
+    "", "drop1(m1, test = \"F\") # This likelihood ratio test approach overcomes the 'sequence of predictors issue' and should routinely be used.", 
+    "", "## c. Inspect model diagnostic plots", "par(mfrow = c(2, 2))", 
+    "plot(m1)", "", "# The plot of the residuals vs. fitted values indicates homoscedasticity and the Q-Q plot shows only minor deviations from normality, which we do not need to worry about. No influential observations are flagged.", 
+    "", "## d. Post hoc analysis. We can slice the interaction in two ways: i) pairwise comparisons of the horizons with a given soil type or ii) compare the two soil types within each horizon. In cases where it makes sense like in this example, we can also ask for all possible pairwise comparisons.", 
+    "ems1 <- emmeans(object = m1, specs = \"horizon\", by = \"loc\") # compare horizons within soil type", 
+    "ems2 <- emmeans(object = m1, specs = \"loc\", by = \"horizon\") # compare soil types within horizon", 
+    "ems3 <- emmeans(object = m1, specs = ~ loc * horizon) # get all possible pairwise comparison", 
+    "ems1", "ems2", "ems3", "pairs(ems3, adjust = \"fdr\") # fdr = false discovery rate method (more powerful than other multiplicity adjustments such as the bonferroni method)", 
+    "", "## Get significance letters for statistical annotation of the figure", 
+    "cld(ems3, Letters = letters, adjust = \"fdr\")", "", "## e. Publication-quality figure", 
+    "locs <- function(x) { c(\"Alluvial\", \"Terrace\") }  # custom facet labels", 
+    "stats <- group_by(soilp, loc, horizon) %>% summarise(max = max(p)) %>% add_column(sig = c(\"c\", \"b\", \"ab\", \"b\", \"ab\", \"a\"))", 
+    "", "ggplot(data = soilp, mapping = aes(x = horizon, y = p)) + ", 
+    "  geom_boxplot() + ", "  geom_text(data = stats, aes(x = horizon, y = max, label = sig), nudge_y = 15, size = 4) +", 
+    "  labs(y = expression(paste(\"Soil phosphorus (mg kg\"^-1, \")\")), x = \"Soil horizon\") +", 
+    "  facet_wrap(facets = ~ loc, labeller = labeller(loc = locs)) +", 
+    "  theme_test()"), chunk_opts = list(label = "anova-exercise1-solution", 
+        fig.cap = "**Figure, fig.height=4, 1** Soil phosphorous concentration as a function of soil horizon and landscape location. Different lower-case letters indiciate statistically signifiant differences within each landscape location at $\\alpha$=0.05", 
+        exercise.reveal_solution = TRUE)), tests = NULL, options = list(
+        eval = FALSE, echo = TRUE, results = "markup", tidy = FALSE, 
+        tidy.opts = NULL, collapse = FALSE, prompt = FALSE, comment = NA, 
+        highlight = FALSE, size = "normalsize", background = "#F7F7F7", 
+        strip.white = TRUE, cache = 0, cache.path = "Ch10_exercises_cache/html/", 
+        cache.vars = NULL, cache.lazy = TRUE, dependson = NULL, 
+        autodep = FALSE, cache.rebuild = FALSE, fig.keep = "high", 
+        fig.show = "asis", fig.align = "default", fig.path = "Ch10_exercises_files/figure-html/", 
+        dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
+        fig.width = 6, fig.height = 5.5, fig.env = "figure", 
+        fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, 
+        fig.pos = "", out.width = 576, out.height = NULL, out.extra = NULL, 
+        fig.retina = 2, external = TRUE, sanitize = FALSE, interval = 1, 
+        aniopts = "controls,loop", warning = FALSE, error = FALSE, 
+        message = FALSE, render = NULL, ref.label = NULL, child = NULL, 
+        engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
+        max.print = 1000, label = "anova-exercise1", exercise = TRUE, 
+        code = c("## Check structure and data summary", "head(soilp, n = 3)", 
+        "", "str(soilp)", "", "summary(soilp)"), out.width.px = 576, 
+        out.height.px = 528, params.src = "anova-exercise1, exercise = TRUE, fig.height=5.5, fig.width=6", 
+        fig.num = 0, exercise.df_print = "paged", exercise.checker = "NULL"), 
+    engine = "r", version = "4"), class = c("r", "tutorial_exercise"
+)))
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-anova-exercise2-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-anova-exercise2-code-editor`)), session)
+output$`tutorial-exercise-anova-exercise2-output` <- renderUI({
+  `tutorial-exercise-anova-exercise2-result`()
+})
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::store_exercise_cache(structure(list(label = "anova-exercise2", global_setup = structure(c("knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)", 
+"## List of packages required for this tutorial", "#   pkgs <- c(\"learnr\", \"kableExtra\", \"dplyr\", \"ggplot2\", \"ggpubr\", \"cowplot\", \"emmeans\", \"multcomp\", \"multcompView\")", 
+"# ", "# ## Check whether the specified package is available", 
+"#   inst.pack <- rownames(installed.packages()) # list of installed packages", 
+"#   if (length(setdiff(x = pkgs, y = inst.pack)) > 0) { # setdiff() returns the elements of x that don't occur in y", 
+"#     install.packages(setdiff(pkgs, inst.pack), repos = \"https://cloud.r-project.org\", dependencies = T)  ", 
+"#   }", "  ", "## Load required packages  ", "library(learnr)", 
+"library(tibble)", "library(dplyr)", "library(stringr)", "library(ggplot2)", 
+"library(emmeans)", "library(multcomp)", "library(multcompView)", 
+"library(kableExtra)", "# soilp <- read.csv(\"soil.csv\")", "# copper <- read.csv(\"copper.csv\")", 
+"soilp <- structure(list(loc = factor(c(\"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", ", 
+"                               \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", ", 
+"                               \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", ", 
+"                               \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", ", 
+"                               \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"alluvial\", \"terrace\", ", 
+"                               \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", ", 
+"                               \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", ", 
+"                               \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", ", 
+"                               \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", \"terrace\", ", 
+"                               \"terrace\", \"terrace\")), ", 
+"               horizon = factor(c(\"A\", \"A\", \"A\", \"A\", \"A\", \"A\", \"A\", \"A\", \"A\", ", 
+"                                  \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", ", 
+"                                  \"C\", \"C\", \"C\", \"C\", \"C\", \"C\", \"C\", \"C\", \"C\", ", 
+"                                  \"A\", \"A\", \"A\", \"A\", \"A\", \"A\", \"A\", \"A\", \"A\", ", 
+"                                  \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", \"B\", ", 
+"                                  \"C\", \"C\", \"C\", \"C\", \"C\", \"C\", \"C\", \"C\", \"C\")), ", 
+"               p = c(345.45, 220.64, 224.98, 246.72, 286.6, 283.31, 198.35, 262.94, ", 
+"                     275.38, 155.4, 169.14, 198.07, 195.68, 202.4, 121.96, 236.55, ", 
+"                     115.08, 136.67, 112.78, 227.72, 107.54, 169.59, 129.09, 144.26, ", 
+"                     164.81, 90.23, 160.93, 99.39, 146.31, 115.44, 202.21, 131.53, ", 
+"                     186.65, 147.89, 171.08, 193.95, 107.68, 111.15, 134.49, 84.05, ", 
+"                     157.28, 240.92, 203.09, 122.29, 185.65, 105.05, 141.71, 126.75, ", 
+"                     46.23, 36.72, 80.57, 179.77, 132.66, 85.89), ", 
+"               depth.cm = factor(c(\"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", ", 
+"                                   \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", ", 
+"                                   \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", ", 
+"                                   \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", \"0-10\", ", 
+"                                   \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", \"10-20\", ", 
+"                                   \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\", \"20-30\"))), ", 
+"          class = \"data.frame\", row.names = c(NA, -54L))", 
+"", "set.seed(10)", "copper <- data.frame(", "  alloy = factor(rep(c(\"A\", \"B\", \"C\", \"D\", \"E\"), each = 20)), # Predictor with 5 levels", 
+"  cond = round(rnorm(100, mean = 5.8, sd = 1.5), digits = 2) # Response variable (normally distributed)", 
+")", "copper <- group_by(.data = copper, alloy) %>% mutate(cond = round(cond + rnorm(n = n(), mean = 0, sd = 0.5), digits = 2)) %>% as.data.frame()"
+), chunk_opts = list(label = "setup", include = FALSE)), setup = NULL, 
+    chunks = list(list(label = "anova-exercise2", code = "\n\n", 
+        opts = list(label = "\"anova-exercise2\"", exercise = "TRUE", 
+            fig.cap = "\"**Figure 1** Soil phosphorous concentration as a function of soil horizon and landscape location. Different lower-case letters indiciate statistically signifiant differences within each landscape location at <span>&#120572;<\u002fspan> = 0.05.\""), 
+        engine = "r")), code_check = NULL, error_check = NULL, 
+    check = NULL, solution = structure(c("## e. Publication-quality figure", 
+    "", "locs <- function(x) { c(\"Alluvial\", \"Terrace\") }  # custom facet labels", 
+    "stats <- group_by(soilp, loc, horizon) %>% summarise(max = max(p)) %>% add_column(sig = c(\"c\", \"b\", \"ab\", \"b\", \"ab\", \"a\"))", 
+    "", "ggplot(data = soilp, mapping = aes(x = horizon, y = p)) + ", 
+    "  geom_boxplot() + ", "  geom_text(data = stats, aes(x = horizon, y = max, label = sig), nudge_y = 15, size = 4) +", 
+    "  labs(y = expression(paste(\"Soil phosphorus (mg kg\"^-1, \")\")), x = \"Soil horizon\") +", 
+    "  facet_wrap(facets = ~ loc, labeller = labeller(loc = locs)) +", 
+    "  theme_test()"), chunk_opts = list(label = "anova-exercise2-solution", 
+        exercise.reveal_solution = TRUE)), tests = NULL, options = list(
+        eval = FALSE, echo = TRUE, results = "markup", tidy = FALSE, 
+        tidy.opts = NULL, collapse = FALSE, prompt = FALSE, comment = NA, 
+        highlight = FALSE, size = "normalsize", background = "#F7F7F7", 
+        strip.white = TRUE, cache = 0, cache.path = "Ch10_exercises_cache/html/", 
+        cache.vars = NULL, cache.lazy = TRUE, dependson = NULL, 
+        autodep = FALSE, cache.rebuild = FALSE, fig.keep = "high", 
+        fig.show = "asis", fig.align = "default", fig.path = "Ch10_exercises_files/figure-html/", 
+        dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
+        fig.width = 6.5, fig.height = 4, fig.env = "figure", 
+        fig.cap = "**Figure 1** Soil phosphorous concentration as a function of soil horizon and landscape location. Different lower-case letters indiciate statistically signifiant differences within each landscape location at <span>&#120572;<\u002fspan> = 0.05.", 
+        fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, 
+        fig.pos = "", out.width = 624, out.height = NULL, out.extra = NULL, 
+        fig.retina = 2, external = TRUE, sanitize = FALSE, interval = 1, 
+        aniopts = "controls,loop", warning = FALSE, error = FALSE, 
+        message = FALSE, render = NULL, ref.label = NULL, child = NULL, 
+        engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
+        max.print = 1000, label = "anova-exercise2", exercise = TRUE, 
+        out.width.px = 624, out.height.px = 384, params.src = "anova-exercise2, exercise = TRUE, fig.height=4, fig.cap=\"**Figure 1** Soil phosphorous concentration as a function of soil horizon and landscape location. Different lower-case letters indiciate statistically signifiant differences within each landscape location at <span>&#120572;<\u002fspan> = 0.05.\"", 
+        fig.num = 0L, exercise.df_print = "paged", exercise.checker = "NULL"), 
+    engine = "r", version = "4"), class = c("r", "tutorial_exercise"
+)))
+</script>
+</p>
+<!--html_preserve-->
+<script type="application/shiny-prerendered" data-context="dependencies">
+{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["header-attrs"]},{"type":"character","attributes":{},"value":["2.29"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/pandoc"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["header-attrs.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.29"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["3.6.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/3.6.0"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery-3.6.0.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquerylib"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.1.4"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootstrap"]},{"type":"character","attributes":{},"value":["3.3.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/bootstrap"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["viewport"]}},"value":[{"type":"character","attributes":{},"value":["width=device-width, initial-scale=1"]}]},{"type":"character","attributes":{},"value":["js/bootstrap.min.js","shim/html5shiv.min.js","shim/respond.min.js"]},{"type":"character","attributes":{},"value":["css/cerulean.min.css"]},{"type":"character","attributes":{},"value":["<style>h1 {font-size: 34px;}\n       h1.title {font-size: 38px;}\n       h2 {font-size: 30px;}\n       h3 {font-size: 24px;}\n       h4 {font-size: 18px;}\n       h5 {font-size: 16px;}\n       h6 {font-size: 12px;}\n       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}\n       pre:not([class]) { background-color: white }<\/style>"]},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.29"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["pagedtable"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/pagedtable-1.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/pagedtable.js"]},{"type":"character","attributes":{},"value":["css/pagedtable.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.29"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["highlightjs"]},{"type":"character","attributes":{},"value":["9.12.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/highlightjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["highlight.js"]},{"type":"character","attributes":{},"value":["textmate.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.29"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.11.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["i18n"]},{"type":"character","attributes":{},"value":["21.6.10"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/i18n"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["i18next.min.js","tutorial-i18n-init.js"]},{"type":"NULL"},{"type":"character","attributes":{},"value":["<script id=\"i18n-cstm-trns\" type=\"application/json\">{\"language\":\"en\",\"resources\":{\"en\":{\"translation\":{\"button\":{\"runcode\":\"Run Code\",\"runcodetitle\":\"$t(button.runcode) ({{kbd}})\",\"hint\":\"Hint\",\"hint_plural\":\"Hints\",\"hinttitle\":\"$t(button.hint)\",\"hintnext\":\"Next Hint\",\"hintprev\":\"Previous Hint\",\"solution\":\"Solution\",\"solutiontitle\":\"$t(button.solution)\",\"copyclipboard\":\"Copy to Clipboard\",\"startover\":\"Start Over\",\"startovertitle\":\"$t(button.startover)\",\"continue\":\"Continue\",\"submitanswer\":\"Submit Answer\",\"submitanswertitle\":\"$t(button.submitanswer)\",\"previoustopic\":\"Previous Topic\",\"nexttopic\":\"Next Topic\",\"questionsubmit\":\"$t(button.submitanswer)\",\"questiontryagain\":\"Try Again\"},\"text\":{\"startover\":\"Start Over\",\"areyousure\":\"Are you sure you want to start over? (all exercise progress will be reset)\",\"youmustcomplete\":\"You must complete the\",\"exercise\":\"exercise\",\"exercise_plural\":\"exercises\",\"inthissection\":\"in this section before continuing.\",\"code\":\"Code\",\"enginecap\":\"{{engine}} $t(text.code)\",\"quiz\":\"Quiz\",\"blank\":\"blank\",\"blank_plural\":\"blanks\",\"exercisecontainsblank\":\"This exercise contains {{count}} $t(text.blank).\",\"pleasereplaceblank\":\"Please replace {{blank}} with valid code.\",\"unparsable\":\"It looks like this might not be valid R code. R cannot determine how to turn your text into a complete command. You may have forgotten to fill in a blank, to remove an underscore, to include a comma between arguments, or to close an opening <code>&quot;<\\/code>, <code>'<\\/code>, <code>(<\\/code> or <code>{<\\/code> with a matching <code>&quot;<\\/code>, <code>'<\\/code>, <code>)<\\/code> or <code>}<\\/code>.\\n\",\"unparsablequotes\":\"<p>It looks like your R code contains specially formatted quotation marks or &quot;curly&quot; quotes (<code>{{character}}<\\/code>) around character strings, making your code invalid. R requires character values to be contained in straight quotation marks (<code>&quot;<\\/code> or <code>'<\\/code>).<\\/p> {{code}} <p>Don't worry, this is a common source of errors when you copy code from another app that applies its own formatting to text. You can try replacing the code on that line with the following. There may be other places that need to be fixed, too.<\\/p> {{suggestion}}\\n\",\"unparsableunicode\":\"<p>It looks like your R code contains an unexpected special character (<code>{{character}}<\\/code>) that makes your code invalid.<\\/p> {{code}} <p>Sometimes your code may contain a special character that looks like a regular character, especially if you copy and paste the code from another app. Try deleting the special character from your code and retyping it manually.<\\/p>\\n\",\"unparsableunicodesuggestion\":\"<p>It looks like your R code contains an unexpected special character (<code>{{character}}<\\/code>) that makes your code invalid.<\\/p> {{code}} <p>Sometimes your code may contain a special character that looks like a regular character, especially if you copy and paste the code from another app. You can try replacing the code on that line with the following. There may be other places that need to be fixed, too.<\\/p> {{suggestion}}\\n\",\"and\":\"and\",\"or\":\"or\",\"listcomma\":\", \",\"oxfordcomma\":\",\"}}},\"fr\":{\"translation\":{\"button\":{\"runcode\":\"Lancer le Code\",\"runcodetitle\":\"$t(button.runcode) ({{kbd}})\",\"hint\":\"Indication\",\"hint_plural\":\"Indications\",\"hinttitle\":\"$t(button.hint)\",\"hintnext\":\"Indication Suivante\",\"hintprev\":\"Indication Précédente\",\"solution\":\"Solution\",\"solutiontitle\":\"$t(button.solution)\",\"copyclipboard\":\"Copier dans le Presse-papier\",\"startover\":\"Recommencer\",\"startovertitle\":\"$t(button.startover)\",\"continue\":\"Continuer\",\"submitanswer\":\"Soumettre\",\"submitanswertitle\":\"$t(button.submitanswer)\",\"previoustopic\":\"Chapitre Précédent\",\"nexttopic\":\"Chapitre Suivant\",\"questionsubmit\":\"$t(button.submitanswer)\",\"questiontryagain\":\"Réessayer\"},\"text\":{\"startover\":\"Recommencer\",\"areyousure\":\"Êtes-vous certains de vouloir recommencer? (La progression sera remise à zéro)\",\"youmustcomplete\":\"Vous devez d'abord compléter\",\"exercise\":\"l'exercice\",\"exercise_plural\":\"des exercices\",\"inthissection\":\"de cette section avec de continuer.\",\"code\":\"Code\",\"enginecap\":\"$t(text.code) {{engine}}\",\"quiz\":\"Quiz\",\"and\":\"et\",\"or\":\"ou\",\"oxfordcomma\":\"\"}}},\"es\":{\"translation\":{\"button\":{\"runcode\":\"Ejecutar código\",\"runcodetitle\":\"$t(button.runcode) ({{kbd}})\",\"hint\":\"Pista\",\"hint_plural\":\"Pistas\",\"hinttitle\":\"$t(button.hint)\",\"hintnext\":\"Siguiente pista\",\"hintprev\":\"Pista anterior\",\"solution\":\"Solución\",\"solutiontitle\":\"$t(button.solution)\",\"copyclipboard\":\"Copiar al portapapeles\",\"startover\":\"Reiniciar\",\"startovertitle\":\"$t(button.startover)\",\"continue\":\"Continuar\",\"submitanswer\":\"Enviar respuesta\",\"submitanswertitle\":\"$t(button.submitanswer)\",\"previoustopic\":\"Tema anterior\",\"nexttopic\":\"Tema siguiente\",\"questionsubmit\":\"$t(button.submitanswer)\",\"questiontryagain\":\"Volver a intentar\"},\"text\":{\"startover\":\"Reiniciar\",\"areyousure\":\"¿De verdad quieres empezar de nuevo? (todo el progreso del ejercicio se perderá)\",\"youmustcomplete\":\"Debes completar\",\"exercise\":\"el ejercicio\",\"exercise_plural\":\"los ejercicios\",\"inthissection\":\"en esta sección antes de continuar.\",\"code\":\"Código\",\"enginecap\":\"$t(text.code) {{engine}}\",\"quiz\":\"Cuestionario\",\"and\":\"y\",\"or\":\"o\",\"oxfordcomma\":\"\"}}},\"pt\":{\"translation\":{\"button\":{\"runcode\":\"Executar código\",\"runcodetitle\":\"$t(button.runcode) ({{kbd}})\",\"hint\":\"Dica\",\"hint_plural\":\"Dicas\",\"hinttitle\":\"$t(button.hint)\",\"hintnext\":\"Próxima dica\",\"hintprev\":\"Dica anterior\",\"solution\":\"Solução\",\"solutiontitle\":\"$t(button.solution)\",\"copyclipboard\":\"Copiar para a área de transferência\",\"startover\":\"Reiniciar\",\"startovertitle\":\"$t(button.startover)\",\"continue\":\"Continuar\",\"submitanswer\":\"Enviar resposta\",\"submitanswertitle\":\"$t(button.submitanswer)\",\"previoustopic\":\"Tópico anterior\",\"nexttopic\":\"Próximo tópico\",\"questionsubmit\":\"$t(button.submitanswer)\",\"questiontryagain\":\"Tentar novamente\"},\"text\":{\"startover\":\"Reiniciar\",\"areyousure\":\"Tem certeza que deseja começar novamente? (todo o progresso feito será perdido)\",\"youmustcomplete\":\"Você deve completar\",\"exercise\":\"o exercício\",\"exercise_plural\":\"os exercícios\",\"inthissection\":\"nesta seção antes de continuar.\",\"code\":\"Código\",\"enginecap\":\"$t(text.code) {{engine}}\",\"quiz\":\"Quiz\",\"and\":\"e\",\"or\":\"ou\",\"oxfordcomma\":\"\"}}},\"tr\":{\"translation\":{\"button\":{\"runcode\":\"Çalıştırma Kodu\",\"runcodetitle\":\"$t(button.runcode) ({{kbd}})\",\"hint\":\"Ipucu\",\"hint_plural\":\"İpuçları\",\"hinttitle\":\"$t(button.hint)\",\"hintnext\":\"Sonraki İpucu\",\"hintprev\":\"Önceki İpucu\",\"solution\":\"Çözüm\",\"solutiontitle\":\"$t(button.solution)\",\"copyclipboard\":\"Pano'ya Kopyala\",\"startover\":\"Baştan Başlamak\",\"startovertitle\":\"$t(button.startover)\",\"continue\":\"Devam et\",\"submitanswer\":\"Cevabı onayla\",\"submitanswertitle\":\"$t(button.submitanswer)\",\"previoustopic\":\"Önceki Konu\",\"nexttopic\":\"Sonraki Konu\",\"questionsubmit\":\"$t(button.submitanswer)\",\"questiontryagain\":\"Tekrar Deneyin\"},\"text\":{\"startover\":\"Baştan Başlamak\",\"areyousure\":\"Baştan başlamak istediğinizden emin misiniz? (tüm egzersiz ilerlemesi kaybolacak)\",\"youmustcomplete\":\"Tamamlamalısın\",\"exercise\":\"egzersiz\",\"exercise_plural\":\"egzersizler\",\"inthissection\":\"devam etmeden önce bu bölümde\",\"code\":\"Kod\",\"enginecap\":\"$t(text.code) {{engine}}\",\"quiz\":\"Sınav\",\"oxfordcomma\":\"\"}}},\"emo\":{\"translation\":{\"button\":{\"runcode\":\"🏃\",\"runcodetitle\":\"$t(button.runcode) ({{kbd}})\",\"hint\":\"💡\",\"hint_plural\":\"$t(button.hint)\",\"hinttitle\":\"$t(button.hint)\",\"solution\":\"🎯\",\"solutiontitle\":\"$t(button.solution)\",\"copyclipboard\":\"📋\",\"startover\":\"⏮\",\"startovertitle\":\"Start Over\",\"continue\":\"✅\",\"submitanswer\":\"🆗\",\"submitanswertitle\":\"Submit Answer\",\"previoustopic\":\"⬅\",\"nexttopic\":\"➡\",\"questionsubmit\":\"$t(button.submitanswer)\",\"questiontryagain\":\"🔁\"},\"text\":{\"startover\":\"⏮\",\"areyousure\":\"🤔\",\"youmustcomplete\":\"⚠️ 👉 🧑‍💻\",\"exercise\":\"\",\"exercise_plural\":\"\",\"inthissection\":\"\",\"code\":\"💻\",\"enginecap\":\"$t(text.code) {{engine}}\",\"oxfordcomma\":\"\"}}},\"eu\":{\"translation\":{\"button\":{\"runcode\":\"Kodea egikaritu\",\"runcodetitle\":\"$t(button.runcode) ({{kbd}})\",\"hint\":\"Laguntza\",\"hint_plural\":\"Laguntza\",\"hinttitle\":\"$t(button.hint)\",\"hintnext\":\"Aurreko laguntza\",\"hintprev\":\"Hurrengo laguntza\",\"solution\":\"Ebazpena\",\"solutiontitle\":\"$t(button.solution)\",\"copyclipboard\":\"Arbelean kopiatu\",\"startover\":\"Berrabiarazi\",\"startovertitle\":\"$t(button.startover)\",\"continue\":\"Jarraitu\",\"submitanswer\":\"Erantzuna bidali\",\"submitanswertitle\":\"$t(button.submitanswer)\",\"previoustopic\":\"Aurreko atala\",\"nexttopic\":\"Hurrengo atala\",\"questionsubmit\":\"$t(button.submitanswer)\",\"questiontryagain\":\"Berriro saiatu\"},\"text\":{\"startover\":\"Berrabiarazi\",\"areyousure\":\"Berriro hasi nahi duzu? (egindako lana galdu egingo da)\",\"youmustcomplete\":\"Aurrera egin baino lehen atal honetako\",\"exercise\":\"ariketa egin behar duzu.\",\"exercise_plural\":\"ariketak egin behar dituzu.\",\"inthissection\":\"\",\"code\":\"Kodea\",\"enginecap\":\"$t(text.code) {{engine}}\",\"quiz\":\"Galdetegia\",\"oxfordcomma\":\"\"}}},\"de\":{\"translation\":{\"button\":{\"runcode\":\"Code ausführen\",\"runcodetitle\":\"$t(button.runcode) ({{kbd}})\",\"hint\":\"Tipp\",\"hint_plural\":\"Tipps\",\"hinttitle\":\"$t(button.hint)\",\"hintnext\":\"Nächster Tipp\",\"hintprev\":\"Vorheriger Tipp\",\"solution\":\"Lösung\",\"solutiontitle\":\"$t(button.solution)\",\"copyclipboard\":\"In die Zwischenablage kopieren\",\"startover\":\"Neustart\",\"startovertitle\":\"$t(button.startover)\",\"continue\":\"Weiter\",\"submitanswer\":\"Antwort einreichen\",\"submitanswertitle\":\"$t(button.submitanswer)\",\"previoustopic\":\"Vorheriges Kapitel\",\"nexttopic\":\"Nächstes Kapitel\",\"questionsubmit\":\"$t(button.submitanswer)\",\"questiontryagain\":\"Nochmal versuchen\"},\"text\":{\"startover\":\"Neustart\",\"areyousure\":\"Bist du sicher, dass du neustarten willst? (der gesamte Lernfortschritt wird gelöscht)\",\"youmustcomplete\":\"Vervollstädinge\",\"exercise\":\"die Übung\",\"exercise_plural\":\"die Übungen\",\"inthissection\":\"in diesem Kapitel, bevor du fortfährst.\",\"code\":\"Code\",\"enginecap\":\"$t(text.code) {{engine}}\",\"quiz\":\"Quiz\",\"blank\":\"Lücke\",\"blank_plural\":\"Lücken\",\"pleasereplaceblank\":\"Bitte ersetze {{blank}} mit gültigem Code.\",\"unparsable\":\"Dies scheint kein gültiger R Code zu sein. R kann deinen Text nicht in einen gültigen Befehl übersetzen. Du hast vielleicht vergessen, die Lücke zu füllen, einen Unterstrich zu entfernen, ein Komma zwischen Argumente zu setzen oder ein eröffnendes <code>&quot;<\\/code>, <code>'<\\/code>, <code>(<\\/code> oder <code>{<\\/code> mit einem zugehörigen <code>&quot;<\\/code>, <code>'<\\/code>, <code>)<\\/code> oder <code>}<\\/code> zu schließen.\\n\",\"and\":\"und\",\"or\":\"oder\",\"listcomma\":\", \",\"oxfordcomma\":\",\"}}},\"ko\":{\"translation\":{\"button\":{\"runcode\":\"코드 실행\",\"runcodetitle\":\"$t(button.runcode) ({{kbd}})\",\"hint\":\"힌트\",\"hint_plural\":\"힌트들\",\"hinttitle\":\"$t(button.hint)\",\"hintnext\":\"다음 힌트\",\"hintprev\":\"이전 힌트\",\"solution\":\"솔루션\",\"solutiontitle\":\"$t(button.solution)\",\"copyclipboard\":\"클립보드에 복사\",\"startover\":\"재학습\",\"startovertitle\":\"$t(button.startover)\",\"continue\":\"다음 학습으로\",\"submitanswer\":\"정답 제출\",\"submitanswertitle\":\"$t(button.submitanswer)\",\"previoustopic\":\"이전 토픽\",\"nexttopic\":\"다음 토픽\",\"questionsubmit\":\"$t(button.submitanswer)\",\"questiontryagain\":\"재시도\"},\"text\":{\"startover\":\"재학습\",\"areyousure\":\"다시 시작 하시겠습니까? (모든 예제의 진행 정보가 재설정됩니다)\",\"youmustcomplete\":\"당신은 완료해야 합니다\",\"exercise\":\"연습문제\",\"exercise_plural\":\"연습문제들\",\"inthissection\":\"이 섹션을 실행하기 전에\",\"code\":\"코드\",\"enginecap\":\"$t(text.code) {{engine}}\",\"quiz\":\"퀴즈\",\"blank\":\"공백\",\"blank_plural\":\"공백들\",\"exercisecontainsblank\":\"이 연습문제에는 {{count}}개의 $t(text.blank)이 포함되어 있습니다.\",\"pleasereplaceblank\":\"{{blank}}를 유효한 코드로 바꾸십시오.\",\"unparsable\":\"이것은 유효한 R 코드가 아닐 수 있습니다. R은 텍스트를 완전한 명령으로 변환하는 방법을 결정할 수 없습니다. 당신은 공백이나 밑줄을 대체하여 채우기, 인수를 컴마로 구분하기, 또는 <code>&quot;<\\/code>, <code>'<\\/code>, <code>(<\\/code> , <code>{<\\/code>로 시작하는 구문을 닫는 <code>&quot;<\\/code>, <code>'<\\/code>, <code>)<\\/code>, <code>}<\\/code>을 잊었을 수도 있습니다.\\n\",\"and\":\"그리고\",\"or\":\"혹은\",\"listcomma\":\", \",\"oxfordcomma\":\"\"}}},\"zh\":{\"translation\":{\"button\":{\"runcode\":\"运行代码\",\"runcodetitle\":\"$t(button.runcode) ({{kbd}})\",\"hint\":\"提示\",\"hint_plural\":\"提示\",\"hinttitle\":\"$t(button.hint)\",\"hintnext\":\"下一个提示\",\"hintprev\":\"上一个提示\",\"solution\":\"答案\",\"solutiontitle\":\"$t(button.solution)\",\"copyclipboard\":\"复制到剪切板\",\"startover\":\"重新开始\",\"startovertitle\":\"$t(button.startover)\",\"continue\":\"继续\",\"submitanswer\":\"提交答案\",\"submitanswertitle\":\"$t(button.submitanswer)\",\"previoustopic\":\"上一专题\",\"nexttopic\":\"下一专题\",\"questionsubmit\":\"$t(button.submitanswer)\",\"questiontryagain\":\"再试一次\"},\"text\":{\"startover\":\"重置\",\"areyousure\":\"你确定要重新开始吗? (所有当前进度将被重置)\",\"youmustcomplete\":\"你必须完成\",\"exercise\":\"练习\",\"exercise_plural\":\"练习\",\"inthissection\":\"在进行本节之前\",\"code\":\"代码\",\"enginecap\":\"$t(text.code) {{engine}}\",\"quiz\":\"测试\",\"blank\":\"空\",\"blank_plural\":\"空\",\"exercisecontainsblank\":\"本练习包含{{count}}个$t(text.blank)\",\"pleasereplaceblank\":\"请在{{blank}}内填写恰当的代码\",\"unparsable\":\"这似乎不是有效的R代码。 R不知道如何将您的文本转换为完整的命令。 您是否忘了填空，忘了删除下划线，忘了在参数之间包含逗号，或者是忘了用<code>&quot;<\\/code>, <code>'<\\/code>, <code>)<\\/code>,<code>}<\\/code>来封闭<code>&quot;<\\/code>, <code>'<\\/code>, <code>(<\\/code>。 or <code>{<\\/code>。\\n\",\"unparsablequotes\":\"<p>您的R代码中似乎含有特殊格式的引号，或者弯引号(<code>{{character}}<\\/code>) 在字符串前后，在R中字符串应该被直引号(<code>&quot;<\\/code> 或者 <code>'<\\/code>)包裹。<\\/p> {{code}} <p>别担心，该错误经常在复制粘贴包含格式的代码时遇到， 您可以尝试将该行中的代码替换为以下代码，也许还有其他地方需要修改。<\\/p> {{suggestion}}\\n\",\"unparsableunicode\":\"<p>您的代码中似乎包含有异常字符(<code>{{character}}<\\/code>),导致代码无效。<\\/p> {{code}} <p>有时候你的代码可能含有看似正常字符的特殊字符，特别是当你复制粘贴其他来源代码的时候。 请试着删除这些特殊字符,重新输入<\\/p>\\n\",\"unparsableunicodesuggestion\":\"<p>您的代码中似乎包含有异常字符(<code>{{character}}<\\/code>),导致代码无效。<\\/p> {{code}} <p>有时候你的代码可能含有看似正常字符的特殊字符，特别是当你复制粘贴其他来源代码的时候。 请试着删除这些特殊字符,重新输入<\\/p>\\n\",\"and\":\"且\",\"or\":\"或\",\"listcomma\":\",\",\"oxfordcomma\":\",\"}}},\"pl\":{\"translation\":{\"button\":{\"runcode\":\"Uruchom kod\",\"runcodetitle\":\"$t(button.runcode) ({{kbd}})\",\"hint\":\"Podpowiedź\",\"hint_plural\":\"Podpowiedzi\",\"hinttitle\":\"$t(button.hint)\",\"hintnext\":\"Następna podpowiedź\",\"hintprev\":\"Poprzednia podpowiedź\",\"solution\":\"Rozwiązanie\",\"solutiontitle\":\"$t(button.solution)\",\"copyclipboard\":\"Kopiuj do schowka\",\"startover\":\"Zacznij od początku\",\"startovertitle\":\"$t(button.startover)\",\"continue\":\"Kontynuuj\",\"submitanswer\":\"Wyślij\",\"submitanswertitle\":\"$t(button.submitanswer)\",\"previoustopic\":\"Poprzednia sekcja\",\"nexttopic\":\"Następna sekcja\",\"questionsubmit\":\"$t(button.submitanswer)\",\"questiontryagain\":\"Spróbuj ponownie\"},\"text\":{\"startover\":\"Zacznij od początku\",\"areyousure\":\"Czy na pewno chcesz zacząć od początku? (cały postęp w zadaniu zostanie utracony)\",\"youmustcomplete\":\"Musisz ukończyć\",\"exercise\":\"ćwiczenie\",\"exercise_plural\":\"ćwiczenia\",\"inthissection\":\"w tej sekcji przed kontynuowaniem\",\"code\":\"Kod\",\"enginecap\":\"$t(text.code) {{engine}}\",\"quiz\":\"Quiz\",\"blank\":\"luka\",\"blank_plural\":\"luk(i)\",\"exercisecontainsblank\":\"To ćwiczenie zawiera {{count}} $t(text.blank).\",\"pleasereplaceblank\":\"Proszę uzupełnić {{blank}} prawidłowym kodem.\",\"unparsable\":\"Wygląda na to, że może to nie być prawidłowy kod R. R nie jest w stanie przetworzyć Twojego tekstu na polecenie. Mogłeś(-aś) zapomnieć wypełnić luki, usunąć podkreślnik, umieścić przecinka między argumentami, lub zamknąć znak <code>&quot;<\\/code>, <code>'<\\/code>, <code>(<\\/code> lub <code>{<\\/code> odpowiadającym <code>&quot;<\\/code>, <code>'<\\/code>, <code>)<\\/code> lub <code>}<\\/code>.\\n\",\"unparsablequotes\":\"<p>Wygląda na to, że Twój kod zawiera szczególnie sformatowane cudzysłowy lub cudzysłowy typograficzne (<code>{{character}}<\\/code>) przy ciągach znaków, co sprawia, że kod jest niepoprawny. R wymaga cudzysłowów prostych (<code>&quot;<\\/code> albo <code>'<\\/code>).<\\/p> {{code}} <p>Nie martw się, to powszechne źródło błędów, gdy kopiuje się kod z innego programu, który sam formatuje teskt. Możesz spróbować zastąpić swój kod następującym kodem. Mogą być też inne miejsca, które wymagają poprawienia.<\\/p> {{suggestion}}\\n\",\"unparsableunicode\":\"<p>Wygląda na to, że Twój kod zawiera niespodziewany znak specjalny (<code>{{character}}<\\/code>), co sprawia, że kod jest niepoprawny.<\\/p> {{code}} <p>Czasami Twój kod może zawierać znak specjalny, który wygląda jak zwykły znak, zwłaszcza jeśli kopiujesz kod z innego programu. Spróbuj usunąć znak specjalny i wpisać do ponownie ręcznie.<\\/p>\\n\",\"unparsableunicodesuggestion\":\"<p>Wygląda na to, że Twój kod zawiera niespodziewany znak specjalny (<code>{{character}}<\\/code>), co sprawia, że kod jest niepoprawny.<\\/p> {{code}} <p>Czasami Twój kod może zawierać znak specjalny, który wygląda jak zwykły znak, zwłaszcza jeśli kopiujesz kod z innego programu. Możesz spróbować zastąpić swój kod następującym kodem. Mogą być też inne miejsca, które wymagają poprawienia.<\\/p> {{suggestion}}\\n\",\"and\":\"i\",\"or\":\"lub\",\"listcomma\":\", \",\"oxfordcomma\":\"\"}}}}}<\/script>"]},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-format"]},{"type":"character","attributes":{},"value":["0.11.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmarkdown/templates/tutorial/resources"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-format.js"]},{"type":"character","attributes":{},"value":["tutorial-format.css","rstudio-theme.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["3.6.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/3.6.0"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery-3.6.0.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquerylib"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.1.4"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["navigation"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/navigation-1.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tabsets.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.29"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["highlightjs"]},{"type":"character","attributes":{},"value":["9.12.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/highlightjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["highlight.js"]},{"type":"character","attributes":{},"value":["default.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.29"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["3.6.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/3.6.0"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery-3.6.0.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquerylib"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.1.4"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["font-awesome"]},{"type":"character","attributes":{},"value":["6.5.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["fontawesome"]}]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["css/all.min.css","css/v4-shims.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["fontawesome"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.5.3"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootbox"]},{"type":"character","attributes":{},"value":["5.5.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/bootbox"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["bootbox.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["idb-keyvalue"]},{"type":"character","attributes":{},"value":["3.2.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/idb-keyval"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["idb-keyval-iife-compat.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[false]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.11.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.10.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["2.0.10"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.10.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["2.0.10"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.10.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["2.0.10"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["kePrint"]},{"type":"character","attributes":{},"value":["0.0.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["kePrint-0.0.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["kePrint.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["kableExtra"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["1.4.0"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["lightable"]},{"type":"character","attributes":{},"value":["0.0.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lightable-0.0.1"]}]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["lightable.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["kableExtra"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["1.4.0"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["kePrint"]},{"type":"character","attributes":{},"value":["0.0.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["kePrint-0.0.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["kePrint.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["kableExtra"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["1.4.0"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["lightable"]},{"type":"character","attributes":{},"value":["0.0.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lightable-0.0.1"]}]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["lightable.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["kableExtra"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["1.4.0"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["kePrint"]},{"type":"character","attributes":{},"value":["0.0.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["kePrint-0.0.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["kePrint.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["kableExtra"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["1.4.0"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["lightable"]},{"type":"character","attributes":{},"value":["0.0.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lightable-0.0.1"]}]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["lightable.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["kableExtra"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["1.4.0"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["kePrint"]},{"type":"character","attributes":{},"value":["0.0.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["kePrint-0.0.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["kePrint.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["kableExtra"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["1.4.0"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["lightable"]},{"type":"character","attributes":{},"value":["0.0.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lightable-0.0.1"]}]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["lightable.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["kableExtra"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["1.4.0"]}]}]}
+</script>
+<!--/html_preserve-->
+<!--html_preserve-->
+<script type="application/shiny-prerendered" data-context="execution_dependencies">
+{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages","version"]},"class":{"type":"character","attributes":{},"value":["data.frame"]},"row.names":{"type":"integer","attributes":{},"value":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83]}},"value":[{"type":"character","attributes":{},"value":["backports","base","bslib","cachem","checkmate","cli","coda","codetools","colorspace","commonmark","compiler","datasets","digest","dplyr","ellipsis","emmeans","estimability","evaluate","farver","fastmap","fontawesome","generics","ggplot2","glue","graphics","grDevices","grid","gtable","htmltools","htmlwidgets","httpuv","jquerylib","jsonlite","kableExtra","knitr","labeling","later","lattice","learnr","lifecycle","magrittr","markdown","MASS","Matrix","methods","mime","multcomp","multcompView","munsell","mvtnorm","pillar","pkgconfig","promises","R6","Rcpp","rlang","rmarkdown","rprojroot","rstudioapi","sandwich","sass","scales","shiny","splines","stats","stringi","stringr","survival","svglite","systemfonts","TH.data","tibble","tidyselect","tools","utils","vctrs","viridisLite","withr","xfun","xml2","xtable","yaml","zoo"]},{"type":"character","attributes":{},"value":["1.5.0","4.4.1","0.8.0","1.1.0","2.3.2","3.6.3","0.19-4.1","0.2-20","2.1-1","1.9.2","4.4.1","4.4.1","0.6.37","1.1.4","0.3.2","1.10.6","1.5.1","1.0.3","2.1.2","1.2.0","0.5.3","0.1.3","3.5.1","1.8.0","4.4.1","4.4.1","4.4.1","0.3.6","0.5.8.1","1.6.4","1.6.15","0.1.4","1.8.9","1.4.0","1.49","0.4.3","1.4.1","0.22-6","0.11.5","1.0.4","2.0.3","1.13","7.3-64","1.7-1","4.4.1","0.12","1.4-26","0.1-10","0.5.1","1.3-3","1.10.1","2.0.3","1.3.2","2.5.1","1.0.14","1.1.5","2.29","2.0.4","0.17.1","3.1-1","0.4.9","1.3.0","1.10.0","4.4.1","4.4.1","1.8.4","1.5.1","3.8-3","2.1.3","1.1.0","1.1-2","3.2.1","1.2.1","4.4.1","4.4.1","0.6.5","0.4.2","3.0.2","0.50","1.3.6","1.8-4","2.3.10","1.8-12"]}]}]}
+</script>
+<!--/html_preserve-->
+</div>
+</div>
+
+</article> <!-- topics -->
+
+<div class="topicsContainer">
+<div class="topicsPositioner">
+<div class="band">
+<div class="bandContent topicsListContainer">
+
+<!-- begin doc-metadata -->
+<div id="doc-metadata">
+<h1 class="title toc-ignore" style="display:none;">R-ticulate
+Exercises</h1>
+<h4 class="author"><em>Martin Bader and Sebastian Leuzinger</em></h4>
+</div>
+<!-- end doc-metadata -->
+
+</div> <!-- bandContent.topicsListContainer -->
+</div> <!-- band -->
+</div> <!-- topicsPositioner -->
+</div> <!-- topicsContainer -->
+
+
+</main> <!-- bandContent page -->
+</div> <!-- pageContent band -->
+
+
+
+<!-- Build Tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("section-TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<script>
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+
+</body>
+
+</html>
