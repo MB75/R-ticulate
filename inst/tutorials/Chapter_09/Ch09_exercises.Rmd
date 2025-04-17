@@ -249,7 +249,7 @@ summary(m1)
 
 <p style="margin-top:10px">
 The quantile-quantile plot did not show strong deviations from normality but the plot of the residuals vs. fitted values showed some curvature indicating heteroscedasticity. One observation was flagged in the residuals vs. leverage plot with a Cook's distance just below 1. This observation was related to the largest tree in the dataset. Rerunning the linear regression model without this observation caused only minor changes in the intercept and slope, prompting us to retain this recording in the model.   
-The linear regression results showed a statistically significant slope for girth of ca. 5 cubic feet per inch (ft^3^ in^-1^) (_t_~1,29~ = 20.48, _P_ < 0.001).
+The linear regression results showed a statistically significant slope for girth of ca. 5 cubic feet per inch (ft^3^ in^-1^) (_t_~29~ = 20.48, _P_ < 0.001).
 </p>
 </details>
 </p>
