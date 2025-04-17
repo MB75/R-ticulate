@@ -187,6 +187,8 @@ The model code related to the exercises below relies on the following R packages
 
 * _ggplot2_
 * _dplyr_
+* _stringr_
+* _tibble_
 * _emmeans_
 * _multcomp_
 * _multcompView_
